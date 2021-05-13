@@ -1,0 +1,8 @@
+program MJProgram
+    int x;
+    int y;
+    int a[], b, c[];
+    const int ac = 'a', bc = 2483, cc = false;
+    const int d = 1242;
+{
+}
