@@ -3,7 +3,6 @@
     <target name="delete">
         <delete>
             <fileset dir="src/rs/ac/bg/etf/pp1">
-                <exclude name="Yylex.java"/>
                 <exclude name="util/Log4JUtils.java"/>
                 <exclude name="SemanticPass.java"/>
                 <exclude name="CodeGenerator.java"/>
@@ -26,7 +25,7 @@
         </java>
     </target>
 
-    <target name="parserGen" depends="delete">
+    <target name="parserGen" depends="lexerGen">
         <java jar="lib/cup_v10k.jar" fork="true">
             <arg value="-destdir"/>
             <arg value="src/rs/ac/bg/etf/pp1"/>
@@ -34,7 +33,7 @@
             <arg value="src.rs.ac.bg.etf.pp1.ast"/>
             <arg value="-parser"/>
             <arg value="MJParser"/>
-            <arg value="-dump_states"/>
+            <!--<arg value="-dump_states"/>-->
             <arg value="-buildtree"/>
             <arg value="src/spec/mjparser.cup"/>
         </java>

@@ -35,6 +35,7 @@ import java_cup.runtime.Symbol;
 "\f"    { }
 
 "program"   { return new_symbol(sym.PROG,      yytext()); }
+"const"     { return new_symbol(sym.CONST,     yytext()); }
 "read"      { return new_symbol(sym.READ,      yytext()); }
 "print"     { return new_symbol(sym.PRINT,     yytext()); }
 "return"    { return new_symbol(sym.RETURN,    yytext()); }
@@ -48,6 +49,7 @@ import java_cup.runtime.Symbol;
 "case"      { return new_symbol(sym.CASE,      yytext()); }
 "yield"     { return new_symbol(sym.YIELD,     yytext()); }
 "default"   { return new_symbol(sym.DEFAULT,   yytext()); }
+"="         { return new_symbol(sym.ASSIGN,    yytext()); }
 "+"         { return new_symbol(sym.PLUS,      yytext()); }
 "-"         { return new_symbol(sym.MINUS,     yytext()); }
 "*"         { return new_symbol(sym.MULTIPLE,  yytext()); }
@@ -55,9 +57,8 @@ import java_cup.runtime.Symbol;
 "%"         { return new_symbol(sym.MODULO,    yytext()); }
 "++"        { return new_symbol(sym.INCREMENT, yytext()); }
 "--"        { return new_symbol(sym.DECREMENT, yytext()); }
-"|"         { return new_symbol(sym.OR,        yytext()); }
 "&"         { return new_symbol(sym.AND,       yytext()); }
-"="         { return new_symbol(sym.ASSIGN,    yytext()); }
+"|"         { return new_symbol(sym.OR,        yytext()); }
 "=="        { return new_symbol(sym.EQ,        yytext()); }
 "!="        { return new_symbol(sym.NEQ,       yytext()); }
 ">"         { return new_symbol(sym.GT,        yytext()); }
