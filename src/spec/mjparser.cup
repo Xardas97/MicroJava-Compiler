@@ -62,7 +62,8 @@ nonterminal Program, VarConstDecls, Type;
 nonterminal VarConstDecl, VarDeclList, VarDeclMore, VarDecl;
 nonterminal ConstDeclList, ConstDeclMore, ConstDecl, ConstValue;
 nonterminal MethodDecls, MethodDecl, ReturnType, FormPars, FormPar, FormParMore, MethodVarDecls, Statements;
-nonterminal Statement, PrintArg, DesignatorStatement, Designator, Expr, ActPars, ActParsMore;
+nonterminal Statement, PrintArg, DesignatorStatement, Designator, ActPars, ActParsMore;
+nonterminal Expr, Negation, Terms, Term, Factor, Addop, Mulop;
 
 
 
@@ -164,14 +165,37 @@ ActParsMore ::= (ActParsMoreElement) COMMA Expr ActParsMore
               | (EmptyActParsMore) /* epsilon */
               ;
 
-// Temporary
-Expr ::= (Expr) ConstValue
-       ;
-
 Type ::= (Type) IDENT
        ;
 
+Expr ::= (Expr) Negation Terms
+       ;
 
+Negation ::= (ExistingNegation) MINUS
+           | (NoNegation) /* epsilon */
+           ;
 
+Terms ::= (TermList) Terms Addop Term
+        | (TermListElement) Term
+        ;
 
+Term ::= (FactorList) Term Mulop Factor
+       | (FactorTerm) Factor
+       ;
+
+Factor ::= (DesignatorFctr) Designator
+         | (ConstValueFctr) ConstValue
+         | (ExprFctr) LPAREN Expr RPAREN
+         | (ArrayInitFctr) NEW Type LBRACKET Expr RBRACKET
+         | (MethodCallFctr) Designator LPAREN ActPars RPAREN
+         ;
+
+Addop ::= (Plus) PLUS
+        | (Minus) MINUS
+        ;
+
+Mulop ::= (Multiple) MULTIPLE
+        | (Divide) DIVIDE
+        | (Modulo) MODULO
+        ;
 
