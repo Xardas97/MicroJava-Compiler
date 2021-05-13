@@ -62,7 +62,7 @@ nonterminal Program, VarConstDecls, Type;
 nonterminal VarConstDecl, VarDeclList, VarDeclMore, VarDecl;
 nonterminal ConstDeclList, ConstDeclMore, ConstDecl, ConstValue;
 nonterminal MethodDecls, MethodDecl, ReturnType, FormPars, FormPar, FormParMore, MethodVarDecls, Statements;
-nonterminal Statement;
+nonterminal Statement, PrintArg, DesignatorStatement, Designator, Expr, ActPars, ActParsMore;
 
 
 
@@ -135,8 +135,38 @@ Statements ::= (StatementList) Statements Statement
              | (EmptyStatementList) /* epsilon */
              ;
 
-Statement ::= (Statement) PRINT
+Statement ::= (DesignatorStmt) DesignatorStatement SEMI
+            | (PrintStmt) PRINT LPAREN Expr PrintArg RPAREN SEMI
+            | (ReadStmt) READ LPAREN Designator RPAREN SEMI
+            | (ReturnStmt) RETURN Expr SEMI
+            | (StatementBlock) LBRACE Statements RBRACE
             ;
+
+PrintArg ::= (PrintWidth) COMMA NUMBER:width
+           | (NoPrintArg) /* epsilon */
+           ;
+
+DesignatorStatement ::= (AssignmentStmt) Designator ASSIGN Expr
+                      | (IncrementStmt) Designator INCREMENT
+                      | (DecrementStmt) Designator DECREMENT
+                      | (MethodCall) Designator LPAREN ActPars RPAREN
+                      ;
+
+Designator ::= (SingularDesignator) IDENT:name
+             | (ArrayDesignator) IDENT:name LBRACKET Expr:index RBRACKET
+             ;
+
+ActPars ::= (ActParList) Expr ActParsMore
+          | (NoActPars) /* epsilon */
+          ;
+
+ActParsMore ::= (ActParsMoreElement) COMMA Expr ActParsMore
+              | (EmptyActParsMore) /* epsilon */
+              ;
+
+// Temporary
+Expr ::= (Expr) ConstValue
+       ;
 
 Type ::= (Type) IDENT
        ;
