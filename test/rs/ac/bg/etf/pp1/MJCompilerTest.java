@@ -35,12 +35,12 @@ public class MJCompilerTest {
             Symbol symbol = parser.parse();
 
             if (parser.errorDetected) {
-                log.error("Parsiranje NIJE uspesno zavrseno! (Lexer error)");
+                log.error("Parsiranje NIJE uspesno zavrseno!");
                 return;
             }
 
             Program program = (Program) symbol.value;
-            log.info(program.toString());
+            log.info(program.toString(""));
 
             log.info("Parsiranje gotovo!");
         }

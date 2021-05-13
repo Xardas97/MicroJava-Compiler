@@ -5,4 +5,22 @@ program MJProgram
     const int ac = 'a', bc = 2483, cc = false;
     const int d = 1242;
 {
+    void method1() int x; {
+        print
+        print
+        print
+    }
+
+    int m2(int b, int c[], int d, int x[])
+        int x2, x3;
+        int x4[], x5, x7[];
+    {
+        print
+        print
+        print
+    }
+
+    void main(int c)
+    {
+    }
 }
