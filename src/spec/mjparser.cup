@@ -61,7 +61,12 @@ terminal NUMBER, CHARLIT, BOOLLIT, IDENT;
 nonterminal Program, VarConstDecls, Type;
 nonterminal VarConstDecl, VarDeclList, VarDeclMore, VarDecl;
 nonterminal ConstDeclList, ConstDeclMore, ConstDecl, ConstValue;
-nonterminal MethodDecls;
+nonterminal MethodDecls, MethodDecl, ReturnType, FormPars, FormPar, FormParMore, MethodVarDecls, Statements;
+nonterminal Statement;
+
+
+
+
 
 Program ::= (Program) PROG IDENT:progName VarConstDecls LBRACE MethodDecls RBRACE
           ;
@@ -100,10 +105,40 @@ ConstValue ::= (NumConst) NUMBER
              | (BoolConst) BOOLLIT
              ;
 
-MethodDecls ::= (MethodDecls) /* epsilon */
+MethodDecls ::= (MethodDeclList) MethodDecls MethodDecl
+              | (EmptyMethodDeclList) /* epsilon */
               ;
 
-Type ::= IDENT
+MethodDecl ::= (MethodDecl) ReturnType IDENT LPAREN FormPars RPAREN MethodVarDecls LBRACE Statements RBRACE
+              ;
+
+ReturnType ::= (NonVoidReturnType) Type
+             | (VoidReturnType) VOID
+             ;
+
+FormPars ::= (FormParList) FormPar FormParMore
+           | (NoFormPars) /* epsilon */
+           ;
+
+FormPar ::= (FormPar) Type:parType VarDecl
+          ;
+
+FormParMore ::= (FormParMoreElement) COMMA FormPar FormParMore
+              | (EmptyFormParMore) /* epsilon */
+              ;
+
+MethodVarDecls ::= (MethodVarDeclList) MethodVarDecls VarDeclList
+                 | (EmptyMethodVarDeclList) /* epsilon */
+                 ;
+
+Statements ::= (StatementList) Statements Statement
+             | (EmptyStatementList) /* epsilon */
+             ;
+
+Statement ::= (Statement) PRINT
+            ;
+
+Type ::= (Type) IDENT
        ;
 
 
