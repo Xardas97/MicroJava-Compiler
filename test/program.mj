@@ -6,18 +6,36 @@ program MJProgram
     const int d = 1242;
 {
     void method1() int x; {
-        print
-        print
-        print
+        x = 'a';
+        x = 23124;
+        x = true;
+
+        { print(1212, 1); }
+
+        return 1;
     }
 
     int m2(int b, int c[], int d, int x[])
         int x2, x3;
         int x4[], x5, x7[];
     {
-        print
-        print
-        print
+        print(1212);
+
+        {
+            x4[2] ++;
+            x3--;
+            method1(12, 'a');
+            method1();
+            method1(true, 'b', '4', false, 12131, 'c');
+
+            return true;
+        }
+
+        read(x4[1]);
+
+        { }
+
+        return 'a';
     }
 
     void main(int c)
