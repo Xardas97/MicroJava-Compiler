@@ -42,7 +42,7 @@ scan with {:
     Symbol s = this.getScanner().next_token();
 
     if (s != null && s.value != null) {
-        log.info(s.toString() + " " + s.value.toString());
+        //log.info(s.toString() + " " + s.value.toString());
     }
 
     return s;
@@ -62,15 +62,15 @@ terminal String IDENT;
 
 nonterminal Program, VarConstDecls;
 nonterminal VarConstDecl, VarDecl, VarNames, VarName;
-nonterminal ConstDecl, ConstAssigns, ConstAssign, ConstValue;
-nonterminal MethodDecls, MethodDecl, ReturnType, FormPars, FormPar, FormParMore, MethodVarDecls, Statements;
-nonterminal Statement, Matched, Unmatched, PrintArg, DesignatorStatement, Designator, ActPars, ActParsMore;
-nonterminal Expr, Negation, Terms, Term, Factor, Addop, Mulop;
+nonterminal ConstDecl, ConstAssigns, ConstAssign;
+nonterminal MethodDecls, MethodDecl, MethodTypeName, ReturnType, FormPars, FormPar, FormParMore, MethodVarDecls, Statements;
+nonterminal Statement, Matched, Unmatched, PrintArg, DesignatorStatement, ActPars, ActParsMore;
+nonterminal Negation, Addop, Mulop;
 nonterminal Condition, CondTerm, CondFact, Relop;
 nonterminal Cases;
 
-nonterminal rs.etf.pp1.symboltable.concepts.Obj ProgName, MethodTypeName;
-nonterminal rs.etf.pp1.symboltable.concepts.Struct Type;
+nonterminal rs.etf.pp1.symboltable.concepts.Obj ProgName;
+nonterminal rs.etf.pp1.symboltable.concepts.Struct Type, Expr, Terms, Term, Factor, Designator, ConstValue;
 
 Program ::= (Program) PROG ProgName:progName VarConstDecls LBRACE MethodDecls RBRACE
           ;
