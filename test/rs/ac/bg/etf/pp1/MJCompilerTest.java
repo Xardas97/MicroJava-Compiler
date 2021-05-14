@@ -12,6 +12,9 @@ import org.apache.log4j.xml.DOMConfigurator;
 import java_cup.runtime.*;
 import rs.ac.bg.etf.pp1.ast.Program;
 import rs.ac.bg.etf.pp1.util.Log4JUtils;
+import rs.etf.pp1.symboltable.Tab;
+import rs.etf.pp1.symboltable.concepts.Obj;
+import rs.etf.pp1.symboltable.concepts.Struct;
 
 public class MJCompilerTest {
     private static Logger log;
@@ -34,18 +37,31 @@ public class MJCompilerTest {
 
             Symbol symbol = parser.parse();
 
-            if (parser.errorDetected) {
-                if (symbol.value instanceof Program) {
-                    log.info(((Program)symbol.value).toString(""));
-                }
-
+            if (!(symbol.value instanceof Program)) {
                 log.error("Parsiranje NIJE uspesno zavrseno!");
-
                 return;
             }
 
             Program program = (Program) symbol.value;
             //log.info(program.toString(""));
+
+            Struct boolType = new Struct(Struct.Bool);
+            Tab.init();
+            Tab.currentScope.addToLocals(new Obj(Obj.Type, "bool", boolType));
+
+            SemanticAnalyzer semAnalyzer = new SemanticAnalyzer(boolType);
+            program.traverseBottomUp(semAnalyzer);
+
+            Tab.dump(new DumpSymbolTableVisitorWithBool());
+
+            if (parser.errorDetected || semAnalyzer.errorDetected) {
+                if (symbol.value instanceof Program) {
+                    log.info(((Program)symbol.value).toString(""));
+                }
+
+                log.error("Parsiranje NIJE uspesno zavrseno!");
+                return;
+            }
 
             log.info("Parsiranje gotovo!");
         }

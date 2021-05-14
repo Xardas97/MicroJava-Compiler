@@ -56,9 +56,11 @@ terminal SWITCH, CASE, YIELD, DEFAULT;
 terminal ASSIGN, PLUS, MINUS, MULTIPLE, DIVIDE, MODULO, INCREMENT, DECREMENT;
 terminal AND, OR, EQ, NEQ, GT, LT, GEQ, LEQ;
 terminal COLON, SEMI, COMMA, LPAREN, RPAREN, LBRACE, RBRACE, LBRACKET, RBRACKET;
-terminal NUMBER, CHARLIT, BOOLLIT, IDENT;
+terminal NUMBER, CHARLIT, BOOLLIT;
 
-nonterminal Program, VarConstDecls, Type;
+terminal String IDENT;
+
+nonterminal Program, VarConstDecls;
 nonterminal VarConstDecl, VarDecl, VarNames, VarName;
 nonterminal ConstDecl, ConstAssigns, ConstAssign, ConstValue;
 nonterminal MethodDecls, MethodDecl, ReturnType, FormPars, FormPar, FormParMore, MethodVarDecls, Statements;
@@ -67,8 +69,14 @@ nonterminal Expr, Negation, Terms, Term, Factor, Addop, Mulop;
 nonterminal Condition, CondTerm, CondFact, Relop;
 nonterminal Cases;
 
-Program ::= (Program) PROG IDENT:progName VarConstDecls LBRACE MethodDecls RBRACE
+nonterminal rs.etf.pp1.symboltable.concepts.Obj ProgName, MethodTypeName;
+nonterminal rs.etf.pp1.symboltable.concepts.Struct Type;
+
+Program ::= (Program) PROG ProgName:progName VarConstDecls LBRACE MethodDecls RBRACE
           ;
+
+ProgName ::= (ProgName) IDENT:progName
+           ;
 
 VarConstDecls ::= (VarConstDeclList) VarConstDecls VarConstDecl
                 | (EmptyVarConstDeclList) /* epsilon */
@@ -116,8 +124,11 @@ MethodDecls ::= (MethodDeclList) MethodDecls MethodDecl
               | (EmptyMethodDeclList) /* epsilon */
               ;
 
-MethodDecl ::= (MethodDecl) ReturnType IDENT LPAREN FormPars RPAREN MethodVarDecls LBRACE Statements RBRACE
+MethodDecl ::= (MethodDecl) MethodTypeName LPAREN FormPars RPAREN MethodVarDecls LBRACE Statements RBRACE
               ;
+
+MethodTypeName ::= (MethodTypeName) ReturnType IDENT:methodName
+                 ;
 
 ReturnType ::= (NonVoidReturnType) Type
              | (VoidReturnType) VOID
@@ -186,7 +197,7 @@ ActParsMore ::= (ActParsMoreElement) COMMA Expr ActParsMore
               | (EmptyActParsMore) /* epsilon */
               ;
 
-Type ::= (Type) IDENT
+Type ::= (Type) IDENT:typeName
        ;
 
 Expr ::= (Expression) Negation Terms
