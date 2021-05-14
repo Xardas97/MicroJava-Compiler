@@ -22,6 +22,21 @@ program MJProgram
             x--;
         }
 
+        x = switch (x + 2) {
+          case 0: yield x + 2;
+          case 3: {
+            yield -x + 3;
+          }
+          default: {
+            print(x, 2);
+            yield 3;
+          }
+        };
+
+        x = switch (1) {
+          default: yield 3;
+        };
+
         return 1;
     }
 
