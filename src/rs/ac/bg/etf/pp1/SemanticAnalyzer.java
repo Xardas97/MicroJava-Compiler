@@ -132,6 +132,37 @@ public class SemanticAnalyzer extends VisitorAdaptor {
         Tab.insert(Obj.Con, ident, constType);
     }
 
+    public void visit(SingularDesignator designator) {
+        designator.struct = getDesignatorType(designator.getName(), designator);
+    }
+
+    public void visit(ArrayDesignator designator) {
+        String ident = designator.getName();
+
+        // TODO re-enable when Expr structs are set
+        /*if (designator.getExpr().struct != Tab.intType) {
+            reportError("Index identifikatora " + ident + " mora biti celobrojna vrednost", designator);
+        }*/
+
+        designator.struct = getDesignatorType(ident, designator);
+    }
+
+    private Struct getDesignatorType(String ident, Designator designator) {
+        Obj obj = Tab.find(ident);
+
+        if (obj == Tab.noObj) {
+            reportError("Identifikator " + ident + " ne postoji", designator);
+            return Tab.noType;
+        }
+
+        if (obj.getKind() != Obj.Var && obj.getKind() != Obj.Con && obj.getKind() != Obj.Meth) {
+            reportError("Identifikator " + ident + " se ne moze ovako koristiti", designator);
+            return Tab.noType;
+        }
+
+        return obj.getType();
+    }
+
     private Obj findInCurrentScope(String ident) {
         SymbolDataStructure locals = Tab.currentScope.getLocals();
         if (locals == null) return Tab.noObj;
