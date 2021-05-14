@@ -66,7 +66,9 @@ public class SemanticAnalyzer extends VisitorAdaptor {
     public void visit(ReturnStmt returnStmt) {
         returnFound = true;
 
-        // TODO Check if return type is appropriate
+        if (returnStmt.getExpr().struct != currentMethod.getType()) {
+            reportError("Povratna vrednost je pogrešnog tipa", returnStmt);
+        }
     }
 
     public void visit(MethodDecl methodDecl) {
@@ -133,21 +135,20 @@ public class SemanticAnalyzer extends VisitorAdaptor {
     }
 
     public void visit(SingularDesignator designator) {
-        designator.struct = getDesignatorType(designator.getName(), designator);
+        designator.struct = getDesignatorType(designator.getName(), designator, false);
     }
 
     public void visit(ArrayDesignator designator) {
         String ident = designator.getName();
 
-        // TODO re-enable when Expr structs are set
-        /*if (designator.getExpr().struct != Tab.intType) {
+        if (designator.getExpr().struct != Tab.intType) {
             reportError("Index identifikatora " + ident + " mora biti celobrojna vrednost", designator);
-        }*/
+        }
 
-        designator.struct = getDesignatorType(ident, designator);
+        designator.struct = getDesignatorType(ident, designator, true).getElemType();
     }
 
-    private Struct getDesignatorType(String ident, Designator designator) {
+    private Struct getDesignatorType(String ident, Designator designator, boolean isArray) {
         Obj obj = Tab.find(ident);
 
         if (obj == Tab.noObj) {
@@ -160,7 +161,106 @@ public class SemanticAnalyzer extends VisitorAdaptor {
             return Tab.noType;
         }
 
+        Struct struct = obj.getType();
+
+        if (isArray && struct.getKind() != Struct.Array) {
+            reportError("Identifikatora " + ident + " nije niz", designator);
+            return Tab.noType;
+        }
+
         return obj.getType();
+    }
+
+    public void visit(MethodCall methodCall) {
+        methodCall.struct = methodCall.getDesignator().struct;
+    }
+
+    public void visit(DesignatorFctr factor) {
+        factor.struct = factor.getDesignator().struct;
+    }
+
+    public void visit(ConstValueFctr factor) {
+        factor.struct = factor.getConstValue().struct;
+    }
+
+    public void visit(ExprFctr factor) {
+        factor.struct = factor.getExpr().struct;
+    }
+
+    public void visit(ArrayInitFctr factor) {
+        if (factor.getExpr().struct != Tab.intType) {
+            reportError("Velicina niza u strukturi mora biti celobrojna vrednost", factor);
+        }
+
+        factor.struct = new Struct(Struct.Array, factor.getType().struct);
+    }
+
+    public void visit(MethodCallFctr factor) {
+        factor.struct = factor.getMethodCall().struct;
+    }
+
+    public void visit(FactorListTerm term) {
+        if (term.getTerm().struct != Tab.intType || term.getFactor().struct != Tab.intType) {
+            reportError("Operacija " + mulopToChar(term.getMulop()) + " se moze koristiti samo sa celobrojnim vrednostima", term);
+            term.struct = Tab.noType;
+            return;
+        }
+
+        term.struct = Tab.intType;
+    }
+
+    public void visit(FactorTerm term) {
+        term.struct = term.getFactor().struct;
+    }
+
+    private char mulopToChar(Mulop mulop) {
+        if (mulop instanceof Multiple) return '*';
+        if (mulop instanceof Divide) return '/';
+        return '%';
+    }
+
+    public void visit(TermList terms) {
+        if (terms.getTerms().struct != Tab.intType || terms.getTerm().struct != Tab.intType) {
+            reportError("Operacija " + addopToChar(terms.getAddop()) + " se moze koristiti samo sa celobrojnim vrednostima", terms);
+            terms.struct = Tab.noType;
+            return;
+        }
+
+        terms.struct = Tab.intType;
+    }
+
+    public void visit(TermListElement terms) {
+        terms.struct = terms.getTerm().struct;
+    }
+
+    public void visit(SingleExpression expr) {
+        Struct struct = expr.getTerm().struct;
+
+        if (expr.getNegation() instanceof ExistingNegation && struct != Tab.intType) {
+            reportError("Mogu se negirati samo celobrojne vrednosti", expr);
+        }
+
+        expr.struct = struct;
+    }
+
+    public void visit(MultiExpression expr) {
+        if (expr.getTerm().struct != Tab.intType || expr.getTerms().struct != Tab.intType) {
+            reportError("Operacija " + addopToChar(expr.getAddop()) + " se moze koristiti samo sa celobrojnim vrednostima", expr);
+            expr.struct = Tab.noType;
+            return;
+        }
+
+        expr.struct = expr.getTerm().struct;
+    }
+
+    public void visit(SwitchExpr expr) {
+        // TODO implement switch yield
+        expr.struct = Tab.intType;
+    }
+
+    private char addopToChar(Addop addop) {
+        if (addop instanceof Plus) return '+';
+        return '-';
     }
 
     private Obj findInCurrentScope(String ident) {

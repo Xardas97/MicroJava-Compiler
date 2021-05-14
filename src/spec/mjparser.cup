@@ -203,7 +203,8 @@ ActParsMore ::= (ActParsMoreElement) COMMA Expr ActParsMore
 Type ::= (Type) IDENT:typeName
        ;
 
-Expr ::= (Expression) Negation Terms
+Expr ::= (SingleExpression) Negation Term
+       | (MultiExpression) Negation Term Addop Terms
        | (SwitchExpr) SWITCH LPAREN Expr RPAREN LBRACE Cases DEFAULT COLON Statements RBRACE
        ;
 
@@ -219,7 +220,7 @@ Terms ::= (TermList) Terms Addop Term
         | (TermListElement) Term
         ;
 
-Term ::= (FactorList) Term Mulop Factor
+Term ::= (FactorListTerm) Term Mulop Factor
        | (FactorTerm) Factor
        ;
 
