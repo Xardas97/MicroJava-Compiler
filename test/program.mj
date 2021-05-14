@@ -1,4 +1,11 @@
 program MJProgram
-    const int ac 'a', bc = 3, cc;
 {
+    void main() {
+        if ( x==>=3 ) return 0;
+        return 1;
+
+        do x++; while (x=3);
+
+        print (x);
+    }
 }
