@@ -90,7 +90,7 @@ VarNames ::= (VarNameList) VarNames COMMA VarName
 VarName ::= (SingularVarName) IDENT:varName
           | (ArrayVarName) IDENT:varName LBRACKET RBRACKET
           | (VarNameError) error:l
-                {: parser.report_error("Lose ime promenljive na liniji: " + lleft, null); :}
+                {: parser.report_error("Lose ime promenljive ili parametra na liniji: " + lleft, null); :}
           ;
 
 ConstDecl ::= (ConstDeclList) CONST Type:varType ConstAssigns SEMI
@@ -124,6 +124,8 @@ ReturnType ::= (NonVoidReturnType) Type
              ;
 
 FormPars ::= (FormParList) FormPar FormParMore
+           | (FormParsError) error:l
+                {: parser.report_error("Losa deklaracija formalnih parametara na liniji: " + lleft, null); :}
            | (NoFormPars) /* epsilon */
            ;
 

@@ -1,11 +1,6 @@
 program MJProgram
 {
-    void main() {
-        if ( x==>=3 ) return 0;
+    void main(int x[], int + c x[f], int b[]) {
         return 1;
-
-        do x++; while (x=3);
-
-        print (x);
     }
 }
