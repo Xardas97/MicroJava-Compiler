@@ -64,6 +64,7 @@ nonterminal ConstDeclList, ConstDeclMore, ConstDecl, ConstValue;
 nonterminal MethodDecls, MethodDecl, ReturnType, FormPars, FormPar, FormParMore, MethodVarDecls, Statements;
 nonterminal Statement, PrintArg, DesignatorStatement, Designator, ActPars, ActParsMore;
 nonterminal Expr, Negation, Terms, Term, Factor, Addop, Mulop;
+nonterminal Condition, CondTerm, CondFact, Relop;
 
 
 
@@ -141,6 +142,9 @@ Statement ::= (DesignatorStmt) DesignatorStatement SEMI
             | (ReadStmt) READ LPAREN Designator RPAREN SEMI
             | (ReturnStmt) RETURN Expr SEMI
             | (StatementBlock) LBRACE Statements RBRACE
+            | (WhileStmt) DO Statement WHILE LPAREN Condition RPAREN SEMI
+            | (BreakStmt) BREAK SEMI
+            | (ContinueStmt) CONTINUE SEMI
             ;
 
 PrintArg ::= (PrintWidth) COMMA NUMBER:width
@@ -199,3 +203,23 @@ Mulop ::= (Multiple) MULTIPLE
         | (Modulo) MODULO
         ;
 
+Condition ::= (ConditionList) Condition OR CondTerm
+            | (ConditionListElement) CondTerm
+            ;
+
+
+CondTerm ::= (CondTermList) CondFact AND CondFact
+           | (CondTermElement) CondFact
+           ;
+
+CondFact ::= (CondFactList) CondFact Relop Expr
+           | (CondFactElement) Expr
+           ;
+
+Relop ::= (Equal) EQ
+        | (NotEqual) NEQ
+        | (GreaterThan) GT
+        | (LesserThan) LT
+        | (GreaterEqual) GEQ
+        | (LesserEqual) LEQ
+        ;

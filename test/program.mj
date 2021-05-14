@@ -21,15 +21,22 @@ program MJProgram
     {
         print(1212);
 
+        do
         {
             x4[2] ++;
             x3--;
             method1(12, 'a');
             method1();
+
+            continue;
+
             method1(true, 'b', '4', false, 12131, 'c');
 
-            return true;
+            do return true; while (false);
+
+            break;
         }
+        while (a >= b && c > 5 || d != d || (a + b) == 2 && x2[1] < 3);
 
         read(x4[1]);
 
