@@ -13,6 +13,9 @@ public class SemanticAnalyzer extends VisitorAdaptor {
     private Struct boolType;
     private Logger log = Logger.getLogger(getClass());
 
+    private boolean returnFound = false;
+    private Obj currentMethod = null;
+
     public SemanticAnalyzer(Struct boolType) {
         this.boolType = boolType;
     }
@@ -52,33 +55,39 @@ public class SemanticAnalyzer extends VisitorAdaptor {
             returnType = ((NonVoidReturnType)methodTypeName.getReturnType()).getType().struct;
         }
 
-        methodTypeName.obj = Tab.insert(Obj.Meth, methodTypeName.getMethodName(), returnType);
+        currentMethod = Tab.insert(Obj.Meth, methodTypeName.getMethodName(), returnType);
         Tab.openScope();
 
         reportInfo("Obradjuje se funkcija: " + methodTypeName.getMethodName(), methodTypeName);
     }
 
+    public void visit(ReturnStmt returnStmt) {
+        returnFound = true;
+
+        // TODO Check if return type is appropriate
+    }
+
     public void visit(MethodDecl methodDecl) {
-        Tab.chainLocalSymbols(methodDecl.getMethodTypeName().obj);
+        if (!returnFound && currentMethod.getType() != Tab.noType) {
+            reportError("Funkciji " + methodDecl.getMethodTypeName().getMethodName() + " fali return iskaz", methodDecl);
+        }
+
+        Tab.chainLocalSymbols(currentMethod);
         Tab.closeScope();
+
+        returnFound = false;
+        currentMethod = null;
     }
 
     private void reportError(String message, SyntaxNode info) {
         errorDetected = true;
-
-        StringBuilder msg = new StringBuilder(message);
-        if (info != null) {
-            msg.append(" na liniji: ").append(info.getLine());
-        }
-
-        log.info(msg.toString());
+        reportInfo(message, info);
     }
 
     private void reportInfo(String message, SyntaxNode info) {
-        StringBuilder msg = new StringBuilder(message);
-        if (info != null) {
-            msg.append(" na liniji: ").append(info.getLine());
-        }
+        StringBuilder msg = new StringBuilder();
+        if (info != null) msg.append("Linija ").append(info.getLine()).append(": ");
+        msg.append(message);
 
         log.info(msg.toString());
     }

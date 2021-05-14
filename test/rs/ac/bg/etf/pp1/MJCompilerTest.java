@@ -55,9 +55,7 @@ public class MJCompilerTest {
             Tab.dump(new DumpSymbolTableVisitorWithBool());
 
             if (parser.errorDetected || semAnalyzer.errorDetected) {
-                if (symbol.value instanceof Program) {
-                    log.info(((Program)symbol.value).toString(""));
-                }
+                //log.info(((Program)symbol.value).toString(""));
 
                 log.error("Parsiranje NIJE uspesno zavrseno!");
                 return;
