@@ -59,8 +59,8 @@ terminal COLON, SEMI, COMMA, LPAREN, RPAREN, LBRACE, RBRACE, LBRACKET, RBRACKET;
 terminal NUMBER, CHARLIT, BOOLLIT, IDENT;
 
 nonterminal Program, VarConstDecls, Type;
-nonterminal VarConstDecl, VarDeclList, VarDeclMore, VarDecl;
-nonterminal ConstDeclList, ConstDeclMore, ConstDecl, ConstValue;
+nonterminal VarConstDecl, VarDecl, VarNames, VarName;
+nonterminal ConstDecl, ConstAssigns, ConstAssign, ConstValue;
 nonterminal MethodDecls, MethodDecl, ReturnType, FormPars, FormPar, FormParMore, MethodVarDecls, Statements;
 nonterminal Statement, Matched, Unmatched, PrintArg, DesignatorStatement, Designator, ActPars, ActParsMore;
 nonterminal Expr, Negation, Terms, Term, Factor, Addop, Mulop;
@@ -74,30 +74,38 @@ VarConstDecls ::= (VarConstDeclList) VarConstDecls VarConstDecl
                 | (EmptyVarConstDeclList) /* epsilon */
                 ;
 
-VarConstDecl ::= (VarConstDeclVar) VarDeclList
-               | (VarConstDeclConst) ConstDeclList
+VarConstDecl ::= (VarConstDeclVar) VarDecl
+               | (VarConstDeclConst) ConstDecl
                ;
 
-VarDeclList ::= (VarDeclList) Type:varType VarDecl VarDeclMore SEMI
-              ;
-
-VarDeclMore ::= (VarDeclMoreElement) COMMA VarDecl VarDeclMore
-              | (EmptyVarDeclMore) /* epsilon */
-              ;
-
-VarDecl ::= (SingularVarDecl) IDENT:varName
-          | (ArrayVarDecl) IDENT:varName LBRACKET RBRACKET
+VarDecl ::= (VarDeclList) Type:varType VarNames SEMI
+          | (VarDeclListError) error SEMI:l
+                {: parser.report_error("Losa deklaracija promenljivih na liniji: " + lleft, null); :}
           ;
 
-ConstDeclList ::= (ConstDeclList) CONST Type:varType ConstDecl ConstDeclMore SEMI
-                ;
+VarNames ::= (VarNameList) VarNames COMMA VarName
+           | (VarNameElement) VarName
+           ;
 
-ConstDeclMore ::= (ConstDeclMoreElement) COMMA ConstDecl ConstDeclMore
-                | (EmptyConstDeclMore) /* epsilon */
-                ;
+VarName ::= (SingularVarName) IDENT:varName
+          | (ArrayVarName) IDENT:varName LBRACKET RBRACKET
+          | (VarNameError) error:l
+                {: parser.report_error("Lose ime promenljive na liniji: " + lleft, null); :}
+          ;
 
-ConstDecl ::= (ConstDecl) IDENT:constName ASSIGN ConstValue:constValue
+ConstDecl ::= (ConstDeclList) CONST Type:varType ConstAssigns SEMI
+            | (ConstDeclListError) CONST error SEMI:l
+                {: parser.report_error("Losa deklaracija konstanti na liniji: " + lleft, null); :}
             ;
+
+ConstAssigns ::= (ConstAssignList) ConstAssigns COMMA ConstAssign
+               | (ConstAssignElement) ConstAssign
+               ;
+
+ConstAssign ::= (ConstAssignment) IDENT:constName ASSIGN ConstValue:constValue
+              | (ConstAssignError) error:l
+                    {: parser.report_error("Losa deklaracija konstante na liniji: " + lleft, null); :}
+              ;
 
 ConstValue ::= (NumConst) NUMBER
              | (CharConst) CHARLIT
@@ -119,14 +127,14 @@ FormPars ::= (FormParList) FormPar FormParMore
            | (NoFormPars) /* epsilon */
            ;
 
-FormPar ::= (FormPar) Type:parType VarDecl
+FormPar ::= (FormPar) Type:parType VarName
           ;
 
 FormParMore ::= (FormParMoreElement) COMMA FormPar FormParMore
               | (EmptyFormParMore) /* epsilon */
               ;
 
-MethodVarDecls ::= (MethodVarDeclList) MethodVarDecls VarDeclList
+MethodVarDecls ::= (MethodVarDeclList) MethodVarDecls VarDecl
                  | (EmptyMethodVarDeclList) /* epsilon */
                  ;
 

@@ -35,12 +35,17 @@ public class MJCompilerTest {
             Symbol symbol = parser.parse();
 
             if (parser.errorDetected) {
+                if (symbol.value instanceof Program) {
+                    log.info(((Program)symbol.value).toString(""));
+                }
+
                 log.error("Parsiranje NIJE uspesno zavrseno!");
+
                 return;
             }
 
             Program program = (Program) symbol.value;
-            log.info(program.toString(""));
+            //log.info(program.toString(""));
 
             log.info("Parsiranje gotovo!");
         }
