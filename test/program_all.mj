@@ -2,10 +2,10 @@ program MJProgram
     int x;
     int y;
     int a[], b, c[];
-    const int ac = 'a', bc = 2483, cc = false;
-    const int d = 1242;
+    const int ac = 445, bc = 2483, cc = 3;
+    const bool bcc = false;
 {
-    void method1() int x; {
+    bool method1() int x; {
         x = - 'a' + 1 % x + false / true * false - x * 121;
         x = 3 * m2() * (3 + 8 + new int[4 - 3 ]);
         x = true + x[2];

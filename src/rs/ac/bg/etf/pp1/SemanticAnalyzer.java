@@ -5,6 +5,7 @@ import org.apache.log4j.Logger;
 import rs.ac.bg.etf.pp1.ast.*;
 import rs.etf.pp1.symboltable.*;
 import rs.etf.pp1.symboltable.concepts.*;
+import rs.etf.pp1.symboltable.structure.SymbolDataStructure;
 
 public class SemanticAnalyzer extends VisitorAdaptor {
     boolean errorDetected = false;
@@ -15,6 +16,7 @@ public class SemanticAnalyzer extends VisitorAdaptor {
 
     private boolean returnFound = false;
     private Obj currentMethod = null;
+    private Struct currentType = Tab.noType;
 
     public SemanticAnalyzer(Struct boolType) {
         this.boolType = boolType;
@@ -36,17 +38,17 @@ public class SemanticAnalyzer extends VisitorAdaptor {
 
         if (typeObj == Tab.noObj) {
             reportError("Nepostojeci tip: " + type.getTypeName(), type);
-            type.struct = Tab.noType;
+            currentType = type.struct = Tab.noType;
             return;
         }
 
         if (typeObj.getKind() != Obj.Type) {
             reportError("Identifikator nije tip: " + type.getTypeName(), type);
-            type.struct = Tab.noType;
+            currentType = type.struct = Tab.noType;
             return;
         }
 
-        type.struct = typeObj.getType();
+        currentType = type.struct = typeObj.getType();
     }
 
     public void visit(MethodTypeName methodTypeName) {
@@ -77,6 +79,65 @@ public class SemanticAnalyzer extends VisitorAdaptor {
 
         returnFound = false;
         currentMethod = null;
+    }
+
+    public void visit(SingularVarName varName) {
+        insertVar(varName, varName.getVarName(), currentType);
+    }
+
+    public void visit(ArrayVarName varName) {
+        insertVar(varName, varName.getVarName(), new Struct(Struct.Array, currentType));
+    }
+
+    private void insertVar(VarName varName, String ident, Struct type) {
+        Obj obj = findInCurrentScope(ident);
+
+        if (obj != Tab.noObj) {
+            reportError("Promemljiva " + ident + " je vec deklarisana", varName);
+            return;
+        }
+
+        Tab.insert(Obj.Var, ident, type);
+    }
+
+    public void visit(NumConst constValue) {
+        constValue.struct = Tab.intType;
+    }
+
+    public void visit(CharConst constValue) {
+        constValue.struct = Tab.charType;
+    }
+
+    public void visit(BoolConst constValue) {
+        constValue.struct = boolType;
+    }
+
+    public void visit(ConstAssignment constAssign) {
+        boolean error = false;
+        String ident = constAssign.getConstName();
+
+        Struct constType = constAssign.getConstValue().struct;
+        if (constType != currentType) {
+            reportError("Konstanti " + ident + " je dodeljen izraz pogresnog tipa", constAssign);
+            error = true;
+        }
+
+        Obj obj = findInCurrentScope(ident);
+        if (obj != Tab.noObj) {
+            reportError("Konstanta " + ident + " je vec deklarisana", constAssign);
+            error = true;
+        }
+
+        if (error) return;
+        Tab.insert(Obj.Con, ident, constType);
+    }
+
+    private Obj findInCurrentScope(String ident) {
+        SymbolDataStructure locals = Tab.currentScope.getLocals();
+        if (locals == null) return Tab.noObj;
+
+        Obj result = locals.searchKey(ident);
+        return result != null? result: Tab.noObj;
     }
 
     private void reportError(String message, SyntaxNode info) {
