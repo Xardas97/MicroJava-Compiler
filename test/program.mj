@@ -12,6 +12,16 @@ program MJProgram
 
         { print(1212, 1); }
 
+`       if (x < 3 || x > 6) {
+            x++;
+            if (x < 2) x++;
+            if (x < 0) x++; else x--;
+        }
+        else {
+            x--;
+            x--;
+        }
+
         return 1;
     }
 
@@ -28,13 +38,16 @@ program MJProgram
             method1(12, 'a');
             method1();
 
-            continue;
+            if (x2 > 2)
+                continue;
+            else {
+                x2++;
+                break;
+            }
 
             method1(true, 'b', '4', false, 12131, 'c');
 
             do return true; while (false);
-
-            break;
         }
         while (a >= b && c > 5 || d != d || (a + b) == 2 && x2[1] < 3);
 

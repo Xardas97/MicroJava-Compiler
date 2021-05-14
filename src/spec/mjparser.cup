@@ -51,7 +51,7 @@ scan with {:
 
 terminal PROG, NEW, CONST;
 terminal READ, PRINT, RETURN, VOID;
-terminal DO, WHILE, BREAK, CONTINUE;
+terminal DO, WHILE, BREAK, CONTINUE, IF, ELSE;
 terminal SWITCH, CASE, YIELD, DEFAULT;
 terminal ASSIGN, PLUS, MINUS, MULTIPLE, DIVIDE, MODULO, INCREMENT, DECREMENT;
 terminal AND, OR, EQ, NEQ, GT, LT, GEQ, LEQ;
@@ -62,7 +62,7 @@ nonterminal Program, VarConstDecls, Type;
 nonterminal VarConstDecl, VarDeclList, VarDeclMore, VarDecl;
 nonterminal ConstDeclList, ConstDeclMore, ConstDecl, ConstValue;
 nonterminal MethodDecls, MethodDecl, ReturnType, FormPars, FormPar, FormParMore, MethodVarDecls, Statements;
-nonterminal Statement, PrintArg, DesignatorStatement, Designator, ActPars, ActParsMore;
+nonterminal Statement, Matched, Unmatched, PrintArg, DesignatorStatement, Designator, ActPars, ActParsMore;
 nonterminal Expr, Negation, Terms, Term, Factor, Addop, Mulop;
 nonterminal Condition, CondTerm, CondFact, Relop;
 
@@ -137,14 +137,23 @@ Statements ::= (StatementList) Statements Statement
              | (EmptyStatementList) /* epsilon */
              ;
 
-Statement ::= (DesignatorStmt) DesignatorStatement SEMI
-            | (PrintStmt) PRINT LPAREN Expr PrintArg RPAREN SEMI
-            | (ReadStmt) READ LPAREN Designator RPAREN SEMI
-            | (ReturnStmt) RETURN Expr SEMI
-            | (StatementBlock) LBRACE Statements RBRACE
-            | (WhileStmt) DO Statement WHILE LPAREN Condition RPAREN SEMI
-            | (BreakStmt) BREAK SEMI
-            | (ContinueStmt) CONTINUE SEMI
+Statement ::= (MatchedStmt) Matched
+            | (UnmatchedStmt) Unmatched
+            ;
+
+Matched ::= (DesignatorStmt) DesignatorStatement SEMI
+          | (PrintStmt) PRINT LPAREN Expr PrintArg RPAREN SEMI
+          | (ReadStmt) READ LPAREN Designator RPAREN SEMI
+          | (ReturnStmt) RETURN Expr SEMI
+          | (StatementBlock) LBRACE Statements RBRACE
+          | (WhileStmt) DO Statement WHILE LPAREN Condition RPAREN SEMI
+          | (BreakStmt) BREAK SEMI
+          | (ContinueStmt) CONTINUE SEMI
+          | (MatchedIfElseStmt) IF LPAREN Condition RPAREN Matched ELSE Matched
+          ;
+
+Unmatched ::= (UnmatchedIfStmt) IF LPAREN Condition RPAREN Statement
+            | (UnmatchedIfElseStmt) IF LPAREN Condition RPAREN Matched ELSE Unmatched
             ;
 
 PrintArg ::= (PrintWidth) COMMA NUMBER:width
