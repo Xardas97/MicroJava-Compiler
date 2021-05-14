@@ -70,7 +70,7 @@ nonterminal Condition, CondTerm, CondFact, Relop;
 nonterminal Cases;
 
 nonterminal rs.etf.pp1.symboltable.concepts.Obj ProgName;
-nonterminal rs.etf.pp1.symboltable.concepts.Struct Type, Expr, Terms, Term, Factor, Designator, ConstValue;
+nonterminal rs.etf.pp1.symboltable.concepts.Struct Type, Expr, Terms, Term, Factor, Designator, ConstValue, MethodCall;
 
 Program ::= (Program) PROG ProgName:progName VarConstDecls LBRACE MethodDecls RBRACE
           ;
@@ -182,8 +182,11 @@ PrintArg ::= (PrintWidth) COMMA NUMBER:width
 DesignatorStatement ::= (AssignmentStmt) Designator ASSIGN Expr
                       | (IncrementStmt) Designator INCREMENT
                       | (DecrementStmt) Designator DECREMENT
-                      | (MethodCall) Designator LPAREN ActPars RPAREN
+                      | (MethodCallStmt) MethodCall
                       ;
+
+MethodCall ::= (MethodCall) Designator LPAREN ActPars RPAREN
+             ;
 
 Designator ::= (SingularDesignator) IDENT:name
              | (ArrayDesignator) IDENT:name LBRACKET Expr:index RBRACKET
@@ -224,7 +227,7 @@ Factor ::= (DesignatorFctr) Designator
          | (ConstValueFctr) ConstValue
          | (ExprFctr) LPAREN Expr RPAREN
          | (ArrayInitFctr) NEW Type LBRACKET Expr RBRACKET
-         | (MethodCallFctr) Designator LPAREN ActPars RPAREN
+         | (MethodCallFctr) MethodCall
          ;
 
 Addop ::= (Plus) PLUS
