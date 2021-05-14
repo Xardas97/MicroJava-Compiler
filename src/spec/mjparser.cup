@@ -225,6 +225,8 @@ Mulop ::= (Multiple) MULTIPLE
 
 Condition ::= (ConditionList) Condition OR CondTerm
             | (ConditionListElement) CondTerm
+            | (ConditionError) error:l
+                {: parser.report_error("Los logicki izraz na liniji: " + lleft, null); :}
             ;
 
 
