@@ -65,7 +65,7 @@ nonterminal Program, VarConstDecls;
 nonterminal VarConstDecl, VarDecl, VarNames, VarName;
 nonterminal ConstDecl, ConstAssigns, ConstAssign;
 nonterminal MethodDecls, MethodDecl, MethodTypeName, ReturnType, FormPars, FormPar, FormParMore, MethodVarDecls, Statements;
-nonterminal Statement, Matched, Unmatched, PrintArg, WhileStart, DesignatorStatement, ActPars, ActParsMore;
+nonterminal Statement, Matched, Unmatched, PrintArg, WhileStart, Semi, DesignatorStatement, ActPars, ActParsMore;
 nonterminal Negation, Addop, Mulop;
 nonterminal Condition, CondTerm, Relop;
 nonterminal SwitchStart, Cases, Case;
@@ -162,14 +162,21 @@ Matched ::= (DesignatorStmt) DesignatorStatement SEMI
           | (PrintStmt) PRINT LPAREN Expr PrintArg RPAREN SEMI
           | (ReadStmt) READ LPAREN Designator RPAREN SEMI
           | (ReturnStmt) RETURN Expr SEMI
-          | (EmptyReturnStmt) RETURN SEMI
+          | (EmptyReturnStmt) RETURN Semi
           | (StatementBlock) LBRACE Statements RBRACE
           | (WhileStmt) WhileStart Statement WHILE LPAREN Condition RPAREN SEMI
-          | (BreakStmt) BREAK SEMI
-          | (ContinueStmt) CONTINUE SEMI
+          | (BreakStmt) BREAK Semi
+          | (ContinueStmt) CONTINUE Semi
           | (MatchedIfElseStmt) IF LPAREN Condition RPAREN Matched ELSE Matched
           | (YieldStmt) YIELD Expr SEMI
           ;
+
+/* HACK:
+   For some reason the parser
+   doesn't set the line if there
+   are no nonterminals */
+Semi ::= (Semi) SEMI
+      ;
 
 WhileStart ::= (WhileStart) DO
              ;
