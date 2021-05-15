@@ -64,10 +64,21 @@ public class SemanticAnalyzer extends VisitorAdaptor {
     }
 
     public void visit(ReturnStmt returnStmt) {
-        returnFound = true;
+        if (currentMethod.getType() == Tab.noType) {
+            reportError("Funkcija tipa void ne sme imati povratnu vrednost", returnStmt);
+            return;
+        }
 
+        returnFound = true;
         if (returnStmt.getExpr().struct != currentMethod.getType()) {
             reportError("Povratna vrednost je pogrešnog tipa", returnStmt);
+        }
+    }
+
+    public void visit(EmptyReturnStmt returnStmt) {
+        if (currentMethod.getType() != Tab.noType) {
+            reportError("Return izraz ove funkcije mora imati povratnu vrednost", returnStmt);
+            return;
         }
     }
 

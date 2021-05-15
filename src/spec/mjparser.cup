@@ -161,6 +161,7 @@ Matched ::= (DesignatorStmt) DesignatorStatement SEMI
           | (PrintStmt) PRINT LPAREN Expr PrintArg RPAREN SEMI
           | (ReadStmt) READ LPAREN Designator RPAREN SEMI
           | (ReturnStmt) RETURN Expr SEMI
+          | (EmptyReturnStmt) RETURN SEMI
           | (StatementBlock) LBRACE Statements RBRACE
           | (WhileStmt) DO Statement WHILE LPAREN Condition RPAREN SEMI
           | (BreakStmt) BREAK SEMI
