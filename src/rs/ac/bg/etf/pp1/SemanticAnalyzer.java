@@ -341,9 +341,13 @@ public class SemanticAnalyzer extends VisitorAdaptor {
     }
 
     public void visit(SingleExpression expr) {
+        expr.struct = expr.getTerm().struct;
+    }
+
+    public void visit(SingleExpressionWithNegation expr) {
         Struct struct = expr.getTerm().struct;
 
-        if (expr.getNegation() instanceof ExistingNegation && struct != Tab.intType) {
+        if (struct != Tab.intType) {
             reportError("Mogu se negirati samo celobrojne vrednosti", expr);
         }
 
@@ -351,16 +355,19 @@ public class SemanticAnalyzer extends VisitorAdaptor {
     }
 
     public void visit(MultiExpression expr) {
-        Struct operand1 = expr.getTerm().struct;
-        Struct operand2 = expr.getTerms().struct;
+        calculateMultiExpressionType(expr.getTerm().struct, expr.getTerms().struct, expr.getAddop(), expr);
+    }
 
+    public void visit(MultiExpressionWithNegation expr) {
+        calculateMultiExpressionType(expr.getTerm().struct, expr.getTerms().struct, expr.getAddop(), expr);
+    }
+
+    private void calculateMultiExpressionType(Struct operand1, Struct operand2, Addop addop, Expr expr) {
         if (operand1 != Tab.intType || operand2 != Tab.intType) {
-            reportError("Operacija " + addopToChar(expr.getAddop()) + " se moze koristiti samo sa celobrojnim vrednostima", expr);
-            expr.struct = operand1;
-            return;
+            reportError("Operacija " + addopToChar(addop) + " se moze koristiti samo sa celobrojnim vrednostima", expr);
         }
 
-        expr.struct = expr.getTerm().struct;
+        expr.struct = operand1;
     }
 
     private char addopToChar(Addop addop) {
@@ -447,15 +454,15 @@ public class SemanticAnalyzer extends VisitorAdaptor {
 
     public void visit(IncrementStmt incrementStmt) {
         Obj var = incrementStmt.getDesignator().obj;
-        testIncrementPrDecrementStmt(var, incrementStmt);
+        testIncrementOrDecrementStmt(var, incrementStmt);
     }
 
     public void visit(DecrementStmt decrementStmt) {
         Obj var = decrementStmt.getDesignator().obj;
-        testIncrementPrDecrementStmt(var, decrementStmt);
+        testIncrementOrDecrementStmt(var, decrementStmt);
     }
 
-    private void testIncrementPrDecrementStmt(Obj var, DesignatorStatement stmt) {
+    private void testIncrementOrDecrementStmt(Obj var, DesignatorStatement stmt) {
         if (var.getKind() != Obj.Var && var.getKind() != Obj.Elem) {
             reportError("Samo promenljive se mogu inkrementirati ili dekrementirati", stmt);
             return;
