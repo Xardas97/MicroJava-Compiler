@@ -416,6 +416,62 @@ public class SemanticAnalyzer extends VisitorAdaptor {
         return struct.compatibleWith(Tab.intType) || struct.compatibleWith(Tab.charType);
     }
 
+    public void visit(PrintStmt printStmt) {
+        if (printStmt.getExpr().struct.getKind() == Struct.Array) {
+            reportError("Ne moze se raditi ispisivanje niza", printStmt);
+        }
+    }
+
+    public void visit(ReadStmt readStmt) {
+        Obj var = readStmt.getDesignator().obj;
+
+        if (var.getKind() != Obj.Var && var.getKind() != Obj.Elem) {
+            reportError("Vrednost se moze ucitavati samo u promenljivu ili element niza", readStmt);
+        }
+
+        if (var.getType().getKind() == Struct.Array) {
+            reportError("Vrednost se ne moze ucitavati u niz", readStmt);
+        }
+    }
+
+    public void visit(AssignmentStmt assignmentStmt) {
+        Obj var = assignmentStmt.getDesignator().obj;
+
+        if (var.getKind() != Obj.Var && var.getKind() != Obj.Elem) {
+            reportError("Vrednost se moze dodeljivati samo promenljivivama i nizovima", assignmentStmt);
+        }
+
+        if (areNotCompatible(var.getType(), assignmentStmt.getExpr().struct)) {
+            reportError("Dodela vrednosti nije moguca, tipovi nisu kompatibilni", assignmentStmt);
+        }
+    }
+
+    public void visit(IncrementStmt incrementStmt) {
+        Obj var = incrementStmt.getDesignator().obj;
+        testIncrementPrDecrementStmt(var, incrementStmt);
+    }
+
+    public void visit(DecrementStmt decrementStmt) {
+        Obj var = decrementStmt.getDesignator().obj;
+        testIncrementPrDecrementStmt(var, decrementStmt);
+    }
+
+    private void testIncrementPrDecrementStmt(Obj var, DesignatorStatement stmt) {
+        if (var.getKind() != Obj.Var && var.getKind() != Obj.Elem) {
+            reportError("Samo promenljive se mogu inkrementirati ili dekrementirati", stmt);
+            return;
+        }
+
+        if (var.getType().getKind() == Struct.Array) {
+            reportError("Nizovi se ne mogu inkrementirati ili dekrementirati", stmt);
+            return;
+        }
+
+        if (var.getType() != Tab.intType) {
+            reportError("Samo celobrojne vrednosti se mogu inkrementirati ili dekrementirati", stmt);
+        }
+    }
+
     private Obj findInCurrentScope(String ident) {
         SymbolDataStructure locals = Tab.currentScope.getLocals();
         if (locals == null) return Tab.noObj;
