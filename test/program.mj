@@ -27,6 +27,9 @@ program MJProgram
             yield -x + 3;
           }
           default: {
+            do {
+                break;
+            } while (true);
             print(x, 2);
             yield 3;
           }
