@@ -69,8 +69,8 @@ nonterminal Negation, Addop, Mulop;
 nonterminal Condition, CondTerm, CondFact, Relop;
 nonterminal Cases;
 
-nonterminal rs.etf.pp1.symboltable.concepts.Obj ProgName;
-nonterminal rs.etf.pp1.symboltable.concepts.Struct Type, Expr, Terms, Term, Factor, Designator, ConstValue, MethodCall;
+nonterminal rs.etf.pp1.symboltable.concepts.Obj ProgName, Designator;
+nonterminal rs.etf.pp1.symboltable.concepts.Struct Type, Expr, Terms, Term, Factor, ConstValue, MethodCall;
 
 Program ::= (Program) PROG ProgName:progName VarConstDecls LBRACE MethodDecls RBRACE
           ;
