@@ -80,6 +80,10 @@ public class SemanticAnalyzer extends VisitorAdaptor {
     }
 
     public void visit(ReturnStmt returnStmt) {
+        if (surroundingBlockTypeStack.size() > 0 && surroundingBlockTypeStack.peek() == BlockType.SWITCH) {
+            reportError("Return se ne moze koristiti u switch blokovima", returnStmt);
+        }
+
         if (currentMethod.getType() == Tab.noType) {
             reportError("Funkcija tipa void ne sme imati povratnu vrednost", returnStmt);
             return;
@@ -92,6 +96,10 @@ public class SemanticAnalyzer extends VisitorAdaptor {
     }
 
     public void visit(EmptyReturnStmt returnStmt) {
+        if (surroundingBlockTypeStack.size() > 0 && surroundingBlockTypeStack.peek() == BlockType.SWITCH) {
+            reportError("Return se ne moze koristiti u switch blokovima", returnStmt);
+        }
+
         if (currentMethod.getType() != Tab.noType) {
             reportError("Return izraz ove funkcije mora imati povratnu vrednost", returnStmt);
             return;
