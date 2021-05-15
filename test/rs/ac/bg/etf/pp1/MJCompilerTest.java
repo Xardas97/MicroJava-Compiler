@@ -14,7 +14,9 @@ import rs.ac.bg.etf.pp1.ast.Program;
 import rs.ac.bg.etf.pp1.util.Log4JUtils;
 import rs.etf.pp1.symboltable.Tab;
 import rs.etf.pp1.symboltable.concepts.Obj;
+import rs.etf.pp1.symboltable.concepts.Scope;
 import rs.etf.pp1.symboltable.concepts.Struct;
+import rs.etf.pp1.symboltable.visitors.SymbolTableVisitor;
 
 public class MJCompilerTest {
     private static Logger log;
@@ -52,7 +54,7 @@ public class MJCompilerTest {
             SemanticAnalyzer semAnalyzer = new SemanticAnalyzer(boolType);
             program.traverseBottomUp(semAnalyzer);
 
-            Tab.dump(new DumpSymbolTableVisitorWithBool());
+            dumpTable();
 
             if (parser.errorDetected || semAnalyzer.errorDetected) {
                 //log.info(((Program)symbol.value).toString(""));
@@ -76,5 +78,13 @@ public class MJCompilerTest {
                 }
             }
         }
+    }
+
+    private static void dumpTable() {
+        SymbolTableVisitor stv = new DumpSymbolTableVisitorWithBool();
+        for (Scope s = Tab.currentScope; s != null; s = s.getOuter()) {
+            s.accept(stv);
+        }
+        log.info("\n" + stv.getOutput());
     }
 }
