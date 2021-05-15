@@ -19,9 +19,13 @@ public class SemanticAnalyzer extends VisitorAdaptor {
     private Struct boolType;
     private Logger log = Logger.getLogger(getClass());
 
-    private boolean returnFound = false;
     private Obj currentMethod = null;
+    private boolean returnFound = false;
+
     private Struct currentType = Tab.noType;
+
+    private Struct currentSwitchType = null;
+    private boolean yieldFound = false;
 
     private enum BlockType { WHILE, SWITCH };
     private Stack<BlockType> surroundingBlockTypeStack = new Stack<>();
@@ -96,7 +100,7 @@ public class SemanticAnalyzer extends VisitorAdaptor {
 
     public void visit(MethodDecl methodDecl) {
         if (!returnFound && currentMethod.getType() != Tab.noType) {
-            reportError("Funkciji " + methodDecl.getMethodTypeName().getMethodName() + " fali return iskaz", methodDecl);
+            reportError("Funkciji " + methodDecl.getMethodTypeName().getMethodName() + " fali return naredba", methodDecl);
         }
 
         Tab.chainLocalSymbols(currentMethod);
@@ -490,11 +494,43 @@ public class SemanticAnalyzer extends VisitorAdaptor {
         surroundingBlockTypeStack.push(BlockType.SWITCH);
     }
 
+    public void visit(Case case_) {
+        if (!yieldFound) {
+            reportError("Case bloku fali yield naredba", case_);
+        }
+
+        yieldFound = false;
+    }
+
     public void visit(SwitchExpr expr) {
         surroundingBlockTypeStack.pop();
 
-        // TODO implement switch yield
-        expr.struct = Tab.intType;
+        if (!yieldFound) {
+            reportError("Default bloku fali yield naredba", expr);
+        }
+
+        yieldFound = false;
+
+        expr.struct = currentSwitchType;
+        currentSwitchType = null;
+    }
+
+    public void visit(YieldStmt yieldStmt) {
+        if (surroundingBlockTypeStack.isEmpty() || surroundingBlockTypeStack.peek() != BlockType.SWITCH) {
+            reportError("Yield se moze koristiti samo u switch blokovima", yieldStmt);
+        }
+
+        yieldFound = true;
+
+        Struct type = yieldStmt.getExpr().struct;
+        if (currentSwitchType == null) {
+            currentSwitchType = type;
+            return;
+        }
+
+        if (areNotCompatible(type, currentSwitchType)) {
+            reportError("Svi blokovi switch-a moraju da vracaju isti tip rezultata", yieldStmt);
+        }
     }
 
     public void visit(BreakStmt breakStmt) {
