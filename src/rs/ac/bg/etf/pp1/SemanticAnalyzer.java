@@ -359,14 +359,61 @@ public class SemanticAnalyzer extends VisitorAdaptor {
         expr.struct = expr.getTerm().struct;
     }
 
+    private char addopToChar(Addop addop) {
+        if (addop instanceof Plus) return '+';
+        return '-';
+    }
+
     public void visit(SwitchExpr expr) {
         // TODO implement switch yield
         expr.struct = Tab.intType;
     }
 
-    private char addopToChar(Addop addop) {
-        if (addop instanceof Plus) return '+';
-        return '-';
+    public void visit(CondFactList condFact) {
+        Struct s1 = condFact.getCondFact().struct;
+        Struct s2 = condFact.getExpr().struct;
+
+        if (areNotCompatible(s1, s2)) {
+            reportError("Relacione operacije se ne mogu koristiti sa nekompatibilnim tipovima", condFact);
+        }
+
+        if (!typeSupportsRelop(s1, condFact.getRelop())) {
+            reportError("Operacija " + relopToString(condFact.getRelop()) + " se ne moze koristiti sa ovim tipovima", condFact);
+        }
+
+        condFact.struct = boolType;
+    }
+
+    public void visit(CondFactElement condFact) {
+        condFact.struct = condFact.getExpr().struct;
+    }
+
+    public void visit(CondTermList condTerm) {
+        if (condTerm.getCondFact().struct != boolType) {
+            reportError("Operacije AND i OR i uslovi se koriste samo sa bool vrednostima", condTerm);
+        }
+    }
+
+    public void visit(CondTermElement condTerm) {
+        if (condTerm.getCondFact().struct != boolType) {
+            reportError("Operacije AND i OR i uslovi se koriste samo sa bool vrednostima", condTerm);
+        }
+    }
+
+    private String relopToString(Relop relop) {
+        if (relop instanceof NotEqual) return "!=";
+        if (relop instanceof GreaterThan) return ">";
+        if (relop instanceof LesserThan) return "<";
+        if (relop instanceof GreaterEqual) return ">=";
+        if (relop instanceof LesserEqual) return "<=";
+        return "==";
+    }
+
+    private boolean typeSupportsRelop(Struct struct, Relop relop) {
+        if (relop instanceof Equal || relop instanceof NotEqual)
+            return true;
+
+        return struct.compatibleWith(Tab.intType) || struct.compatibleWith(Tab.charType);
     }
 
     private Obj findInCurrentScope(String ident) {
