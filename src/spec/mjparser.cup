@@ -65,10 +65,10 @@ nonterminal Program, VarConstDecls;
 nonterminal VarConstDecl, VarDecl, VarNames, VarName;
 nonterminal ConstDecl, ConstAssigns, ConstAssign;
 nonterminal MethodDecls, MethodDecl, MethodTypeName, ReturnType, FormPars, FormPar, FormParMore, MethodVarDecls, Statements;
-nonterminal Statement, Matched, Unmatched, PrintArg, DesignatorStatement, ActPars, ActParsMore;
+nonterminal Statement, Matched, Unmatched, PrintArg, WhileStart, DesignatorStatement, ActPars, ActParsMore;
 nonterminal Negation, Addop, Mulop;
 nonterminal Condition, CondTerm, Relop;
-nonterminal Cases;
+nonterminal SwitchStart, Cases;
 
 nonterminal rs.etf.pp1.symboltable.concepts.Obj ProgName, Designator;
 nonterminal rs.etf.pp1.symboltable.concepts.Struct Type, Expr, Terms, Term, Factor, MethodCall;
@@ -164,12 +164,15 @@ Matched ::= (DesignatorStmt) DesignatorStatement SEMI
           | (ReturnStmt) RETURN Expr SEMI
           | (EmptyReturnStmt) RETURN SEMI
           | (StatementBlock) LBRACE Statements RBRACE
-          | (WhileStmt) DO Statement WHILE LPAREN Condition RPAREN SEMI
+          | (WhileStmt) WhileStart Statement WHILE LPAREN Condition RPAREN SEMI
           | (BreakStmt) BREAK SEMI
           | (ContinueStmt) CONTINUE SEMI
           | (MatchedIfElseStmt) IF LPAREN Condition RPAREN Matched ELSE Matched
           | (YieldStmt) YIELD Expr SEMI
           ;
+
+WhileStart ::= (WhileStart) DO
+             ;
 
 Unmatched ::= (UnmatchedIfStmt) IF LPAREN Condition RPAREN Statement
             | (UnmatchedIfElseStmt) IF LPAREN Condition RPAREN Matched ELSE Unmatched
@@ -205,8 +208,11 @@ Type ::= (Type) IDENT:typeName
 
 Expr ::= (SingleExpression) Negation Term
        | (MultiExpression) Negation Term Addop Terms
-       | (SwitchExpr) SWITCH LPAREN Expr RPAREN LBRACE Cases DEFAULT COLON Statements RBRACE
+       | (SwitchExpr) SwitchStart LPAREN Expr RPAREN LBRACE Cases DEFAULT COLON Statements RBRACE
        ;
+
+SwitchStart ::= (SwitchStart) SWITCH
+              ;
 
 Cases ::= (CaseList) Cases CASE NUMBER COLON Statements
         | (EmptyCaseListElement) /* epsilon */

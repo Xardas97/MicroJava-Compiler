@@ -3,6 +3,7 @@ package rs.ac.bg.etf.pp1;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Stack;
 
 import org.apache.log4j.Logger;
 
@@ -21,6 +22,9 @@ public class SemanticAnalyzer extends VisitorAdaptor {
     private boolean returnFound = false;
     private Obj currentMethod = null;
     private Struct currentType = Tab.noType;
+
+    private enum BlockType { WHILE, SWITCH };
+    private Stack<BlockType> surroundingBlockTypeStack = new Stack<>();
 
     public SemanticAnalyzer(Struct boolType) {
         this.boolType = boolType;
@@ -364,11 +368,6 @@ public class SemanticAnalyzer extends VisitorAdaptor {
         return '-';
     }
 
-    public void visit(SwitchExpr expr) {
-        // TODO implement switch yield
-        expr.struct = Tab.intType;
-    }
-
     public void visit(CondFactList condFact) {
         Struct s1 = condFact.getCondFact().struct;
         Struct s2 = condFact.getExpr().struct;
@@ -469,6 +468,37 @@ public class SemanticAnalyzer extends VisitorAdaptor {
 
         if (var.getType() != Tab.intType) {
             reportError("Samo celobrojne vrednosti se mogu inkrementirati ili dekrementirati", stmt);
+        }
+    }
+
+    public void visit(WhileStart whileStart) {
+        surroundingBlockTypeStack.push(BlockType.WHILE);
+    }
+
+    public void visit(WhileStmt whileStmt) {
+        surroundingBlockTypeStack.pop();
+    }
+
+    public void visit(SwitchStart switchStart) {
+        surroundingBlockTypeStack.push(BlockType.SWITCH);
+    }
+
+    public void visit(SwitchExpr expr) {
+        surroundingBlockTypeStack.pop();
+
+        // TODO implement switch yield
+        expr.struct = Tab.intType;
+    }
+
+    public void visit(BreakStmt breakStmt) {
+        if (surroundingBlockTypeStack.isEmpty() || surroundingBlockTypeStack.peek() != BlockType.WHILE) {
+            reportError("Break se moze koristiti samo u do-while blokovima", breakStmt);
+        }
+    }
+
+    public void visit(ContinueStmt continueStmt) {
+        if (surroundingBlockTypeStack.isEmpty() || surroundingBlockTypeStack.peek() != BlockType.WHILE) {
+            reportError("Continue se moze koristiti samo u do-while blokovima", continueStmt);
         }
     }
 
