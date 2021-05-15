@@ -67,11 +67,12 @@ nonterminal ConstDecl, ConstAssigns, ConstAssign;
 nonterminal MethodDecls, MethodDecl, MethodTypeName, ReturnType, FormPars, FormPar, FormParMore, MethodVarDecls, Statements;
 nonterminal Statement, Matched, Unmatched, PrintArg, DesignatorStatement, ActPars, ActParsMore;
 nonterminal Negation, Addop, Mulop;
-nonterminal Condition, CondTerm, CondFact, Relop;
+nonterminal Condition, CondTerm, Relop;
 nonterminal Cases;
 
 nonterminal rs.etf.pp1.symboltable.concepts.Obj ProgName, Designator;
 nonterminal rs.etf.pp1.symboltable.concepts.Struct Type, Expr, Terms, Term, Factor, MethodCall;
+nonterminal rs.etf.pp1.symboltable.concepts.Struct CondFact;
 
 Program ::= (Program) PROG ProgName:progName VarConstDecls LBRACE MethodDecls RBRACE
           ;
@@ -248,7 +249,7 @@ Condition ::= (ConditionList) Condition OR CondTerm
             ;
 
 
-CondTerm ::= (CondTermList) CondFact AND CondFact
+CondTerm ::= (CondTermList) CondTerm AND CondFact
            | (CondTermElement) CondFact
            ;
 
