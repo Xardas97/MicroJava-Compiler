@@ -102,23 +102,21 @@ public class SemanticAnalyzer extends VisitorAdaptor {
         Tab.insert(Obj.Var, ident, type);
     }
 
-    public void visit(NumConst constValue) {
-        constValue.struct = Tab.intType;
+    public void visit(ConstAssignmentNum constAssign) {
+        insertConst(constAssign, constAssign.getConstName(), Tab.intType, constAssign.getN1());
     }
 
-    public void visit(CharConst constValue) {
-        constValue.struct = Tab.charType;
+    public void visit(ConstAssignmentChar constAssign) {
+        insertConst(constAssign, constAssign.getConstName(), Tab.charType, constAssign.getC1());
     }
 
-    public void visit(BoolConst constValue) {
-        constValue.struct = boolType;
+    public void visit(ConstAssignmentBool constAssign) {
+        insertConst(constAssign, constAssign.getConstName(), boolType, constAssign.getB1());
     }
 
-    public void visit(ConstAssignment constAssign) {
+    public void insertConst(ConstAssign constAssign, String ident, Struct constType, int value) {
         boolean error = false;
-        String ident = constAssign.getConstName();
 
-        Struct constType = constAssign.getConstValue().struct;
         if (constType != currentType) {
             reportError("Konstanti " + ident + " je dodeljen izraz pogresnog tipa", constAssign);
             error = true;
@@ -131,7 +129,9 @@ public class SemanticAnalyzer extends VisitorAdaptor {
         }
 
         if (error) return;
-        Tab.insert(Obj.Con, ident, constType);
+
+        obj = Tab.insert(Obj.Con, ident, constType);
+        obj.setAdr(value);
     }
 
     public void visit(SingularDesignator designator) {
@@ -196,8 +196,16 @@ public class SemanticAnalyzer extends VisitorAdaptor {
         }
     }
 
-    public void visit(ConstValueFctr factor) {
-        factor.struct = factor.getConstValue().struct;
+    public void visit(NumConstFctr factor) {
+        factor.struct = Tab.intType;
+    }
+
+    public void visit(CharConstFctr factor) {
+        factor.struct = Tab.charType;
+    }
+
+    public void visit(BoolConstFctr factor) {
+        factor.struct = boolType;
     }
 
     public void visit(ExprFctr factor) {

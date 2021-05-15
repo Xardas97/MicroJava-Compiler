@@ -56,8 +56,9 @@ terminal SWITCH, CASE, YIELD, DEFAULT;
 terminal ASSIGN, PLUS, MINUS, MULTIPLE, DIVIDE, MODULO, INCREMENT, DECREMENT;
 terminal AND, OR, EQ, NEQ, GT, LT, GEQ, LEQ;
 terminal COLON, SEMI, COMMA, LPAREN, RPAREN, LBRACE, RBRACE, LBRACKET, RBRACKET;
-terminal NUMBER, CHARLIT, BOOLLIT;
 
+terminal Integer NUMBER, BOOLLIT;
+terminal Character CHARLIT;
 terminal String IDENT;
 
 nonterminal Program, VarConstDecls;
@@ -70,7 +71,7 @@ nonterminal Condition, CondTerm, CondFact, Relop;
 nonterminal Cases;
 
 nonterminal rs.etf.pp1.symboltable.concepts.Obj ProgName, Designator;
-nonterminal rs.etf.pp1.symboltable.concepts.Struct Type, Expr, Terms, Term, Factor, ConstValue, MethodCall;
+nonterminal rs.etf.pp1.symboltable.concepts.Struct Type, Expr, Terms, Term, Factor, MethodCall;
 
 Program ::= (Program) PROG ProgName:progName VarConstDecls LBRACE MethodDecls RBRACE
           ;
@@ -110,15 +111,12 @@ ConstAssigns ::= (ConstAssignList) ConstAssigns COMMA ConstAssign
                | (ConstAssignElement) ConstAssign
                ;
 
-ConstAssign ::= (ConstAssignment) IDENT:constName ASSIGN ConstValue:constValue
+ConstAssign ::= (ConstAssignmentNum) IDENT:constName ASSIGN NUMBER
+              | (ConstAssignmentChar) IDENT:constName ASSIGN CHARLIT
+              | (ConstAssignmentBool) IDENT:constName ASSIGN BOOLLIT
               | (ConstAssignError) error:l
                     {: parser.report_error("Losa deklaracija konstante na liniji: " + lleft, null); :}
               ;
-
-ConstValue ::= (NumConst) NUMBER
-             | (CharConst) CHARLIT
-             | (BoolConst) BOOLLIT
-             ;
 
 MethodDecls ::= (MethodDeclList) MethodDecls MethodDecl
               | (EmptyMethodDeclList) /* epsilon */
@@ -225,7 +223,9 @@ Term ::= (FactorListTerm) Term Mulop Factor
        ;
 
 Factor ::= (DesignatorFctr) Designator
-         | (ConstValueFctr) ConstValue
+         | (NumConstFctr) NUMBER
+         | (CharConstFctr) CHARLIT
+         | (BoolConstFctr) BOOLLIT
          | (ExprFctr) LPAREN Expr RPAREN
          | (ArrayInitFctr) NEW Type LBRACKET Expr RBRACKET
          | (MethodCallFctr) MethodCall
