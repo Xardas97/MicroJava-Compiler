@@ -1,5 +1,9 @@
 package rs.ac.bg.etf.pp1;
 
+import java.util.Collection;
+import java.util.LinkedList;
+import java.util.List;
+
 import org.apache.log4j.Logger;
 
 import rs.ac.bg.etf.pp1.ast.*;
@@ -63,6 +67,10 @@ public class SemanticAnalyzer extends VisitorAdaptor {
         reportInfo("Obradjuje se funkcija: " + methodTypeName.getMethodName(), methodTypeName);
     }
 
+    public void visit(FormPar formPar) {
+        currentMethod.setLevel(currentMethod.getLevel() + 1);
+    }
+
     public void visit(ReturnStmt returnStmt) {
         if (currentMethod.getType() == Tab.noType) {
             reportError("Funkcija tipa void ne sme imati povratnu vrednost", returnStmt);
@@ -70,7 +78,7 @@ public class SemanticAnalyzer extends VisitorAdaptor {
         }
 
         returnFound = true;
-        if (returnStmt.getExpr().struct != currentMethod.getType()) {
+        if (areNotCompatible(returnStmt.getExpr().struct, currentMethod.getType())) {
             reportError("Povratna vrednost je pogrešnog tipa", returnStmt);
         }
     }
@@ -128,7 +136,7 @@ public class SemanticAnalyzer extends VisitorAdaptor {
     public void insertConst(ConstAssign constAssign, String ident, Struct constType, int value) {
         boolean error = false;
 
-        if (constType != currentType) {
+        if (areNotCompatible(constType, currentType)) {
             reportError("Konstanti " + ident + " je dodeljen izraz pogresnog tipa", constAssign);
             error = true;
         }
@@ -163,7 +171,7 @@ public class SemanticAnalyzer extends VisitorAdaptor {
             obj = Tab.noObj;
         }
 
-        designator.obj = obj;
+        designator.obj = new Obj(Obj.Elem, ident + "_elem", obj.getType().getElemType());
     }
 
     private Obj getDesignatorObj(String ident, Designator designator) {
@@ -192,19 +200,72 @@ public class SemanticAnalyzer extends VisitorAdaptor {
 
         if (obj.getKind() != Obj.Meth) {
             reportError("Identifikator " + obj.getName() + " nije funkcija", methodCall);
+            methodCall.struct = obj.getType();
+            return;
         }
 
         methodCall.struct = obj.getType();
+
+        List<Struct> actPars = getActualParTypes(methodCall.getActPars());
+        if (obj.getLevel() != actPars.size()) {
+            reportError("Pogresan broj parametara funkcije " + obj.getName(), methodCall);
+        }
+
+        if (obj.getLevel() < 1) return;
+
+        List<Struct> formPars = getFormParTypes(obj);
+        for (int i = 0; i < Math.min(actPars.size(), formPars.size()); ++i) {
+            if (areNotCompatible(actPars.get(i), formPars.get(i))) {
+                reportError("Parametar #" + (i + 1) + " poziva funkcije " + obj.getName() + " je pogresnog tipa", methodCall);
+            }
+        }
+    }
+
+    private List<Struct> getActualParTypes(ActPars actPars) {
+        List<Struct> structs = new LinkedList<Struct>();
+
+        if (actPars instanceof NoActPars) return structs;
+
+        ActParList parList = (ActParList) actPars;
+        structs.add(parList.getExpr().struct);
+
+        ActParsMore currentActParsMore = parList.getActParsMore();
+
+        while(currentActParsMore instanceof ActParsMoreElement) {
+            ActParsMoreElement actParsMoreElement = (ActParsMoreElement) currentActParsMore;
+            structs.add(actParsMoreElement.getExpr().struct);
+            currentActParsMore = actParsMoreElement.getActParsMore();
+        }
+
+        return structs;
+    }
+
+    private List<Struct> getFormParTypes(Obj obj) {
+        List<Struct> structs = new LinkedList<Struct>();
+
+        int formParCnt = obj.getLevel();
+        Collection<Obj> formPars = null;
+
+        if (currentMethod.equals(obj)) {
+           formPars = Tab.currentScope().values();
+        }
+        else {
+            formPars = obj.getLocalSymbols();
+        }
+
+        for(Obj formPar: formPars) {
+            --formParCnt;
+
+            structs.add(formPar.getType());
+
+            if (formParCnt < 1) break;
+        }
+
+        return structs;
     }
 
     public void visit(DesignatorFctr factor) {
-        Struct struct = factor.getDesignator().obj.getType();
-
-        if (struct.getKind() != Struct.Array) {
-            factor.struct = struct;
-        } else {
-            factor.struct = struct.getElemType();
-        }
+        factor.struct = factor.getDesignator().obj.getType();
     }
 
     public void visit(NumConstFctr factor) {
@@ -314,6 +375,15 @@ public class SemanticAnalyzer extends VisitorAdaptor {
 
         Obj result = locals.searchKey(ident);
         return result != null? result: Tab.noObj;
+    }
+
+    private static boolean areNotCompatible(Struct s1, Struct s2) {
+        return !areCompatible(s1, s2);
+    }
+
+    private static boolean areCompatible(Struct s1, Struct s2) {
+        if (s1 == null || s2 == null) return false;
+        return s1.compatibleWith(s2);
     }
 
     private void reportError(String message, SyntaxNode info) {
