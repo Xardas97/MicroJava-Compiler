@@ -57,7 +57,20 @@
         </javac>
     </target>
 
-    <target name="disasm">
+	<target name="runParser">
+        <java classname="rs.ac.bg.etf.pp1.MJCompilerTest">
+            <classpath>
+                <pathelement path="bin/"/>
+                <pathelement path="lib/JFlex.jar"/>
+                <pathelement path="lib/cup_v10k.jar"/>
+                <pathelement path="lib/log4j-1.2.17.jar"/>
+                <pathelement path="lib/symboltable-1-1.jar"/>
+                <pathelement path="lib/mj-runtime-1.1.jar"/>
+            </classpath>
+        </java>
+    </target>
+
+    <target name="disasm" depends = "runParser">
         <java classname="rs.etf.pp1.mj.runtime.disasm">
             <arg value="test/program.obj"/>
             <classpath>
@@ -67,11 +80,21 @@
     </target>
 
     <target name="runObj" depends="disasm" >
-        <java classname="rs.etf.pp1.mj.runtime.Run">
+        <java classname="rs.etf.pp1.mj.runtime.Run" input="test/ulazniPodaci.txt">
             <arg value="test/program.obj"/>
             <classpath>
                 <pathelement location="lib/mj-runtime-1.1.jar"/>
             </classpath>
         </java>
     </target>
+
+	<target name="debugObj" depends="disasm">
+		<java classname="rs.etf.pp1.mj.runtime.Run" input="test/ulazniPodaci.txt">
+		    <arg value="test/program.obj"/>
+			<arg value="-debug"/>
+			<classpath>
+				<pathelement location="lib/mj-runtime-1.1.jar"/>
+			</classpath>
+		</java>
+	</target>
 </project>

@@ -1,13 +1,31 @@
 program MJProgram
 {
 
+    int test(char c) {
+        print(c);
+        return 3;
+    }
+
     void main()
+        int x1, x2;
+        char c, c2;
+        bool b;
     {
-        print(123456);
-        print(123457, 7);
-        print(true);
-        print(false, 7);
-        print('a');
-        print('b', 6);
+        x1 = 0;
+        x1++;
+        x1--;
+        x1++;
+
+        read(c);
+        read(x2);
+        read(b);
+
+        c2 = 'y';
+        test(c2);
+
+        print(x1, 7);
+        print(c);
+        print(x2);
+        print(b);
     }
 }
