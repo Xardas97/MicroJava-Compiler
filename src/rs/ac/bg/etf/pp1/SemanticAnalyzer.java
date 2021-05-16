@@ -69,7 +69,7 @@ public class SemanticAnalyzer extends VisitorAdaptor {
             returnType = ((NonVoidReturnType)methodTypeName.getReturnType()).getType().struct;
         }
 
-        currentMethod = Tab.insert(Obj.Meth, methodTypeName.getMethodName(), returnType);
+        methodTypeName.obj = currentMethod = Tab.insert(Obj.Meth, methodTypeName.getMethodName(), returnType);
         Tab.openScope();
 
         reportInfo("Obradjuje se funkcija: " + methodTypeName.getMethodName(), methodTypeName);
