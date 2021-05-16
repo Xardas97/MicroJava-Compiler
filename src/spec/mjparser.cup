@@ -64,13 +64,13 @@ terminal String IDENT;
 nonterminal Program, VarConstDecls;
 nonterminal VarConstDecl, VarDecl, VarNames, VarName;
 nonterminal ConstDecl, ConstAssigns, ConstAssign;
-nonterminal MethodDecls, MethodDecl, MethodTypeName, ReturnType, FormPars, FormPar, FormParMore, MethodVarDecls, Statements;
+nonterminal MethodDecls, MethodDecl, ReturnType, FormPars, FormPar, FormParMore, MethodVarDecls, Statements;
 nonterminal Statement, Matched, Unmatched, PrintArg, WhileStart, Semi, DesignatorStatement, ActPars, ActParsMore;
 nonterminal Negation, Addop, Mulop;
 nonterminal Condition, CondTerm, Relop;
 nonterminal SwitchStart, Cases, Case;
 
-nonterminal rs.etf.pp1.symboltable.concepts.Obj ProgName, Designator;
+nonterminal rs.etf.pp1.symboltable.concepts.Obj ProgName, MethodTypeName, Designator;
 nonterminal rs.etf.pp1.symboltable.concepts.Struct Type, Expr, Terms, Term, Factor, MethodCall;
 nonterminal rs.etf.pp1.symboltable.concepts.Struct CondFact;
 
