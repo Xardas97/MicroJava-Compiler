@@ -282,8 +282,8 @@ CondTerm ::= (CondTermList) CondTerm AND CondFact
            | (CondTermElement) CondFact
            ;
 
-CondFact ::= (CondFactList) CondFact Relop Expr
-           | (CondFactElement) Expr
+CondFact ::= (CondFactRelop) Expr:e1 Relop Expr:e2
+           | (CondFactSingle) Expr
            ;
 
 Relop ::= (Equal) EQ

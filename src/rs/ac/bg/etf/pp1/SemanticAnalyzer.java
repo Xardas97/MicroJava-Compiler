@@ -386,9 +386,9 @@ public class SemanticAnalyzer extends VisitorAdaptor {
         return '-';
     }
 
-    public void visit(CondFactList condFact) {
-        Struct s1 = condFact.getCondFact().struct;
-        Struct s2 = condFact.getExpr().struct;
+    public void visit(CondFactRelop condFact) {
+        Struct s1 = condFact.getExpr().struct;
+        Struct s2 = condFact.getExpr1().struct;
 
         if (areNotCompatible(s1, s2)) {
             reportError("Relacione operacije se ne mogu koristiti sa nekompatibilnim tipovima", condFact);
@@ -401,7 +401,7 @@ public class SemanticAnalyzer extends VisitorAdaptor {
         condFact.struct = boolType;
     }
 
-    public void visit(CondFactElement condFact) {
+    public void visit(CondFactSingle condFact) {
         condFact.struct = condFact.getExpr().struct;
     }
 
