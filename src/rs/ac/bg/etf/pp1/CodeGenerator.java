@@ -7,7 +7,13 @@ import rs.etf.pp1.symboltable.concepts.Obj;
 import rs.etf.pp1.symboltable.concepts.Struct;
 
 public class CodeGenerator extends VisitorAdaptor {
+    private Struct boolType;
+
     int mainPc = 0;
+
+    public CodeGenerator(Struct boolType) {
+        this.boolType = boolType;
+    }
 
     public void visit(MethodTypeName methodTypeName) {
         if ("main".equalsIgnoreCase(methodTypeName.getMethodName())) {
@@ -88,17 +94,24 @@ public class CodeGenerator extends VisitorAdaptor {
     }
 
     public void visit(IncrementStmt incrementStmt) {
-        Code.load(incrementStmt.getDesignator().obj);
-        Code.loadConst(1);
-        Code.put(Code.add);
-        Code.store(incrementStmt.getDesignator().obj);
+        Designator designator = incrementStmt.getDesignator();
+        doIncOrDec(designator, Code.add);
     }
 
     public void visit(DecrementStmt decrementStmt) {
-        Code.load(decrementStmt.getDesignator().obj);
+        Designator designator = decrementStmt.getDesignator();
+        doIncOrDec(designator, Code.sub);
+    }
+
+    private void doIncOrDec(Designator designator, int cmd) {
+        if (designator instanceof ArrayDesignator) {
+            Code.put(Code.dup2);
+        }
+
+        Code.load(designator.obj);
         Code.loadConst(1);
-        Code.put(Code.sub);
-        Code.store(decrementStmt.getDesignator().obj);
+        Code.put(cmd);
+        Code.store(designator.obj);
     }
 
     public void visit(MethodCall methodCall) {
@@ -109,6 +122,20 @@ public class CodeGenerator extends VisitorAdaptor {
 
         if (methodCall.getParent() instanceof MethodCallStmt && methodCall.struct != Tab.noType) {
             Code.put(Code.pop);
+        }
+    }
+
+    public void visit(ArrayName arrayName) {
+        Code.load(arrayName.obj);
+    }
+
+    public void visit(ArrayInitFctr arrayInit) {
+        Code.put(Code.newarray);
+        if (arrayInit.struct == Tab.charType || arrayInit.struct == boolType) {
+            Code.put(0);
+        }
+        else {
+            Code.put(1);
         }
     }
 }
