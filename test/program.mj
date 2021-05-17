@@ -1,13 +1,17 @@
 program MJProgram
 {
     void main()
-        int x1, x2, x3;
+        int x1, x2;
     {
-        x1 = 3;
-        x2 = 1 + 1 + 1 + 1 + 1;
+        x1 = 1;
+        x2 = 2;
 
-        x3 = -(-x1 + x2 * (x1 + 3 - x1));
-
-        print(x3);
+        do {
+            print(x1);
+            break;
+            print(x2);
+            continue;
+        }
+        while (true);
     }
 }
