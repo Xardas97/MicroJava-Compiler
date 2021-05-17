@@ -245,7 +245,7 @@ public class SemanticAnalyzer extends VisitorAdaptor {
 
         List<Struct> formPars = getFormParTypes(obj);
         for (int i = 0; i < Math.min(actPars.size(), formPars.size()); ++i) {
-            if (areNotCompatible(actPars.get(i), formPars.get(i))) {
+            if (actPars.get(i).getKind() != formPars.get(i).getKind()) {
                 reportError("Parametar #" + (i + 1) + " poziva funkcije " + obj.getName() + " je pogresnog tipa", methodCall);
             }
         }
