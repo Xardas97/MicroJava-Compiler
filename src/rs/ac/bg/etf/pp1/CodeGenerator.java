@@ -138,4 +138,49 @@ public class CodeGenerator extends VisitorAdaptor {
             Code.put(1);
         }
     }
+
+    public void visit(SingleExpressionWithNegation expr) {
+        Code.put(Code.neg);
+    }
+
+    public void visit(MultiExpression expr) {
+        int op = getAddopOp(expr.getAddop());
+        Code.put(op);
+    }
+
+    public void visit(MultiExpressionWithNegation expr) {
+        int op = getAddopOp(expr.getAddop());
+        Code.put(op);
+    }
+
+    public void visit(TermList term) {
+        int op = getAddopOp(term.getAddop());
+        Code.put(op);
+    }
+
+    public void visit(FactorListTerm term) {
+        int op = getMulopOp(term.getMulop());
+        Code.put(op);
+
+        if (term.getParent() instanceof MultiExpressionWithNegation) {
+            Code.put(Code.neg);
+        }
+    }
+
+    public void visit(FactorTerm term) {
+        if (term.getParent() instanceof MultiExpressionWithNegation) {
+            Code.put(Code.neg);
+        }
+    }
+
+    private int getAddopOp(Addop addop) {
+        if (addop instanceof Plus) return Code.add;
+        return Code.sub;
+    }
+
+    private int getMulopOp(Mulop mulop) {
+        if (mulop instanceof Multiple) return Code.mul;
+        if (mulop instanceof Divide) return Code.mul;
+        return Code.rem;
+    }
 }
