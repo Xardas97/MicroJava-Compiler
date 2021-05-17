@@ -24,8 +24,6 @@ public class SemanticAnalyzer extends VisitorAdaptor {
 
     private Struct currentType = Tab.noType;
 
-    private List<Struct> currentActPars = new LinkedList<>();
-
     private Struct currentSwitchType = null;
     private boolean yieldFound = false;
 
@@ -214,10 +212,6 @@ public class SemanticAnalyzer extends VisitorAdaptor {
         return obj;
     }
 
-    public void visit(ActPar actPar) {
-        currentActPars.add(actPar.getExpr().struct);
-    }
-
     public void visit(MethodCall methodCall) {
         Obj obj = methodCall.getDesignator().obj;
 
@@ -234,8 +228,7 @@ public class SemanticAnalyzer extends VisitorAdaptor {
 
         methodCall.struct = obj.getType();
 
-        List<Struct> actPars = currentActPars;
-        currentActPars = new LinkedList<>();
+        List<Struct> actPars = getActParTypes(methodCall.getActPars());
 
         if (obj.getLevel() != actPars.size()) {
             reportError("Pogresan broj parametara funkcije " + obj.getName(), methodCall);
@@ -249,6 +242,25 @@ public class SemanticAnalyzer extends VisitorAdaptor {
                 reportError("Parametar #" + (i + 1) + " poziva funkcije " + obj.getName() + " je pogresnog tipa", methodCall);
             }
         }
+    }
+
+    private List<Struct> getActParTypes(ActPars actPars) {
+        List<Struct> structs = new LinkedList<Struct>();
+
+        if (actPars instanceof NoActPars) return structs;
+
+        ActParList parList = (ActParList) actPars;
+        structs.add(parList.getActPar().getExpr().struct);
+
+        ActParsMore currentActParsMore = parList.getActParsMore();
+
+        while(currentActParsMore instanceof ActParsMoreElement) {
+            ActParsMoreElement actParsMoreElement = (ActParsMoreElement) currentActParsMore;
+            structs.add(actParsMoreElement.getActPar().getExpr().struct);
+            currentActParsMore = actParsMoreElement.getActParsMore();
+        }
+
+        return structs;
     }
 
     private List<Struct> getFormParTypes(Obj obj) {
