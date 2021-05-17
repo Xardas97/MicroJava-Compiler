@@ -175,33 +175,39 @@ public class SemanticAnalyzer extends VisitorAdaptor {
         designator.obj = getDesignatorObj(designator.getName(), designator);
     }
 
+    public void visit(ArrayName arrayName) {
+        String ident = arrayName.getName();
+        Obj obj = getDesignatorObj(ident, arrayName);
+
+        if (obj.getType().getKind() != Struct.Array) {
+            reportError("Identifikatora " + ident + " nije niz", arrayName);
+            obj = Tab.noObj;
+        }
+
+        arrayName.obj = obj;
+    }
+
     public void visit(ArrayDesignator designator) {
-        String ident = designator.getName();
+        String ident = designator.getArrayName().getName();
 
         if (designator.getExpr().struct != Tab.intType) {
             reportError("Index niza mora biti celobrojna vrednost", designator);
         }
 
-        Obj obj = getDesignatorObj(ident, designator);
-
-        if (obj.getType().getKind() != Struct.Array) {
-            reportError("Identifikatora " + ident + " nije niz", designator);
-            obj = Tab.noObj;
-        }
-
-        designator.obj = new Obj(Obj.Elem, ident + "_elem", obj.getType().getElemType());
+        Struct type = designator.getArrayName().obj.getType().getElemType();
+        designator.obj = new Obj(Obj.Elem, ident + "_elem", type != null? type: Tab.noType);
     }
 
-    private Obj getDesignatorObj(String ident, Designator designator) {
+    private Obj getDesignatorObj(String ident, SyntaxNode node) {
         Obj obj = Tab.find(ident);
 
         if (obj == Tab.noObj) {
-            reportError("Identifikator " + ident + " ne postoji", designator);
+            reportError("Identifikator " + ident + " ne postoji", node);
             return Tab.noObj;
         }
 
         if (obj.getKind() != Obj.Var && obj.getKind() != Obj.Con && obj.getKind() != Obj.Meth) {
-            reportError("Identifikator " + ident + " se ne moze ovako koristiti", designator);
+            reportError("Identifikator " + ident + " se ne moze ovako koristiti", node);
             return Tab.noObj;
         }
 

@@ -70,7 +70,7 @@ nonterminal Negation, Addop, Mulop;
 nonterminal Condition, CondTerm, Relop;
 nonterminal SwitchStart, Cases, Case;
 
-nonterminal rs.etf.pp1.symboltable.concepts.Obj ProgName, MethodTypeName, Designator;
+nonterminal rs.etf.pp1.symboltable.concepts.Obj ProgName, MethodTypeName, Designator, ArrayName;
 nonterminal rs.etf.pp1.symboltable.concepts.Struct Type, Expr, Terms, Term, Factor, MethodCall;
 nonterminal rs.etf.pp1.symboltable.concepts.Struct CondFact;
 
@@ -199,8 +199,11 @@ MethodCall ::= (MethodCall) Designator LPAREN ActPars RPAREN
              ;
 
 Designator ::= (SingularDesignator) IDENT:name
-             | (ArrayDesignator) IDENT:name LBRACKET Expr:index RBRACKET
+             | (ArrayDesignator) ArrayName LBRACKET Expr:index RBRACKET
              ;
+
+ArrayName ::= (ArrayName) IDENT:name
+            ;
 
 ActPars ::= (ActParList) ActPar ActParsMore
           | (NoActPars) /* epsilon */
