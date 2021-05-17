@@ -21,6 +21,10 @@ public class CodeGenerator extends VisitorAdaptor {
     }
     private Stack<WhileInfo> currentWhileInfoStack = new Stack<>();
 
+    private int lastRelopOp;
+    private List<Integer> conditionFalsePatchAddrs = new LinkedList<>();
+    private List<Integer> conditionTruePatchAddrs = new LinkedList<>();
+
     public CodeGenerator(Struct boolType) {
         this.boolType = boolType;
     }
@@ -200,11 +204,23 @@ public class CodeGenerator extends VisitorAdaptor {
         currentWhileInfoStack.push(info);
     }
 
-    public void visit(WhileStmt whileStmt) {
+    private void generateWhileStmtJumps() {
         WhileInfo info = currentWhileInfoStack.pop();
 
-        Code.loadConst(0);
-        Code.putFalseJump(Code.eq, info.start);
+        conditionFalsePatchAddrs.add(Code.pc + 1);
+        Code.putFalseJump(lastRelopOp, 0);
+
+        for(int addr : conditionTruePatchAddrs) {
+            Code.fixup(addr);
+        }
+        conditionTruePatchAddrs = new LinkedList<>();
+
+        Code.putJump(info.start);
+
+        for(int addr : conditionFalsePatchAddrs) {
+            Code.fixup(addr);
+        }
+        conditionFalsePatchAddrs = new LinkedList<>();
 
         for(int addr : info.patchUp) {
             Code.fixup(addr);
@@ -218,5 +234,53 @@ public class CodeGenerator extends VisitorAdaptor {
     public void visit(BreakStmt breakStmt) {
         currentWhileInfoStack.peek().patchUp.add(Code.pc + 1);
         Code.putJump(0);
+    }
+
+    public void visit(CondFactRelop condFact) {
+        lastRelopOp = getRelopOp(condFact.getRelop());
+    }
+
+    private int getRelopOp(Relop relop) {
+        if (relop instanceof Equal) return Code.eq;
+        if (relop instanceof NotEqual) return Code.ne;
+        if (relop instanceof GreaterThan) return Code.gt;
+        if (relop instanceof LesserThan) return Code.lt;
+        if (relop instanceof GreaterEqual) return Code.ge;
+        return Code.le;
+    }
+
+    public void visit(CondFactSingle condFact) {
+        Code.loadConst(0);
+        lastRelopOp = Code.ne;
+    }
+
+    public void visit(And and) {
+        conditionFalsePatchAddrs.add(Code.pc + 1);
+        Code.putFalseJump(lastRelopOp, 0);
+    }
+
+    public void visit(Or or) {
+        conditionTruePatchAddrs.add(Code.pc + 1);
+        Code.put(Code.jcc + lastRelopOp);
+        Code.put2(0);
+
+        for(int addr : conditionFalsePatchAddrs) {
+            Code.fixup(addr);
+        }
+        conditionFalsePatchAddrs = new LinkedList<>();
+    }
+
+    public void visit(ConditionList condition) {
+        visit((Condition)condition);
+    }
+
+    public void visit(ConditionListElement condition) {
+        visit((Condition)condition);
+    }
+
+    public void visit(Condition condition) {
+        if (condition.getParent() instanceof WhileStmt) {
+            generateWhileStmtJumps();
+        }
     }
 }

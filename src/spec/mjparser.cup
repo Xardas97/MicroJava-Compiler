@@ -67,7 +67,7 @@ nonterminal ConstDecl, ConstAssigns, ConstAssign;
 nonterminal MethodDecls, MethodDecl, ReturnType, FormPars, FormPar, FormParMore, MethodVarDecls, Statements;
 nonterminal Statement, Matched, Unmatched, PrintArg, WhileStart, Semi, DesignatorStatement, ActPars, ActParsMore, ActPar;
 nonterminal Negation, Addop, Mulop;
-nonterminal Condition, CondTerm, Relop;
+nonterminal Condition, CondTerm, And, Or, Relop;
 nonterminal SwitchStart, Cases, Case, CaseStart, DefaultStart;
 
 nonterminal rs.etf.pp1.symboltable.concepts.Obj ProgName, MethodTypeName, Designator, ArrayName;
@@ -271,16 +271,21 @@ Mulop ::= (Multiple) MULTIPLE
         | (Modulo) MODULO
         ;
 
-Condition ::= (ConditionList) Condition OR CondTerm
+Condition ::= (ConditionList) Condition Or CondTerm
             | (ConditionListElement) CondTerm
             | (ConditionError) error:l
                 {: parser.report_error("Los logicki izraz na liniji: " + lleft, null); :}
             ;
 
-
-CondTerm ::= (CondTermList) CondTerm AND CondFact
+CondTerm ::= (CondTermList) CondTerm And CondFact
            | (CondTermElement) CondFact
            ;
+
+Or ::= (Or) OR
+     ;
+
+And ::= (And) AND
+      ;
 
 CondFact ::= (CondFactRelop) Expr:e1 Relop Expr:e2
            | (CondFactSingle) Expr
