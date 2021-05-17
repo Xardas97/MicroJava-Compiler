@@ -1,5 +1,9 @@
 package rs.ac.bg.etf.pp1;
 
+import java.util.Stack;
+import java.util.List;
+import java.util.LinkedList;
+
 import rs.ac.bg.etf.pp1.ast.*;
 import rs.etf.pp1.mj.runtime.Code;
 import rs.etf.pp1.symboltable.Tab;
@@ -10,6 +14,12 @@ public class CodeGenerator extends VisitorAdaptor {
     private Struct boolType;
 
     int mainPc = 0;
+
+    private static class WhileInfo {
+        int start;
+        List<Integer> patchUp = new LinkedList<>();
+    }
+    private Stack<WhileInfo> currentWhileInfoStack = new Stack<>();
 
     public CodeGenerator(Struct boolType) {
         this.boolType = boolType;
@@ -182,5 +192,31 @@ public class CodeGenerator extends VisitorAdaptor {
         if (mulop instanceof Multiple) return Code.mul;
         if (mulop instanceof Divide) return Code.mul;
         return Code.rem;
+    }
+
+    public void visit(WhileStart whileStart) {
+        WhileInfo info = new WhileInfo();
+        info.start = Code.pc;
+        currentWhileInfoStack.push(info);
+    }
+
+    public void visit(WhileStmt whileStmt) {
+        WhileInfo info = currentWhileInfoStack.pop();
+
+        Code.loadConst(0);
+        Code.putFalseJump(Code.eq, info.start);
+
+        for(int addr : info.patchUp) {
+            Code.fixup(addr);
+        }
+    }
+
+    public void visit(ContinueStmt whileStmt) {
+        Code.putJump(currentWhileInfoStack.peek().start);
+    }
+
+    public void visit(BreakStmt breakStmt) {
+        currentWhileInfoStack.peek().patchUp.add(Code.pc + 1);
+        Code.putJump(0);
     }
 }
