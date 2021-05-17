@@ -24,8 +24,8 @@ public class SemanticAnalyzer extends VisitorAdaptor {
 
     private Struct currentType = Tab.noType;
 
-    private Struct currentSwitchType = null;
-    private boolean yieldFound = false;
+    private Stack<Struct> currentSwitchTypeStack = new Stack<>();
+    private Stack<Boolean> yieldFoundStack = new Stack<>();
 
     private enum BlockType { WHILE, SWITCH };
     private Stack<BlockType> surroundingBlockTypeStack = new Stack<>();
@@ -499,27 +499,31 @@ public class SemanticAnalyzer extends VisitorAdaptor {
 
     public void visit(SwitchStart switchStart) {
         surroundingBlockTypeStack.push(BlockType.SWITCH);
+        currentSwitchTypeStack.push(null);
+    }
+
+    public void visit(CaseStart caseStart) {
+        yieldFoundStack.push(false);
     }
 
     public void visit(Case case_) {
-        if (!yieldFound) {
+        if (!yieldFoundStack.pop()) {
             reportError("Case bloku fali yield naredba", case_);
         }
+    }
 
-        yieldFound = false;
+    public void visit(DefaultStart defaultStart) {
+        yieldFoundStack.push(false);
     }
 
     public void visit(SwitchExpr expr) {
         surroundingBlockTypeStack.pop();
 
-        if (!yieldFound) {
+        if (!yieldFoundStack.pop()) {
             reportError("Default bloku fali yield naredba", expr);
         }
 
-        yieldFound = false;
-
-        expr.struct = currentSwitchType;
-        currentSwitchType = null;
+        expr.struct = currentSwitchTypeStack.pop();
     }
 
     public void visit(YieldStmt yieldStmt) {
@@ -527,11 +531,15 @@ public class SemanticAnalyzer extends VisitorAdaptor {
             reportError("Yield se moze koristiti samo u switch blokovima", yieldStmt);
         }
 
-        yieldFound = true;
+        yieldFoundStack.pop();
+        yieldFoundStack.push(true);
 
         Struct type = yieldStmt.getExpr().struct;
+        Struct currentSwitchType = currentSwitchTypeStack.peek();
+
         if (currentSwitchType == null) {
-            currentSwitchType = type;
+            currentSwitchTypeStack.pop();
+            currentSwitchTypeStack.push(type);
             return;
         }
 
