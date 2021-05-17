@@ -1,4 +1,10 @@
-
+program MJProgram
+    int x;
+    int y;
+    int a[], b, c[];
+    const int ac = 445, bc = 2483, cc = 3;
+    const bool bcc = false;
+{
     int method1() int x, x2[]; {
         x = - x + x % 3 + x / 4 * x - 10 * x;
         x = 3 * method1() * (3 + 8 + x) + method1();
@@ -70,3 +76,11 @@
 
         return false;
     }
+
+    int main(int c[])
+    {
+        c = new int[3];
+        c[1] = main(c);
+        return c[3];
+    }
+}

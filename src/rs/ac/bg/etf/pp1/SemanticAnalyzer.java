@@ -24,6 +24,8 @@ public class SemanticAnalyzer extends VisitorAdaptor {
 
     private Struct currentType = Tab.noType;
 
+    private List<Struct> currentActPars = new LinkedList<>();
+
     private Struct currentSwitchType = null;
     private boolean yieldFound = false;
 
@@ -206,6 +208,10 @@ public class SemanticAnalyzer extends VisitorAdaptor {
         return obj;
     }
 
+    public void visit(ActPar actPar) {
+        currentActPars.add(actPar.getExpr().struct);
+    }
+
     public void visit(MethodCall methodCall) {
         Obj obj = methodCall.getDesignator().obj;
 
@@ -222,7 +228,9 @@ public class SemanticAnalyzer extends VisitorAdaptor {
 
         methodCall.struct = obj.getType();
 
-        List<Struct> actPars = getActualParTypes(methodCall.getActPars());
+        List<Struct> actPars = currentActPars;
+        currentActPars = new LinkedList<>();
+
         if (obj.getLevel() != actPars.size()) {
             reportError("Pogresan broj parametara funkcije " + obj.getName(), methodCall);
         }
@@ -237,44 +245,17 @@ public class SemanticAnalyzer extends VisitorAdaptor {
         }
     }
 
-    private List<Struct> getActualParTypes(ActPars actPars) {
-        List<Struct> structs = new LinkedList<Struct>();
-
-        if (actPars instanceof NoActPars) return structs;
-
-        ActParList parList = (ActParList) actPars;
-        structs.add(parList.getExpr().struct);
-
-        ActParsMore currentActParsMore = parList.getActParsMore();
-
-        while(currentActParsMore instanceof ActParsMoreElement) {
-            ActParsMoreElement actParsMoreElement = (ActParsMoreElement) currentActParsMore;
-            structs.add(actParsMoreElement.getExpr().struct);
-            currentActParsMore = actParsMoreElement.getActParsMore();
-        }
-
-        return structs;
-    }
-
     private List<Struct> getFormParTypes(Obj obj) {
         List<Struct> structs = new LinkedList<Struct>();
 
         int formParCnt = obj.getLevel();
-        Collection<Obj> formPars = null;
-
-        if (currentMethod.equals(obj)) {
-           formPars = Tab.currentScope().values();
-        }
-        else {
-            formPars = obj.getLocalSymbols();
-        }
+        Collection<Obj> formPars = currentMethod.equals(obj)
+                                   ? Tab.currentScope().values()
+                                   : obj.getLocalSymbols();
 
         for(Obj formPar: formPars) {
-            --formParCnt;
-
             structs.add(formPar.getType());
-
-            if (formParCnt < 1) break;
+            if (--formParCnt < 1) break;
         }
 
         return structs;
