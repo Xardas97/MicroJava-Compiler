@@ -68,7 +68,7 @@ nonterminal MethodDecls, MethodDecl, ReturnType, FormPars, FormPar, FormParMore,
 nonterminal Statement, Matched, Unmatched, PrintArg, WhileStart, Semi, DesignatorStatement, ActPars, ActParsMore, ActPar;
 nonterminal Negation, Addop, Mulop;
 nonterminal Condition, CondTerm, Relop;
-nonterminal SwitchStart, Cases, Case;
+nonterminal SwitchStart, Cases, Case, CaseStart, DefaultStart;
 
 nonterminal rs.etf.pp1.symboltable.concepts.Obj ProgName, MethodTypeName, Designator, ArrayName;
 nonterminal rs.etf.pp1.symboltable.concepts.Struct Type, Expr, Terms, Term, Factor, MethodCall;
@@ -223,8 +223,11 @@ Expr ::= (SingleExpression) Term
        | (MultiExpression) Term Addop Terms
        | (SingleExpressionWithNegation) Negation Term
        | (MultiExpressionWithNegation) Negation Term Addop Terms
-       | (SwitchExpr) SwitchStart LPAREN Expr RPAREN LBRACE Cases DEFAULT COLON Statements RBRACE
+       | (SwitchExpr) SwitchStart LPAREN Expr RPAREN LBRACE Cases DefaultStart COLON Statements RBRACE
        ;
+
+DefaultStart ::= (DefaultStart) DEFAULT
+               ;
 
 SwitchStart ::= (SwitchStart) SWITCH
               ;
@@ -233,8 +236,11 @@ Cases ::= (CaseList) Cases Case
         | (EmptyCaseListElement) /* epsilon */
         ;
 
-Case ::= (Case) CASE NUMBER COLON Statements
+Case ::= (Case) CaseStart NUMBER COLON Statements
        ;
+
+CaseStart ::= (CaseStart) CASE
+            ;
 
 Negation ::= (Negation) MINUS
            ;
