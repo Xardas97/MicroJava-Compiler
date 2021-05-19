@@ -25,6 +25,8 @@ public class CodeGenerator extends VisitorAdaptor {
     private List<Integer> conditionFalsePatchAddrs = new LinkedList<>();
     private List<Integer> conditionTruePatchAddrs = new LinkedList<>();
 
+    private Stack<List<Integer>> ifStmtNextJumpPatchAddrStack = new Stack<>();
+
     public CodeGenerator(Struct boolType) {
         this.boolType = boolType;
     }
@@ -279,8 +281,62 @@ public class CodeGenerator extends VisitorAdaptor {
     }
 
     public void visit(Condition condition) {
-        if (condition.getParent() instanceof WhileStmt) {
+        SyntaxNode parent = condition.getParent();
+        if (parent instanceof WhileStmt) {
             generateWhileStmtJumps();
+            return;
+        }
+
+        if (parent instanceof MatchedIfElseStmt || parent instanceof UnmatchedIfElseStmt || parent instanceof UnmatchedIfStmt) {
+            generateIfStmtJumps();
+            return;
+        }
+    }
+
+    private void generateIfStmtJumps() {
+        conditionFalsePatchAddrs.add(Code.pc + 1);
+        Code.putFalseJump(lastRelopOp, 0);
+
+        ifStmtNextJumpPatchAddrStack.push(conditionFalsePatchAddrs);
+
+        for(int addr : conditionTruePatchAddrs) {
+           Code.fixup(addr);
+        }
+
+        conditionFalsePatchAddrs = new LinkedList<>();
+        conditionTruePatchAddrs = new LinkedList<>();
+    }
+
+    public void visit(Else else_) {
+        List<Integer> lastNextJumpPatchAddrs = ifStmtNextJumpPatchAddrStack.pop();
+
+        List<Integer> nextJumpPatchAddrs = new LinkedList<>();
+        nextJumpPatchAddrs.add(Code.pc + 1);
+        ifStmtNextJumpPatchAddrStack.push(nextJumpPatchAddrs);
+        Code.putJump(0);
+
+        for(int addr : lastNextJumpPatchAddrs) {
+            Code.fixup(addr);
+        }
+    }
+
+    public void visit(MatchedIfElseStmt ifStmt) {
+        endIfStmt();
+    }
+
+    public void visit(UnmatchedIfElseStmt ifStmt) {
+        endIfStmt();
+    }
+
+    public void visit(UnmatchedIfStmt ifStmt) {
+        endIfStmt();
+    }
+
+    private void endIfStmt() {
+        List<Integer> nextJumpPatchAddrs = ifStmtNextJumpPatchAddrStack.pop();
+
+        for(int addr : nextJumpPatchAddrs) {
+            Code.fixup(addr);
         }
     }
 }

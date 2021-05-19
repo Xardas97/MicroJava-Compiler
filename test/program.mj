@@ -1,58 +1,15 @@
 program MJProgram
 {
-    bool test1() {
-        print('t', 1);
-        print('1', 1);
-        print(eol);
-
-        return false;
-    }
-
-    bool test2() {
-        print('t', 1);
-        print('2', 1);
-        print(eol);
-
-        return false;
-    }
-
-    bool test3() {
-        print('t', 1);
-        print('3', 1);
-        print(eol);
-
-        return true;
-    }
-
-    bool test4() {
-        print('t', 1);
-        print('4', 1);
-        print(eol);
-
-        return false;
-    }
-
     void main()
-        bool b[];
-        int i;
     {
-        i = -1;
-        b = new bool[2];
-        b[0] = true; b[1] = false;
-
-        do {
-            i++;
-            print('l', 1);
-            print('o', 1);
-            print('o', 1);
-            print('p', 1);
-            print(eol);
+        if (2 < 3) {
+            print(1);
+            if (4 > 5) print(3);
+            if (2 == 3) print(4);
+            else if (2 == 3) print(5); else print(6);
         }
-        while (true && test1() && test2() || test3() && b[i] || test4());
-
-        print('o', 1);
-        print('v', 1);
-        print('e', 1);
-        print('r', 1);
+        else {
+            print(2);
+        }
     }
 }
