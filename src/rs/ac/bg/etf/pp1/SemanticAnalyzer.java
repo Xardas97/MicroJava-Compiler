@@ -513,16 +513,6 @@ public class SemanticAnalyzer extends VisitorAdaptor {
         currentSwitchTypeStack.push(null);
     }
 
-    public void visit(CaseStart caseStart) {
-        yieldFoundStack.push(false);
-    }
-
-    public void visit(Case case_) {
-        if (!yieldFoundStack.pop()) {
-            reportError("Case bloku fali yield naredba", case_);
-        }
-    }
-
     public void visit(DefaultStart defaultStart) {
         yieldFoundStack.push(false);
     }
@@ -542,8 +532,10 @@ public class SemanticAnalyzer extends VisitorAdaptor {
             reportError("Yield se moze koristiti samo u switch blokovima", yieldStmt);
         }
 
-        yieldFoundStack.pop();
-        yieldFoundStack.push(true);
+        if (!yieldFoundStack.empty()) {
+            yieldFoundStack.pop();
+            yieldFoundStack.push(true);
+        }
 
         Struct type = yieldStmt.getExpr().struct;
         Struct currentSwitchType = currentSwitchTypeStack.peek();
