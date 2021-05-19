@@ -24,6 +24,8 @@ public class SemanticAnalyzer extends VisitorAdaptor {
 
     private Struct currentType = Tab.noType;
 
+    private Stack<Boolean> inIfBlock = new Stack<>();
+
     private Stack<Struct> currentSwitchTypeStack = new Stack<>();
     private Stack<Boolean> yieldFoundStack = new Stack<>();
 
@@ -89,7 +91,10 @@ public class SemanticAnalyzer extends VisitorAdaptor {
             return;
         }
 
-        returnFound = true;
+        if (inIfBlock.isEmpty()) {
+            returnFound = true;
+        }
+
         if (areNotCompatible(returnStmt.getExpr().struct, currentMethod.getType())) {
             reportError("Povratna vrednost je pogrešnog tipa", returnStmt);
         }
@@ -108,7 +113,7 @@ public class SemanticAnalyzer extends VisitorAdaptor {
 
     public void visit(MethodDecl methodDecl) {
         if (!returnFound && currentMethod.getType() != Tab.noType) {
-            reportError("Funkciji " + methodDecl.getMethodTypeName().getMethodName() + " fali return naredba", methodDecl);
+            reportError("Funkciji " + methodDecl.getMethodTypeName().getMethodName() + " fali return naredba van grana", methodDecl);
         }
 
         Tab.chainLocalSymbols(currentMethod);
@@ -558,6 +563,22 @@ public class SemanticAnalyzer extends VisitorAdaptor {
         if (surroundingBlockTypeStack.isEmpty() || surroundingBlockTypeStack.peek() != BlockType.WHILE) {
             reportError("Continue se moze koristiti samo u do-while blokovima", continueStmt);
         }
+    }
+
+    public void visit(IfStart ifStart) {
+        inIfBlock.push(true);
+    }
+
+    public void visit(MatchedIfElseStmt ifStmt) {
+        inIfBlock.pop();
+    }
+
+    public void visit(UnmatchedIfElseStmt ifStmt) {
+        inIfBlock.pop();
+    }
+
+    public void visit(UnmatchedIfStmt ifStmt) {
+        inIfBlock.pop();
     }
 
     private Obj findInCurrentScope(String ident) {

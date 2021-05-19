@@ -65,7 +65,7 @@ nonterminal Program, VarConstDecls;
 nonterminal VarConstDecl, VarDecl, VarNames, VarName;
 nonterminal ConstDecl, ConstAssigns, ConstAssign;
 nonterminal MethodDecls, MethodDecl, ReturnType, FormPars, FormPar, FormParMore, MethodVarDecls, Statements;
-nonterminal Statement, Matched, Unmatched, PrintArg, WhileStart, Semi, DesignatorStatement, ActPars, ActParsMore, ActPar, Else;
+nonterminal Statement, Matched, Unmatched, PrintArg, WhileStart, Semi, DesignatorStatement, ActPars, ActParsMore, ActPar, IfStart, Else;
 nonterminal Negation, Addop, Mulop;
 nonterminal Condition, CondTerm, And, Or, Relop;
 nonterminal SwitchStart, Cases, Case, CaseStart, DefaultStart;
@@ -167,7 +167,7 @@ Matched ::= (DesignatorStmt) DesignatorStatement SEMI
           | (WhileStmt) WhileStart Statement WHILE LPAREN Condition RPAREN SEMI
           | (BreakStmt) BREAK Semi
           | (ContinueStmt) CONTINUE Semi
-          | (MatchedIfElseStmt) IF LPAREN Condition RPAREN Matched Else Matched
+          | (MatchedIfElseStmt) IfStart LPAREN Condition RPAREN Matched Else Matched
           | (YieldStmt) YIELD Expr SEMI
           ;
 
@@ -181,9 +181,12 @@ Semi ::= (Semi) SEMI
 WhileStart ::= (WhileStart) DO
              ;
 
-Unmatched ::= (UnmatchedIfStmt) IF LPAREN Condition RPAREN Statement
-            | (UnmatchedIfElseStmt) IF LPAREN Condition RPAREN Matched Else Unmatched
+Unmatched ::= (UnmatchedIfStmt) IfStart LPAREN Condition RPAREN Statement
+            | (UnmatchedIfElseStmt) IfStart LPAREN Condition RPAREN Matched Else Unmatched
             ;
+
+IfStart ::= (IfStart) IF
+          ;
 
 Else ::= (Else) ELSE
        ;
