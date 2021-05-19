@@ -27,6 +27,12 @@ public class CodeGenerator extends VisitorAdaptor {
 
     private Stack<List<Integer>> ifStmtNextJumpPatchAddrStack = new Stack<>();
 
+    private static class SwitchInfo {
+        int lastCasePatchAddr;
+        List<Integer> endOfSwitchPatchAddrs = new LinkedList<>();
+    }
+    Stack<SwitchInfo> switchInfoStack = new Stack<>();
+
     public CodeGenerator(Struct boolType, boolean generateChr, boolean generateOrd, boolean generateLen) {
         this.boolType = boolType;
 
@@ -360,5 +366,46 @@ public class CodeGenerator extends VisitorAdaptor {
         for(int addr : nextJumpPatchAddrs) {
             Code.fixup(addr);
         }
+    }
+
+    public void visit(SwitchStart switchStart) {
+        switchInfoStack.push(new SwitchInfo());
+    }
+
+    public void visit(CaseStart caseStart) {
+        // Save the switch parameter by duplicating
+        Code.put(Code.dup);
+
+        int number = ((Case)caseStart.getParent()).getN2();
+        Code.loadConst(number);
+
+        SwitchInfo info = switchInfoStack.peek();
+        info.lastCasePatchAddr = Code.pc + 1;
+        Code.putFalseJump(Code.eq, 0);
+    }
+
+    public void visit(Case case_) {
+        SwitchInfo info = switchInfoStack.peek();
+        Code.fixup(info.lastCasePatchAddr);
+    }
+
+    public void visit(YieldStmt yieldStmt) {
+        SwitchInfo info = switchInfoStack.peek();
+        info.endOfSwitchPatchAddrs.add(Code.pc + 1);
+        Code.putJump(0);
+    }
+
+    public void visit(SwitchExpr switchExpr) {
+        SwitchInfo info = switchInfoStack.pop();
+        for (int addr : info.endOfSwitchPatchAddrs) {
+            Code.fixup(addr);
+        }
+
+        // The top of the stack is the result on the switch expr
+        // we need to save it behind the leftover duplicate of the parameter
+        // and than delete the leftover parameter duplicate and the result duplicate
+        Code.put(Code.dup_x1);
+        Code.put(Code.pop);
+        Code.put(Code.pop);
     }
 }
