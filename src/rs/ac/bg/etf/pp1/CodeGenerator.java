@@ -27,8 +27,30 @@ public class CodeGenerator extends VisitorAdaptor {
 
     private Stack<List<Integer>> ifStmtNextJumpPatchAddrStack = new Stack<>();
 
-    public CodeGenerator(Struct boolType) {
+    public CodeGenerator(Struct boolType, boolean generateChr, boolean generateOrd, boolean generateLen) {
         this.boolType = boolType;
+
+        if (generateChr || generateOrd) {
+            Tab.find("chr").setAdr(Code.pc);
+            Tab.find("ord").setAdr(Code.pc);
+            Code.put(Code.enter);
+            Code.put(1);
+            Code.put(1);
+            Code.put(Code.load_n);
+            Code.put(Code.exit);
+            Code.put(Code.return_);
+        }
+
+        if (generateLen) {
+            Tab.find("len").setAdr(Code.pc);
+            Code.put(Code.enter);
+            Code.put(1);
+            Code.put(1);
+            Code.put(Code.load_n);
+            Code.put(Code.arraylength);
+            Code.put(Code.exit);
+            Code.put(Code.return_);
+        }
     }
 
     public void visit(MethodTypeName methodTypeName) {

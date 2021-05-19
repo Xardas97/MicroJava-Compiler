@@ -70,7 +70,7 @@ public class MJCompilerTest {
             File objFile = new File("test/program.obj");
             if (objFile.exists()) objFile.delete();
 
-            CodeGenerator codeGenerator = new CodeGenerator(boolType);
+            CodeGenerator codeGenerator = new CodeGenerator(boolType, semAnalyzer.chrCalled, semAnalyzer.ordCalled, semAnalyzer.lenCalled);
             program.traverseBottomUp(codeGenerator);
             Code.dataSize = semAnalyzer.nVars;
             Code.mainPc = codeGenerator.mainPc;
