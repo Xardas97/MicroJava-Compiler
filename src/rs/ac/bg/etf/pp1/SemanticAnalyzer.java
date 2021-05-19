@@ -32,6 +32,10 @@ public class SemanticAnalyzer extends VisitorAdaptor {
     private enum BlockType { WHILE, SWITCH };
     private Stack<BlockType> surroundingBlockTypeStack = new Stack<>();
 
+    public boolean chrCalled;
+    public boolean ordCalled;
+    public boolean lenCalled;
+
     public SemanticAnalyzer(Struct boolType) {
         this.boolType = boolType;
     }
@@ -231,6 +235,8 @@ public class SemanticAnalyzer extends VisitorAdaptor {
             return;
         }
 
+        checkIfPredeclared(obj.getName());
+
         methodCall.struct = obj.getType();
 
         List<Struct> actPars = getActParTypes(methodCall.getActPars());
@@ -243,7 +249,7 @@ public class SemanticAnalyzer extends VisitorAdaptor {
 
         List<Struct> formPars = getFormParTypes(obj);
         for (int i = 0; i < Math.min(actPars.size(), formPars.size()); ++i) {
-            if (actPars.get(i).getKind() != formPars.get(i).getKind()) {
+            if (areNotCompatible(actPars.get(i), formPars.get(i))) {
                 reportError("Parametar #" + (i + 1) + " poziva funkcije " + obj.getName() + " je pogresnog tipa", methodCall);
             }
         }
@@ -581,6 +587,12 @@ public class SemanticAnalyzer extends VisitorAdaptor {
         inIfBlock.pop();
     }
 
+    private void checkIfPredeclared(String name) {
+        if ("chr".equals(name)) chrCalled = true;
+        if ("ord".equals(name)) ordCalled = true;
+        if ("len".equals(name)) lenCalled = true;
+    }
+
     private Obj findInCurrentScope(String ident) {
         SymbolDataStructure locals = Tab.currentScope.getLocals();
         if (locals == null) return Tab.noObj;
@@ -595,7 +607,13 @@ public class SemanticAnalyzer extends VisitorAdaptor {
 
     private static boolean areCompatible(Struct s1, Struct s2) {
         if (s1 == null || s2 == null) return false;
-        return s1.compatibleWith(s2);
+
+        if (s1.compatibleWith(s2)) return true;
+
+        // Arrays are example if one of the elements has no type
+        return s1.getKind() == s2.getKind()
+               && s1.getKind() == Struct.Array
+               && (s1.getElemType() == Tab.noType || s2.getElemType() == Tab.noType);
     }
 
     private void reportError(String message, SyntaxNode info) {

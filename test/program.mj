@@ -1,15 +1,30 @@
 program MJProgram
 {
     void main()
+        char c;
+        int i;
+        int i_ar[];
+        bool b_ar[];
+        char c_ar[];
     {
-        if (2 < 3) {
-            print(1);
-            if (4 > 5) print(3);
-            if (2 == 3) print(4);
-            else if (2 == 3) print(5); else print(6);
-        }
-        else {
-            print(2);
-        }
+        c = 'a';
+        i = ord(c);
+
+        print(c);
+        print(i);
+
+        i = 98;
+        c = chr(i);
+
+        print(c);
+        print(i);
+
+        i_ar = new int[1];
+        c_ar = new char[2];
+        b_ar = new bool[3];
+
+        print(len(i_ar));
+        print(len(c_ar));
+        print(len(b_ar));
     }
 }
