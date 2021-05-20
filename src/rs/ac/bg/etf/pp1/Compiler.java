@@ -6,6 +6,7 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
+import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -32,6 +33,24 @@ public class Compiler implements rs.ac.bg.etf.pp1.test.Compiler {
         log = Logger.getLogger(Compiler.class);
     }
 
+    public static void main(String[] args) {
+        if (args.length < 2) {
+            log.error("Nedovoljno argumenata");
+            return;
+        }
+        Compiler compiler = new Compiler();
+        List<CompilerError> errors = compiler.compile(args[0], args[1]);
+
+        System.out.print("==============ERROR LIST===================\n");
+        errors.sort(new Comparator<CompilerError>() {
+            @Override
+            public int compare(CompilerError e1, CompilerError e2) {
+                return e1.getLine() - e2.getLine();
+            }
+        });
+        errors.forEach(System.out::println);
+    }
+
     @Override
     public List<CompilerError> compile(String sourceFilePath, String outputFilePath) {
         errors = new LinkedList<>();
@@ -47,6 +66,9 @@ public class Compiler implements rs.ac.bg.etf.pp1.test.Compiler {
 
             Symbol symbol = parser.parse();
 
+            errors.addAll(lexer.errors);
+            errors.addAll(parser.errors);
+
             if (!(symbol.value instanceof Program)) {
                 log.error("Parsiranje NIJE uspesno zavrseno!");
                 return errors;
@@ -60,6 +82,8 @@ public class Compiler implements rs.ac.bg.etf.pp1.test.Compiler {
 
             SemanticAnalyzer semAnalyzer = new SemanticAnalyzer(boolType);
             program.traverseBottomUp(semAnalyzer);
+
+            errors.addAll(semAnalyzer.errors);
 
             log.info("==============SADRZAJ TABELE SIMBOLA===================");
             dumpTable();

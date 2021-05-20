@@ -1,10 +1,17 @@
 package rs.ac.bg.etf.pp1;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import java_cup.runtime.*;
 import org.apache.log4j.*;
+
 import rs.ac.bg.etf.pp1.ast.*;
+import rs.ac.bg.etf.pp1.test.CompilerError;
 
 parser code {:
+    public List<CompilerError> errors = new LinkedList<>();
+
     private Logger log = Logger.getLogger(getClass());
 
     public boolean errorDetected;
@@ -15,7 +22,7 @@ parser code {:
     }
 
     public void syntax_error(Symbol cur_token) {
-        report_error("\nSintaksna greska", cur_token);
+        report_error("Sintaksna greska", cur_token);
     }
 
     public void unrecovered_syntax_error(Symbol cur_token) throws java.lang.Exception {
@@ -25,12 +32,23 @@ parser code {:
     public void report_error(String message, Object info) {
         errorDetected = true;
 
+        int line = -1;
+
         StringBuilder msg = new StringBuilder(message);
         if (info instanceof Symbol) {
-            msg.append(" na liniji: ").append(((Symbol)info).left);
+            line = ((Symbol)info).left;
+            msg.append(" na liniji: ").append(line);
         }
 
         log.error(msg.toString());
+        //errors.add(new CompilerError(line, message, CompilerError.CompilerErrorType.SYNTAX_ERROR));
+    }
+
+    public void report_error(String message, int line) {
+        errorDetected = true;
+
+        log.error(message + " na liniji: " + line);
+        errors.add(new CompilerError(line, message, CompilerError.CompilerErrorType.SYNTAX_ERROR));
     }
 :}
 
@@ -90,7 +108,7 @@ VarConstDecl ::= (VarConstDeclVar) VarDecl
 
 VarDecl ::= (VarDeclList) Type:varType VarNames SEMI
           | (VarDeclListError) error SEMI:l
-                {: parser.report_error("Losa deklaracija promenljivih na liniji: " + lleft, null); :}
+                {: parser.report_error("Losa deklaracija promenljivih", lleft); :}
           ;
 
 VarNames ::= (VarNameList) VarNames COMMA VarName
@@ -100,12 +118,12 @@ VarNames ::= (VarNameList) VarNames COMMA VarName
 VarName ::= (SingularVarName) IDENT:varName
           | (ArrayVarName) IDENT:varName LBRACKET RBRACKET
           | (VarNameError) error:l
-                {: parser.report_error("Lose ime promenljive ili parametra na liniji: " + lleft, null); :}
+                {: parser.report_error("Lose ime promenljive ili parametra", lleft); :}
           ;
 
 ConstDecl ::= (ConstDeclList) CONST Type:varType ConstAssigns SEMI
             | (ConstDeclListError) CONST error SEMI:l
-                {: parser.report_error("Losa deklaracija konstanti na liniji: " + lleft, null); :}
+                {: parser.report_error("Losa deklaracija konstanti", lleft); :}
             ;
 
 ConstAssigns ::= (ConstAssignList) ConstAssigns COMMA ConstAssign
@@ -116,7 +134,7 @@ ConstAssign ::= (ConstAssignmentNum) IDENT:constName ASSIGN NUMBER
               | (ConstAssignmentChar) IDENT:constName ASSIGN CHARLIT
               | (ConstAssignmentBool) IDENT:constName ASSIGN BOOLLIT
               | (ConstAssignError) error:l
-                    {: parser.report_error("Losa deklaracija konstante na liniji: " + lleft, null); :}
+                    {: parser.report_error("Losa deklaracija konstante", lleft); :}
               ;
 
 MethodDecls ::= (MethodDeclList) MethodDecls MethodDecl
@@ -135,7 +153,7 @@ ReturnType ::= (NonVoidReturnType) Type
 
 FormPars ::= (FormParList) FormPar FormParMore
            | (FormParsError) error:l
-                {: parser.report_error("Losa deklaracija formalnih parametara na liniji: " + lleft, null); :}
+                {: parser.report_error("Losa deklaracija formalnih parametara", lleft); :}
            | (NoFormPars) /* epsilon */
            ;
 
@@ -280,7 +298,7 @@ Mulop ::= (Multiple) MULTIPLE
 Condition ::= (ConditionList) Condition Or CondTerm
             | (ConditionListElement) CondTerm
             | (ConditionError) error:l
-                {: parser.report_error("Los logicki izraz na liniji: " + lleft, null); :}
+                {: parser.report_error("Los logicki izraz", lleft); :}
             ;
 
 CondTerm ::= (CondTermList) CondTerm And CondFact

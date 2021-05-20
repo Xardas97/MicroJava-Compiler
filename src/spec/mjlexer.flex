@@ -1,16 +1,24 @@
 package rs.ac.bg.etf.pp1;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import java_cup.runtime.Symbol;
+import org.apache.log4j.*;
+
+import rs.ac.bg.etf.pp1.test.CompilerError;
 
 %%
 
 %{
-    // ukljucivanje informacije o poziciji tokena
+    public List<CompilerError> errors = new LinkedList<>();
+
+    private Logger log = Logger.getLogger(getClass());
+
     private Symbol new_symbol(int type) {
         return new Symbol(type, yyline+1, yycolumn);
     }
     
-    // ukljucivanje informacije o poziciji tokena
     private Symbol new_symbol(int type, Object value) {
         return new Symbol(type, yyline+1, yycolumn, value);
     }
@@ -86,4 +94,7 @@ import java_cup.runtime.Symbol;
 ("true" | "false")          { return new_symbol(sym.BOOLLIT, "true".equals(yytext()) ? 1 : 0); }
 ([a-z]|[A-Z])[a-zA-Z0-9_]*  { return new_symbol(sym.IDENT,    yytext()); }
 
-. { System.err.println("Leksicka greska (" + yytext() + ") u liniji " + (yyline + 1)); }
+. {
+      log.error("Leksicka greska (" + yytext() + ") u liniji " + (yyline + 1));
+      errors.add(new CompilerError(yyline + 1, "Nevalidan simbol " + yytext(), CompilerError.CompilerErrorType.LEXICAL_ERROR));
+  }

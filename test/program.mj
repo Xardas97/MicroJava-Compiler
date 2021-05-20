@@ -1,11 +1,13 @@
 program MJProgram
+    int ?;
+    const int b = 2, f = _;
 {
     void main()
         int result, switchExpr, temp;
     {
         switchExpr = 2;
 
-        result = 100 + (switch (switchExpr) {
+        result = 'c' + (switch (switchExpr) {
             case 1:
                 temp = switch (switchExpr)
                 {
@@ -20,7 +22,7 @@ program MJProgram
                     default: yield 20;
                 };
                 yield temp;
-            default: yield 30;
+            default: return 30;
         }) + 1;
 
         result = result * 1000  + (switch (1) {
