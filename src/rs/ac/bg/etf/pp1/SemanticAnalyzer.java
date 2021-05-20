@@ -21,6 +21,8 @@ public class SemanticAnalyzer extends VisitorAdaptor {
     private Struct boolType;
     private Logger log = Logger.getLogger(getClass());
 
+    private boolean mainFound = false;
+
     private Obj currentMethod = null;
     private boolean returnFound = false;
 
@@ -51,6 +53,10 @@ public class SemanticAnalyzer extends VisitorAdaptor {
         nVars = Tab.currentScope.getnVars();
         Tab.chainLocalSymbols(program.getProgName().obj);
         Tab.closeScope();
+
+        if (!mainFound) {
+            reportError("Mora postojati ulazna metoda 'main'", program);
+        }
     }
 
     public void visit(Type type) {
@@ -119,7 +125,19 @@ public class SemanticAnalyzer extends VisitorAdaptor {
 
     public void visit(MethodDecl methodDecl) {
         if (!returnFound && currentMethod.getType() != Tab.noType) {
-            reportError("Funkciji " + methodDecl.getMethodTypeName().getMethodName() + " fali return naredba van grana", methodDecl);
+            reportError("Funkciji " + methodDecl.getMethodTypeName().getMethodName() + " fali return naredba koja je van grana", methodDecl);
+        }
+
+        if ("main".equals(methodDecl.getMethodTypeName().getMethodName())) {
+            mainFound = true;
+
+            if (methodDecl.getMethodTypeName().getReturnType() instanceof NonVoidReturnType) {
+                reportError("Ulazna metoda 'main' ne sme imati povratnu vrednost", methodDecl);
+            }
+
+            if (!(methodDecl.getFormPars() instanceof NoFormPars)) {
+                reportError("Ulazna metoda 'main' ne sme imati argumente", methodDecl);
+            }
         }
 
         Tab.chainLocalSymbols(currentMethod);
