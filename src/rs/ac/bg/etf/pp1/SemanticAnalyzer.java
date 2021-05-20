@@ -8,13 +8,15 @@ import java.util.Stack;
 import org.apache.log4j.Logger;
 
 import rs.ac.bg.etf.pp1.ast.*;
+import rs.ac.bg.etf.pp1.test.CompilerError;
 import rs.etf.pp1.symboltable.*;
 import rs.etf.pp1.symboltable.concepts.*;
 import rs.etf.pp1.symboltable.structure.SymbolDataStructure;
 
 public class SemanticAnalyzer extends VisitorAdaptor {
-    boolean errorDetected = false;
-    int nVars;
+    public List<CompilerError> errors = new LinkedList<>();
+    public boolean errorDetected = false;
+    public int nVars;
 
     private Struct boolType;
     private Logger log = Logger.getLogger(getClass());
@@ -611,6 +613,7 @@ public class SemanticAnalyzer extends VisitorAdaptor {
     private void reportError(String message, SyntaxNode info) {
         errorDetected = true;
         reportInfo(message, info);
+        errors.add(new CompilerError(info.getLine(), message, CompilerError.CompilerErrorType.SEMANTIC_ERROR));
     }
 
     private void reportInfo(String message, SyntaxNode info) {
