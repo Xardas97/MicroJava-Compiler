@@ -8,6 +8,9 @@
                 <exclude name="DumpSymbolTableVisitorWithBool.java"/>
                 <exclude name="CodeGenerator.java"/>
                 <exclude name="CounterVisitor.java"/>
+                <exclude name="Compiler.java"/>
+                <exclude name="test/Compiler.java"/>
+                <exclude name="test/CompilerError.java"/>
             </fileset>
         </delete>
         <delete>
