@@ -60,7 +60,7 @@ public class CodeGenerator extends VisitorAdaptor {
     }
 
     public void visit(MethodTypeName methodTypeName) {
-        if ("main".equalsIgnoreCase(methodTypeName.getMethodName())) {
+        if ("main".equals(methodTypeName.getMethodName())) {
             mainPc = Code.pc;
         }
 

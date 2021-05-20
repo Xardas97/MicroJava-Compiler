@@ -2,10 +2,12 @@ program MJProgram
     int ?;
     const int b = 2, f = _;
 {
-    void main()
+    int main(char c)
         int result, switchExpr, temp;
     {
         switchExpr = 2;
+        result[3]++;
+        result = temp = 3;
 
         result = 'c' + (switch (switchExpr) {
             case 1:
