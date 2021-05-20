@@ -95,6 +95,6 @@ import rs.ac.bg.etf.pp1.test.CompilerError;
 ([a-z]|[A-Z])[a-zA-Z0-9_]*  { return new_symbol(sym.IDENT,    yytext()); }
 
 . {
-      log.error("Leksicka greska (" + yytext() + ") u liniji " + (yyline + 1));
+      log.error("Leksicka greska (" + yytext() + ") na " + (yyline + 1) + ":" + yycolumn);
       errors.add(new CompilerError(yyline + 1, "Nevalidan simbol " + yytext(), CompilerError.CompilerErrorType.LEXICAL_ERROR));
   }
