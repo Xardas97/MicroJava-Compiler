@@ -87,7 +87,7 @@ nonterminal Condition, CondTerm, And, Or, Relop;
 nonterminal SwitchStart, Cases, Case, CaseStart, DefaultStart;
 
 nonterminal rs.etf.pp1.symboltable.concepts.Obj ProgName, MethodTypeName, Designator, ArrayName;
-nonterminal rs.etf.pp1.symboltable.concepts.Struct Type, Expr, Terms, Term, Factor, MethodCall;
+nonterminal rs.etf.pp1.symboltable.concepts.Struct AssignmentStatement, Type, Expr, Terms, Term, Factor, MethodCall;
 nonterminal rs.etf.pp1.symboltable.concepts.Struct CondFact;
 
 Program ::= (Program) PROG ProgName:progName VarConstDecls LBRACE MethodDecls RBRACE
@@ -213,10 +213,14 @@ PrintArg ::= (PrintWidth) COMMA NUMBER:width
            | (NoPrintArg) /* epsilon */
            ;
 
-DesignatorStatement ::= (AssignmentStmt) Designator ASSIGN Expr
+DesignatorStatement ::= (AssignmentStmt) AssignmentStatement
                       | (IncrementStmt) Designator INCREMENT
                       | (DecrementStmt) Designator DECREMENT
                       | (MethodCallStmt) MethodCall
+                      ;
+
+AssignmentStatement ::= (SingleAssignmentStmt) Designator ASSIGN Expr
+                      | (DoubleAssignmentStmt) Designator ASSIGN AssignmentStatement
                       ;
 
 MethodCall ::= (MethodCall) Designator LPAREN ActPars RPAREN

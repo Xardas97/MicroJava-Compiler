@@ -496,16 +496,28 @@ public class SemanticAnalyzer extends VisitorAdaptor {
         }
     }
 
-    public void visit(AssignmentStmt assignmentStmt) {
+    public void visit(SingleAssignmentStmt assignmentStmt) {
         Obj var = assignmentStmt.getDesignator().obj;
+        Expr assigned = assignmentStmt.getExpr();
+        verifyAssignmentStmt(assignmentStmt, var, assigned.struct);
+    }
 
+    public void visit(DoubleAssignmentStmt assignmentStmt) {
+        Obj var = assignmentStmt.getDesignator().obj;
+        AssignmentStatement assigned = assignmentStmt.getAssignmentStatement();
+        verifyAssignmentStmt(assignmentStmt, var, assigned.struct);
+    }
+
+    private void verifyAssignmentStmt(AssignmentStatement assignmentStmt, Obj var, Struct assignedType) {
         if (var.getKind() != Obj.Var && var.getKind() != Obj.Elem) {
             reportError("Vrednost se moze dodeljivati samo promenljivivama i nizovima", assignmentStmt);
         }
 
-        if (areNotCompatible(var.getType(), assignmentStmt.getExpr().struct)) {
+        if (areNotCompatible(var.getType(), assignedType)) {
             reportError("Dodela vrednosti nije moguca, tipovi nisu kompatibilni", assignmentStmt);
         }
+
+        assignmentStmt.struct = var.getType();
     }
 
     public void visit(IncrementStmt incrementStmt) {
