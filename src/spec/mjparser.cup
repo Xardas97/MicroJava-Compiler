@@ -21,9 +21,7 @@ parser code {:
       report_error(message, info);
     }
 
-    public void syntax_error(Symbol cur_token) {
-        report_error("Sintaksna greska", cur_token);
-    }
+    public void syntax_error(Symbol cur_token) { }
 
     public void unrecovered_syntax_error(Symbol cur_token) throws java.lang.Exception {
         report_fatal_error("Fatalna greska, parsiranje se ne moze nastaviti", cur_token);
@@ -41,7 +39,7 @@ parser code {:
         }
 
         log.error(msg.toString());
-        //errors.add(new CompilerError(line, message, CompilerError.CompilerErrorType.SYNTAX_ERROR));
+        errors.add(new CompilerError(line, message, CompilerError.CompilerErrorType.SYNTAX_ERROR));
     }
 
     public void report_error(String message, int line) {
@@ -187,6 +185,8 @@ Matched ::= (DesignatorStmt) DesignatorStatement SEMI
           | (ContinueStmt) CONTINUE Semi
           | (MatchedIfElseStmt) IfStart LPAREN Condition RPAREN Matched Else Matched
           | (YieldStmt) YIELD Expr SEMI
+          | (ErrorStmt) error SEMI:l
+                {: parser.report_error("Iskaz ne moze biti prepoznat", lleft); :}
           ;
 
 /* HACK:
