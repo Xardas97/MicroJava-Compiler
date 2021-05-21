@@ -85,8 +85,6 @@ public class SemanticAnalyzer extends VisitorAdaptor {
 
         methodTypeName.obj = currentMethod = Tab.insert(Obj.Meth, methodTypeName.getMethodName(), returnType);
         Tab.openScope();
-
-        reportInfo("Obradjuje se funkcija: " + methodTypeName.getMethodName(), methodTypeName);
     }
 
     public void visit(FormPar formPar) {
@@ -207,7 +205,7 @@ public class SemanticAnalyzer extends VisitorAdaptor {
         Obj obj = getDesignatorObj(ident, arrayName);
 
         if (obj.getType().getKind() != Struct.Array) {
-            reportError("Identifikatora " + ident + " nije niz", arrayName);
+            reportError("Identifikator " + ident + " nije niz", arrayName);
             obj = Tab.noObj;
         }
 
