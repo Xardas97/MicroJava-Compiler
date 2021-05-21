@@ -61,7 +61,9 @@
     </target>
 
 	<target name="runParser">
-        <java classname="rs.ac.bg.etf.pp1.MJCompilerTest">
+        <java classname="rs.ac.bg.etf.pp1.Compiler">
+            <arg value="test/program.mj"/>
+            <arg value="test/program.obj"/>
             <classpath>
                 <pathelement path="bin/"/>
                 <pathelement path="lib/JFlex.jar"/>

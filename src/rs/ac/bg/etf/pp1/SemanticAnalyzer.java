@@ -36,9 +36,12 @@ public class SemanticAnalyzer extends VisitorAdaptor {
     private enum BlockType { WHILE, SWITCH };
     private Stack<BlockType> surroundingBlockTypeStack = new Stack<>();
 
-    public boolean chrCalled;
-    public boolean ordCalled;
-    public boolean lenCalled;
+    public class PredeclaredFunctionsUsed {
+        public boolean chr = false;
+        public boolean ord = false;
+        public boolean len = false;
+    }
+    public PredeclaredFunctionsUsed predeclaredFunctionsUsed;
 
     public SemanticAnalyzer(Struct boolType) {
         this.boolType = boolType;
@@ -663,9 +666,9 @@ public class SemanticAnalyzer extends VisitorAdaptor {
     }
 
     private void checkIfPredeclared(String name) {
-        if ("chr".equals(name)) chrCalled = true;
-        if ("ord".equals(name)) ordCalled = true;
-        if ("len".equals(name)) lenCalled = true;
+        if ("chr".equals(name)) predeclaredFunctionsUsed.chr = true;
+        if ("ord".equals(name)) predeclaredFunctionsUsed.ord = true;
+        if ("len".equals(name)) predeclaredFunctionsUsed.len = true;
     }
 
     private Obj findInCurrentScope(String ident) {

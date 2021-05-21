@@ -4,6 +4,7 @@ import java.util.Stack;
 import java.util.List;
 import java.util.LinkedList;
 
+import rs.ac.bg.etf.pp1.SemanticAnalyzer.PredeclaredFunctionsUsed;
 import rs.ac.bg.etf.pp1.ast.*;
 import rs.etf.pp1.mj.runtime.Code;
 import rs.etf.pp1.symboltable.Tab;
@@ -33,10 +34,10 @@ public class CodeGenerator extends VisitorAdaptor {
     }
     Stack<SwitchInfo> switchInfoStack = new Stack<>();
 
-    public CodeGenerator(Struct boolType, boolean generateChr, boolean generateOrd, boolean generateLen) {
+    public CodeGenerator(Struct boolType, PredeclaredFunctionsUsed predeclared) {
         this.boolType = boolType;
 
-        if (generateChr || generateOrd) {
+        if (predeclared.chr || predeclared.ord) {
             Tab.find("chr").setAdr(Code.pc);
             Tab.find("ord").setAdr(Code.pc);
             Code.put(Code.enter);
@@ -47,7 +48,7 @@ public class CodeGenerator extends VisitorAdaptor {
             Code.put(Code.return_);
         }
 
-        if (generateLen) {
+        if (predeclared.len) {
             Tab.find("len").setAdr(Code.pc);
             Code.put(Code.enter);
             Code.put(1);
