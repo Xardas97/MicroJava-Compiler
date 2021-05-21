@@ -85,6 +85,8 @@ public class SemanticAnalyzer extends VisitorAdaptor {
 
         methodTypeName.obj = currentMethod = Tab.insert(Obj.Meth, methodTypeName.getMethodName(), returnType);
         Tab.openScope();
+
+        reportElement("Nadjeno", methodTypeName.obj, methodTypeName);
     }
 
     public void visit(FormPar formPar) {
@@ -161,7 +163,8 @@ public class SemanticAnalyzer extends VisitorAdaptor {
             return;
         }
 
-        Tab.insert(Obj.Var, ident, type);
+        obj = Tab.insert(Obj.Var, ident, type);
+        reportElement("Nadjeno", obj, varName);
     }
 
     public void visit(ConstAssignmentNum constAssign) {
@@ -194,10 +197,16 @@ public class SemanticAnalyzer extends VisitorAdaptor {
 
         obj = Tab.insert(Obj.Con, ident, constType);
         obj.setAdr(value);
+
+        reportElement("Nadjeno", obj, constAssign);
     }
 
     public void visit(SingularDesignator designator) {
         designator.obj = getDesignatorObj(designator.getName(), designator);
+
+        if (currentMethod != null && designator.obj.getAdr() < currentMethod.getLevel()) {
+            reportElement("Koriscenje argumenta", designator.obj, designator);
+        }
     }
 
     public void visit(ArrayName arrayName) {
@@ -210,6 +219,11 @@ public class SemanticAnalyzer extends VisitorAdaptor {
         }
 
         arrayName.obj = obj;
+        reportElement("Pristup", obj, arrayName);
+
+        if (currentMethod != null && arrayName.obj.getAdr() < currentMethod.getLevel()) {
+            reportElement("Koriscenje argumenta", arrayName.obj, arrayName);
+        }
     }
 
     public void visit(ArrayDesignator designator) {
@@ -252,6 +266,8 @@ public class SemanticAnalyzer extends VisitorAdaptor {
             methodCall.struct = obj.getType();
             return;
         }
+
+        reportElement("Poziv", obj, methodCall);
 
         checkIfPredeclared(obj.getName());
 
@@ -663,17 +679,65 @@ public class SemanticAnalyzer extends VisitorAdaptor {
                && (s1.getElemType() == Tab.noType || s2.getElemType() == Tab.noType);
     }
 
-    private void reportError(String message, SyntaxNode info) {
-        errorDetected = true;
-        reportInfo(message, info);
-        errors.add(new CompilerError(info.getLine(), message, CompilerError.CompilerErrorType.SEMANTIC_ERROR));
+    private void reportElement(String messageHead, Obj obj, SyntaxNode node) {
+        StringBuilder builder = new StringBuilder(messageHead).append(" ");
+        builder.append(getObjKindString(obj)).append(' ').append(obj.getName()).append(": ");
+        builder.append(getStructKindString(obj.getType()));
+        builder.append(", ").append(obj.getAdr()).append(", ").append(obj.getLevel());
+
+        reportInfo(builder.toString(), node);
     }
 
-    private void reportInfo(String message, SyntaxNode info) {
+    private String getObjKindString(Obj obj) {
+        switch (obj.getKind()) {
+            case 0: return "Con";
+            case 1: return "Var";
+            case 2: return "Type";
+            case 3: return "Meth";
+            case 4: return "Fld";
+            case 5: return "Elem";
+            default: return "Prog";
+        }
+    }
+
+    private String getStructKindString(Struct struct) {
+        String ret = "";
+        int kind = struct.getKind();
+
+        if (kind == 3) {
+            ret = "Array of ";
+            kind = struct.getElemType().getKind();
+        }
+
+        switch (kind) {
+            case 0: ret += "None"; break;
+            case 1: ret += "Int"; break;
+            case 2: ret += "Char"; break;
+            case 3: ret += "Array"; break;
+            case 4: ret += "Class"; break;
+            case 5: ret += "Bool"; break;
+            case 6: ret += "Enum"; break;
+            case 7: ret += "Enum"; break;
+        }
+
+        return ret;
+    }
+
+    private void reportError(String message, SyntaxNode node) {
+        errorDetected = true;
+        errors.add(new CompilerError(node.getLine(), message, CompilerError.CompilerErrorType.SEMANTIC_ERROR));
+        log.error(formLogMessage(message, node));
+    }
+
+    private void reportInfo(String message, SyntaxNode node) {
+        log.info(formLogMessage(message, node));
+    }
+
+    private String formLogMessage(String message, SyntaxNode node) {
         StringBuilder msg = new StringBuilder();
-        if (info != null) msg.append("Linija ").append(info.getLine()).append(": ");
+        if (node != null) msg.append("Linija ").append(node.getLine()).append(": ");
         msg.append(message);
 
-        log.info(msg.toString());
+        return msg.toString();
     }
 }
