@@ -129,7 +129,19 @@ public class CodeGenerator extends VisitorAdaptor {
         Code.store(readStmt.getDesignator().obj);
     }
 
-    public void visit(AssignmentStmt assignment) {
+    public void visit(SingleAssignmentStmt assignment) {
+        if (assignment.getParent() instanceof DoubleAssignmentStmt) {
+            Code.put(Code.dup);
+        }
+
+        Code.store(assignment.getDesignator().obj);
+    }
+
+    public void visit(DoubleAssignmentStmt assignment) {
+        if (assignment.getParent() instanceof DoubleAssignmentStmt) {
+            Code.put(Code.dup);
+        }
+
         Code.store(assignment.getDesignator().obj);
     }
 
