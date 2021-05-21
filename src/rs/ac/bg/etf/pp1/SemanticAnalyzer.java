@@ -523,6 +523,11 @@ public class SemanticAnalyzer extends VisitorAdaptor {
     }
 
     public void visit(WhileStmt whileStmt) {
+        if (surroundingBlockTypeStack.isEmpty()) {
+            // If this happens the error will be reported elsewhere
+            return;
+        }
+
         surroundingBlockTypeStack.pop();
     }
 
@@ -536,10 +541,22 @@ public class SemanticAnalyzer extends VisitorAdaptor {
     }
 
     public void visit(SwitchExpr expr) {
-        surroundingBlockTypeStack.pop();
+        if (!surroundingBlockTypeStack.isEmpty()) {
+            // If the stack is empty the error will be reported elsewhere
+            surroundingBlockTypeStack.pop();
+        }
 
-        if (!yieldFoundStack.pop()) {
-            reportError("Default bloku fali yield naredba", expr);
+        if (!yieldFoundStack.isEmpty()) {
+            // If the stack is empty the error will be reported elsewhere
+            if (!yieldFoundStack.pop()) {
+                reportError("Default bloku fali yield naredba", expr);
+            }
+        }
+
+        if (currentSwitchTypeStack.isEmpty()) {
+            // If this happens the error will be reported elsewhere
+            expr.struct = Tab.noType;
+            return;
         }
 
         expr.struct = currentSwitchTypeStack.pop();
@@ -553,6 +570,11 @@ public class SemanticAnalyzer extends VisitorAdaptor {
         if (!yieldFoundStack.empty()) {
             yieldFoundStack.pop();
             yieldFoundStack.push(true);
+        }
+
+        if (currentSwitchTypeStack.isEmpty()) {
+            // If this happens the error will be reported elsewhere
+            return;
         }
 
         Struct type = yieldStmt.getExpr().struct;
@@ -586,14 +608,29 @@ public class SemanticAnalyzer extends VisitorAdaptor {
     }
 
     public void visit(MatchedIfElseStmt ifStmt) {
+        if (inIfBlock.isEmpty()) {
+            // If this happens the error will be reported elsewhere
+            return;
+        }
+
         inIfBlock.pop();
     }
 
     public void visit(UnmatchedIfElseStmt ifStmt) {
+        if (inIfBlock.isEmpty()) {
+            // If this happens the error will be reported elsewhere
+            return;
+        }
+
         inIfBlock.pop();
     }
 
     public void visit(UnmatchedIfStmt ifStmt) {
+        if (inIfBlock.isEmpty()) {
+            // If this happens the error will be reported elsewhere
+            return;
+        }
+
         inIfBlock.pop();
     }
 
