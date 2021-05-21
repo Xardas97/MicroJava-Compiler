@@ -86,12 +86,15 @@ public class Compiler implements rs.ac.bg.etf.pp1.test.Compiler {
             errors.addAll(semAnalyzer.errors);
 
             log.info("==============SADRZAJ TABELE SIMBOLA===================");
-            dumpTable();
+            tsdump();
 
             if (parser.errorDetected || semAnalyzer.errorDetected) {
                 log.error("Parsiranje NIJE uspesno zavrseno!");
                 return errors;
             }
+
+            log.info("==============SINTAKSNO STABLO===================");
+            log.info("\n" + program.toString(""));
 
             File objFile = new File(outputFilePath);
             if (objFile.exists()) objFile.delete();
@@ -120,7 +123,7 @@ public class Compiler implements rs.ac.bg.etf.pp1.test.Compiler {
         }
     }
 
-    private void dumpTable() {
+    public void tsdump() {
         SymbolTableVisitor stv = new DumpSymbolTableVisitorWithBool();
         for (Scope s = Tab.currentScope; s != null; s = s.getOuter()) {
             s.accept(stv);
