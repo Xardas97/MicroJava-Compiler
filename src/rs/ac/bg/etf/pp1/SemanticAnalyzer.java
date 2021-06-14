@@ -10,7 +10,6 @@ import org.apache.log4j.Logger;
 import rs.ac.bg.etf.pp1.ast.*;
 import rs.ac.bg.etf.pp1.test.CompilerError;
 import rs.etf.pp1.symboltable.concepts.*;
-import rs.etf.pp1.symboltable.structure.SymbolDataStructure;
 
 public class SemanticAnalyzer extends VisitorAdaptor {
     public List<CompilerError> errors = new LinkedList<>();
@@ -107,7 +106,7 @@ public class SemanticAnalyzer extends VisitorAdaptor {
             returnFound = true;
         }
 
-        if (areNotCompatible(returnStmt.getExpr().struct, currentMethod.getType())) {
+        if (MyTab.areNotCompatible(returnStmt.getExpr().struct, currentMethod.getType())) {
             reportError("Povratna vrednost je pogrešnog tipa", returnStmt);
         }
     }
@@ -156,7 +155,7 @@ public class SemanticAnalyzer extends VisitorAdaptor {
     }
 
     private void insertVar(VarName varName, String ident, Struct type) {
-        Obj obj = findInCurrentScope(ident);
+        Obj obj = MyTab.findInCurrentScope(ident);
 
         if (obj != MyTab.noObj) {
             reportError("Promemljiva " + ident + " je vec deklarisana", varName);
@@ -182,12 +181,12 @@ public class SemanticAnalyzer extends VisitorAdaptor {
     public void insertConst(ConstAssign constAssign, String ident, Struct constType, int value) {
         boolean error = false;
 
-        if (areNotCompatible(constType, currentType)) {
+        if (MyTab.areNotCompatible(constType, currentType)) {
             reportError("Konstanti " + ident + " je dodeljen izraz pogresnog tipa", constAssign);
             error = true;
         }
 
-        Obj obj = findInCurrentScope(ident);
+        Obj obj = MyTab.findInCurrentScope(ident);
         if (obj != MyTab.noObj) {
             reportError("Konstanta " + ident + " je vec deklarisana", constAssign);
             error = true;
@@ -283,7 +282,7 @@ public class SemanticAnalyzer extends VisitorAdaptor {
 
         List<Struct> formPars = getFormParTypes(obj);
         for (int i = 0; i < Math.min(actPars.size(), formPars.size()); ++i) {
-            if (areNotCompatible(actPars.get(i), formPars.get(i))) {
+            if (MyTab.areNotCompatible(actPars.get(i), formPars.get(i))) {
                 reportError("Parametar #" + (i + 1) + " poziva funkcije " + obj.getName() + " je pogresnog tipa", methodCall);
             }
         }
@@ -435,7 +434,7 @@ public class SemanticAnalyzer extends VisitorAdaptor {
         Struct s1 = condFact.getExpr().struct;
         Struct s2 = condFact.getExpr1().struct;
 
-        if (areNotCompatible(s1, s2)) {
+        if (MyTab.areNotCompatible(s1, s2)) {
             reportError("Relacione operacije se ne mogu koristiti sa nekompatibilnim tipovima", condFact);
         }
 
@@ -513,7 +512,7 @@ public class SemanticAnalyzer extends VisitorAdaptor {
             reportError("Vrednost se moze dodeljivati samo promenljivivama i nizovima", assignmentStmt);
         }
 
-        if (areNotCompatible(var.getType(), assignedType)) {
+        if (MyTab.areNotCompatible(var.getType(), assignedType)) {
             reportError("Dodela vrednosti nije moguca, tipovi nisu kompatibilni", assignmentStmt);
         }
 
@@ -614,7 +613,7 @@ public class SemanticAnalyzer extends VisitorAdaptor {
             return;
         }
 
-        if (areNotCompatible(type, currentSwitchType)) {
+        if (MyTab.areNotCompatible(type, currentSwitchType)) {
             reportError("Svi blokovi switch-a moraju da vracaju isti tip rezultata", yieldStmt);
         }
     }
@@ -668,71 +667,13 @@ public class SemanticAnalyzer extends VisitorAdaptor {
         if ("len".equals(name)) predeclaredFunctionsUsed.len = true;
     }
 
-    private Obj findInCurrentScope(String ident) {
-        SymbolDataStructure locals = MyTab.currentScope.getLocals();
-        if (locals == null) return MyTab.noObj;
-
-        Obj result = locals.searchKey(ident);
-        return result != null? result: MyTab.noObj;
-    }
-
-    private static boolean areNotCompatible(Struct s1, Struct s2) {
-        return !areCompatible(s1, s2);
-    }
-
-    private static boolean areCompatible(Struct s1, Struct s2) {
-        if (s1 == null || s2 == null) return false;
-
-        if (s1.compatibleWith(s2)) return true;
-
-        // Arrays are example if one of the elements has no type
-        return s1.getKind() == s2.getKind()
-               && s1.getKind() == Struct.Array
-               && (s1.getElemType() == MyTab.noType || s2.getElemType() == MyTab.noType);
-    }
-
     private void reportElement(String messageHead, Obj obj, SyntaxNode node) {
         StringBuilder builder = new StringBuilder(messageHead).append(" ");
-        builder.append(getObjKindString(obj)).append(' ').append(obj.getName()).append(": ");
-        builder.append(getStructKindString(obj.getType()));
+        builder.append(MyTab.getObjKindString(obj)).append(' ').append(obj.getName()).append(": ");
+        builder.append(MyTab.getStructKindString(obj.getType()));
         builder.append(", ").append(obj.getAdr()).append(", ").append(obj.getLevel());
 
         reportInfo(builder.toString(), node);
-    }
-
-    private String getObjKindString(Obj obj) {
-        switch (obj.getKind()) {
-            case 0: return "Con";
-            case 1: return "Var";
-            case 2: return "Type";
-            case 3: return "Meth";
-            case 4: return "Fld";
-            case 5: return "Elem";
-            default: return "Prog";
-        }
-    }
-
-    private String getStructKindString(Struct struct) {
-        String ret = "";
-        int kind = struct.getKind();
-
-        if (kind == 3) {
-            ret = "Array of ";
-            kind = struct.getElemType().getKind();
-        }
-
-        switch (kind) {
-            case 0: ret += "None"; break;
-            case 1: ret += "Int"; break;
-            case 2: ret += "Char"; break;
-            case 3: ret += "Array"; break;
-            case 4: ret += "Class"; break;
-            case 5: ret += "Bool"; break;
-            case 6: ret += "Enum"; break;
-            case 7: ret += "Enum"; break;
-        }
-
-        return ret;
     }
 
     private void reportError(String message, SyntaxNode node) {
