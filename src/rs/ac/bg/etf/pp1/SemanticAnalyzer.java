@@ -38,10 +38,9 @@ public class SemanticAnalyzer extends VisitorAdaptor {
         public boolean ord = false;
         public boolean len = false;
     }
-    public PredeclaredFunctionsUsed predeclaredFunctionsUsed;
+    public PredeclaredFunctionsUsed predeclaredFunctionsUsed = new PredeclaredFunctionsUsed();
 
-    public SemanticAnalyzer() {
-    }
+    public SemanticAnalyzer() { }
 
     public void visit(ProgName progName) {
         progName.obj = MyTab.insert(Obj.Prog, progName.getProgName(), MyTab.noType);
