@@ -19,7 +19,7 @@ public class MyTab extends Tab {
     public static void dump(Logger log) {
         log.info("==============SADRZAJ TABELE SIMBOLA===================");
 
-        SymbolTableVisitor stv = new DumpSymbolTableVisitorWithBool();
+        SymbolTableVisitor stv = new MyDumpSymbolTableVisitor();
         for (Scope s = Tab.currentScope; s != null; s = s.getOuter()) {
             s.accept(stv);
         }
@@ -28,6 +28,6 @@ public class MyTab extends Tab {
     }
 
     public static void dump(SymbolTableVisitor stv) {
-        Tab.dump(new DumpSymbolTableVisitorWithBool());
+        Tab.dump(new MyDumpSymbolTableVisitor());
     }
 }
