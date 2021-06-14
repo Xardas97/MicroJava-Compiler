@@ -7,13 +7,10 @@ import java.util.LinkedList;
 import rs.ac.bg.etf.pp1.SemanticAnalyzer.PredeclaredFunctionsUsed;
 import rs.ac.bg.etf.pp1.ast.*;
 import rs.etf.pp1.mj.runtime.Code;
-import rs.etf.pp1.symboltable.Tab;
 import rs.etf.pp1.symboltable.concepts.Obj;
 import rs.etf.pp1.symboltable.concepts.Struct;
 
 public class CodeGenerator extends VisitorAdaptor {
-    private Struct boolType;
-
     int mainPc = 0;
 
     private static class WhileInfo {
@@ -34,12 +31,10 @@ public class CodeGenerator extends VisitorAdaptor {
     }
     Stack<SwitchInfo> switchInfoStack = new Stack<>();
 
-    public CodeGenerator(Struct boolType, PredeclaredFunctionsUsed predeclared) {
-        this.boolType = boolType;
-
+    public CodeGenerator(PredeclaredFunctionsUsed predeclared) {
         if (predeclared.chr || predeclared.ord) {
-            Tab.find("chr").setAdr(Code.pc);
-            Tab.find("ord").setAdr(Code.pc);
+            MyTab.find("chr").setAdr(Code.pc);
+            MyTab.find("ord").setAdr(Code.pc);
             Code.put(Code.enter);
             Code.put(1);
             Code.put(1);
@@ -49,7 +44,7 @@ public class CodeGenerator extends VisitorAdaptor {
         }
 
         if (predeclared.len) {
-            Tab.find("len").setAdr(Code.pc);
+            MyTab.find("len").setAdr(Code.pc);
             Code.put(Code.enter);
             Code.put(1);
             Code.put(1);
@@ -74,7 +69,7 @@ public class CodeGenerator extends VisitorAdaptor {
 
     public void visit(MethodDecl methodDecl) {
         Struct type = methodDecl.getMethodTypeName().obj.getType();
-        if (type == Tab.noType) {
+        if (type == MyTab.noType) {
             Code.put(Code.exit);
             Code.put(Code.return_);
         }
@@ -111,7 +106,7 @@ public class CodeGenerator extends VisitorAdaptor {
             Code.loadConst(width);
         }
 
-        if(printStmt.getExpr().struct.compatibleWith(Tab.charType)) {
+        if(printStmt.getExpr().struct.compatibleWith(MyTab.charType)) {
             Code.put(Code.bprint);
         }
         else {
@@ -120,7 +115,7 @@ public class CodeGenerator extends VisitorAdaptor {
     }
 
     public void visit(ReadStmt readStmt) {
-        if(readStmt.getDesignator().obj.getType().compatibleWith(Tab.charType)) {
+        if(readStmt.getDesignator().obj.getType().compatibleWith(MyTab.charType)) {
             Code.put(Code.bread);
         }
         else {
@@ -177,7 +172,7 @@ public class CodeGenerator extends VisitorAdaptor {
         Code.put(Code.call);
         Code.put2(offset);
 
-        if (methodCall.getParent() instanceof MethodCallStmt && methodCall.struct != Tab.noType) {
+        if (methodCall.getParent() instanceof MethodCallStmt && methodCall.struct != MyTab.noType) {
             Code.put(Code.pop);
         }
     }
@@ -188,7 +183,7 @@ public class CodeGenerator extends VisitorAdaptor {
 
     public void visit(ArrayInitFctr arrayInit) {
         Code.put(Code.newarray);
-        if (arrayInit.struct == Tab.charType || arrayInit.struct == boolType) {
+        if (arrayInit.struct == MyTab.charType || arrayInit.struct == MyTab.boolType) {
             Code.put(0);
         }
         else {

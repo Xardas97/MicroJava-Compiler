@@ -9,7 +9,6 @@ import org.apache.log4j.Logger;
 
 import rs.ac.bg.etf.pp1.ast.*;
 import rs.ac.bg.etf.pp1.test.CompilerError;
-import rs.etf.pp1.symboltable.*;
 import rs.etf.pp1.symboltable.concepts.*;
 import rs.etf.pp1.symboltable.structure.SymbolDataStructure;
 
@@ -18,7 +17,6 @@ public class SemanticAnalyzer extends VisitorAdaptor {
     public boolean errorDetected = false;
     public int nVars;
 
-    private Struct boolType;
     private Logger log = Logger.getLogger(getClass());
 
     private boolean mainFound = false;
@@ -26,7 +24,7 @@ public class SemanticAnalyzer extends VisitorAdaptor {
     private Obj currentMethod = null;
     private boolean returnFound = false;
 
-    private Struct currentType = Tab.noType;
+    private Struct currentType = MyTab.noType;
 
     private Stack<Boolean> inIfBlock = new Stack<>();
 
@@ -43,19 +41,18 @@ public class SemanticAnalyzer extends VisitorAdaptor {
     }
     public PredeclaredFunctionsUsed predeclaredFunctionsUsed;
 
-    public SemanticAnalyzer(Struct boolType) {
-        this.boolType = boolType;
+    public SemanticAnalyzer() {
     }
 
     public void visit(ProgName progName) {
-        progName.obj = Tab.insert(Obj.Prog, progName.getProgName(), Tab.noType);
-        Tab.openScope();
+        progName.obj = MyTab.insert(Obj.Prog, progName.getProgName(), MyTab.noType);
+        MyTab.openScope();
     }
 
     public void visit(Program program) {
-        nVars = Tab.currentScope.getnVars();
-        Tab.chainLocalSymbols(program.getProgName().obj);
-        Tab.closeScope();
+        nVars = MyTab.currentScope.getnVars();
+        MyTab.chainLocalSymbols(program.getProgName().obj);
+        MyTab.closeScope();
 
         if (!mainFound) {
             reportError("Mora postojati ulazna metoda 'main'", program);
@@ -63,17 +60,17 @@ public class SemanticAnalyzer extends VisitorAdaptor {
     }
 
     public void visit(Type type) {
-        Obj typeObj = Tab.find(type.getTypeName());
+        Obj typeObj = MyTab.find(type.getTypeName());
 
-        if (typeObj == Tab.noObj) {
+        if (typeObj == MyTab.noObj) {
             reportError("Nepostojeci tip: " + type.getTypeName(), type);
-            currentType = type.struct = Tab.noType;
+            currentType = type.struct = MyTab.noType;
             return;
         }
 
         if (typeObj.getKind() != Obj.Type) {
             reportError("Identifikator nije tip: " + type.getTypeName(), type);
-            currentType = type.struct = Tab.noType;
+            currentType = type.struct = MyTab.noType;
             return;
         }
 
@@ -81,13 +78,13 @@ public class SemanticAnalyzer extends VisitorAdaptor {
     }
 
     public void visit(MethodTypeName methodTypeName) {
-        Struct returnType = Tab.noType;
+        Struct returnType = MyTab.noType;
         if (methodTypeName.getReturnType() instanceof NonVoidReturnType) {
             returnType = ((NonVoidReturnType)methodTypeName.getReturnType()).getType().struct;
         }
 
-        methodTypeName.obj = currentMethod = Tab.insert(Obj.Meth, methodTypeName.getMethodName(), returnType);
-        Tab.openScope();
+        methodTypeName.obj = currentMethod = MyTab.insert(Obj.Meth, methodTypeName.getMethodName(), returnType);
+        MyTab.openScope();
 
         reportElement("Nadjeno", methodTypeName.obj, methodTypeName);
     }
@@ -101,7 +98,7 @@ public class SemanticAnalyzer extends VisitorAdaptor {
             reportError("Return se ne moze koristiti u switch blokovima", returnStmt);
         }
 
-        if (currentMethod.getType() == Tab.noType) {
+        if (currentMethod.getType() == MyTab.noType) {
             reportError("Funkcija tipa void ne sme imati povratnu vrednost", returnStmt);
             return;
         }
@@ -120,14 +117,14 @@ public class SemanticAnalyzer extends VisitorAdaptor {
             reportError("Return se ne moze koristiti u switch blokovima", returnStmt);
         }
 
-        if (currentMethod.getType() != Tab.noType) {
+        if (currentMethod.getType() != MyTab.noType) {
             reportError("Return izraz ove funkcije mora imati povratnu vrednost", returnStmt);
             return;
         }
     }
 
     public void visit(MethodDecl methodDecl) {
-        if (!returnFound && currentMethod.getType() != Tab.noType) {
+        if (!returnFound && currentMethod.getType() != MyTab.noType) {
             reportError("Funkciji " + methodDecl.getMethodTypeName().getMethodName() + " fali return naredba koja je van grana", methodDecl);
         }
 
@@ -143,8 +140,8 @@ public class SemanticAnalyzer extends VisitorAdaptor {
             }
         }
 
-        Tab.chainLocalSymbols(currentMethod);
-        Tab.closeScope();
+        MyTab.chainLocalSymbols(currentMethod);
+        MyTab.closeScope();
 
         returnFound = false;
         currentMethod = null;
@@ -161,25 +158,25 @@ public class SemanticAnalyzer extends VisitorAdaptor {
     private void insertVar(VarName varName, String ident, Struct type) {
         Obj obj = findInCurrentScope(ident);
 
-        if (obj != Tab.noObj) {
+        if (obj != MyTab.noObj) {
             reportError("Promemljiva " + ident + " je vec deklarisana", varName);
             return;
         }
 
-        obj = Tab.insert(Obj.Var, ident, type);
+        obj = MyTab.insert(Obj.Var, ident, type);
         reportElement("Nadjeno", obj, varName);
     }
 
     public void visit(ConstAssignmentNum constAssign) {
-        insertConst(constAssign, constAssign.getConstName(), Tab.intType, constAssign.getN1());
+        insertConst(constAssign, constAssign.getConstName(), MyTab.intType, constAssign.getN1());
     }
 
     public void visit(ConstAssignmentChar constAssign) {
-        insertConst(constAssign, constAssign.getConstName(), Tab.charType, constAssign.getC1());
+        insertConst(constAssign, constAssign.getConstName(), MyTab.charType, constAssign.getC1());
     }
 
     public void visit(ConstAssignmentBool constAssign) {
-        insertConst(constAssign, constAssign.getConstName(), boolType, constAssign.getB1());
+        insertConst(constAssign, constAssign.getConstName(), MyTab.boolType, constAssign.getB1());
     }
 
     public void insertConst(ConstAssign constAssign, String ident, Struct constType, int value) {
@@ -191,14 +188,14 @@ public class SemanticAnalyzer extends VisitorAdaptor {
         }
 
         Obj obj = findInCurrentScope(ident);
-        if (obj != Tab.noObj) {
+        if (obj != MyTab.noObj) {
             reportError("Konstanta " + ident + " je vec deklarisana", constAssign);
             error = true;
         }
 
         if (error) return;
 
-        obj = Tab.insert(Obj.Con, ident, constType);
+        obj = MyTab.insert(Obj.Con, ident, constType);
         obj.setAdr(value);
 
         reportElement("Nadjeno", obj, constAssign);
@@ -218,7 +215,7 @@ public class SemanticAnalyzer extends VisitorAdaptor {
 
         if (obj.getType().getKind() != Struct.Array) {
             reportError("Identifikator " + ident + " nije niz", arrayName);
-            obj = Tab.noObj;
+            obj = MyTab.noObj;
         }
 
         arrayName.obj = obj;
@@ -232,25 +229,25 @@ public class SemanticAnalyzer extends VisitorAdaptor {
     public void visit(ArrayDesignator designator) {
         String ident = designator.getArrayName().getName();
 
-        if (designator.getExpr().struct != Tab.intType) {
+        if (designator.getExpr().struct != MyTab.intType) {
             reportError("Index niza mora biti celobrojna vrednost", designator);
         }
 
         Struct type = designator.getArrayName().obj.getType().getElemType();
-        designator.obj = new Obj(Obj.Elem, ident + "_elem", type != null? type: Tab.noType);
+        designator.obj = new Obj(Obj.Elem, ident + "_elem", type != null? type: MyTab.noType);
     }
 
     private Obj getDesignatorObj(String ident, SyntaxNode node) {
-        Obj obj = Tab.find(ident);
+        Obj obj = MyTab.find(ident);
 
-        if (obj == Tab.noObj) {
+        if (obj == MyTab.noObj) {
             reportError("Identifikator " + ident + " ne postoji", node);
-            return Tab.noObj;
+            return MyTab.noObj;
         }
 
         if (obj.getKind() != Obj.Var && obj.getKind() != Obj.Con && obj.getKind() != Obj.Meth) {
             reportError("Identifikator " + ident + " se ne moze ovako koristiti", node);
-            return Tab.noObj;
+            return MyTab.noObj;
         }
 
         return obj;
@@ -259,8 +256,8 @@ public class SemanticAnalyzer extends VisitorAdaptor {
     public void visit(MethodCall methodCall) {
         Obj obj = methodCall.getDesignator().obj;
 
-        if (obj == Tab.noObj) {
-            methodCall.struct = Tab.noType;
+        if (obj == MyTab.noObj) {
+            methodCall.struct = MyTab.noType;
             return;
         }
 
@@ -316,7 +313,7 @@ public class SemanticAnalyzer extends VisitorAdaptor {
 
         int formParCnt = obj.getLevel();
         Collection<Obj> formPars = currentMethod.equals(obj)
-                                   ? Tab.currentScope().values()
+                                   ? MyTab.currentScope().values()
                                    : obj.getLocalSymbols();
 
         for(Obj formPar: formPars) {
@@ -332,15 +329,15 @@ public class SemanticAnalyzer extends VisitorAdaptor {
     }
 
     public void visit(NumConstFctr factor) {
-        factor.struct = Tab.intType;
+        factor.struct = MyTab.intType;
     }
 
     public void visit(CharConstFctr factor) {
-        factor.struct = Tab.charType;
+        factor.struct = MyTab.charType;
     }
 
     public void visit(BoolConstFctr factor) {
-        factor.struct = boolType;
+        factor.struct = MyTab.boolType;
     }
 
     public void visit(ExprFctr factor) {
@@ -348,7 +345,7 @@ public class SemanticAnalyzer extends VisitorAdaptor {
     }
 
     public void visit(ArrayInitFctr factor) {
-        if (factor.getExpr().struct != Tab.intType) {
+        if (factor.getExpr().struct != MyTab.intType) {
             reportError("Velicina niza u strukturi mora biti celobrojna vrednost", factor);
         }
 
@@ -363,13 +360,13 @@ public class SemanticAnalyzer extends VisitorAdaptor {
         Struct operand1 = term.getTerm().struct;
         Struct operand2 = term.getFactor().struct;
 
-        if (operand1 != Tab.intType || operand2 != Tab.intType) {
+        if (operand1 != MyTab.intType || operand2 != MyTab.intType) {
             reportError("Operacija " + mulopToChar(term.getMulop()) + " se moze koristiti samo sa celobrojnim vrednostima", term);
             term.struct = operand1;
             return;
         }
 
-        term.struct = Tab.intType;
+        term.struct = MyTab.intType;
     }
 
     public void visit(FactorTerm term) {
@@ -386,13 +383,13 @@ public class SemanticAnalyzer extends VisitorAdaptor {
         Struct operand1 = terms.getTerms().struct;
         Struct operand2 = terms.getTerm().struct;
 
-        if (operand1 != Tab.intType || operand2 != Tab.intType) {
+        if (operand1 != MyTab.intType || operand2 != MyTab.intType) {
             reportError("Operacija " + addopToChar(terms.getAddop()) + " se moze koristiti samo sa celobrojnim vrednostima", terms);
             terms.struct = operand1;
             return;
         }
 
-        terms.struct = Tab.intType;
+        terms.struct = MyTab.intType;
     }
 
     public void visit(TermListElement terms) {
@@ -406,7 +403,7 @@ public class SemanticAnalyzer extends VisitorAdaptor {
     public void visit(SingleExpressionWithNegation expr) {
         Struct struct = expr.getTerm().struct;
 
-        if (struct != Tab.intType) {
+        if (struct != MyTab.intType) {
             reportError("Mogu se negirati samo celobrojne vrednosti", expr);
         }
 
@@ -422,7 +419,7 @@ public class SemanticAnalyzer extends VisitorAdaptor {
     }
 
     private void calculateMultiExpressionType(Struct operand1, Struct operand2, Addop addop, Expr expr) {
-        if (operand1 != Tab.intType || operand2 != Tab.intType) {
+        if (operand1 != MyTab.intType || operand2 != MyTab.intType) {
             reportError("Operacija " + addopToChar(addop) + " se moze koristiti samo sa celobrojnim vrednostima", expr);
         }
 
@@ -446,7 +443,7 @@ public class SemanticAnalyzer extends VisitorAdaptor {
             reportError("Operacija " + relopToString(condFact.getRelop()) + " se ne moze koristiti sa ovim tipovima", condFact);
         }
 
-        condFact.struct = boolType;
+        condFact.struct = MyTab.boolType;
     }
 
     public void visit(CondFactSingle condFact) {
@@ -454,13 +451,13 @@ public class SemanticAnalyzer extends VisitorAdaptor {
     }
 
     public void visit(CondTermList condTerm) {
-        if (condTerm.getCondFact().struct != boolType) {
+        if (condTerm.getCondFact().struct != MyTab.boolType) {
             reportError("Operacije AND i OR i uslovi se koriste samo sa bool vrednostima", condTerm);
         }
     }
 
     public void visit(CondTermElement condTerm) {
-        if (condTerm.getCondFact().struct != boolType) {
+        if (condTerm.getCondFact().struct != MyTab.boolType) {
             reportError("Operacije AND i OR i uslovi se koriste samo sa bool vrednostima", condTerm);
         }
     }
@@ -478,7 +475,7 @@ public class SemanticAnalyzer extends VisitorAdaptor {
         if (relop instanceof Equal || relop instanceof NotEqual)
             return true;
 
-        return struct.compatibleWith(Tab.intType) || struct.compatibleWith(Tab.charType);
+        return struct.compatibleWith(MyTab.intType) || struct.compatibleWith(MyTab.charType);
     }
 
     public void visit(PrintStmt printStmt) {
@@ -544,7 +541,7 @@ public class SemanticAnalyzer extends VisitorAdaptor {
             return;
         }
 
-        if (var.getType() != Tab.intType) {
+        if (var.getType() != MyTab.intType) {
             reportError("Samo celobrojne vrednosti se mogu inkrementirati ili dekrementirati", stmt);
         }
     }
@@ -586,7 +583,7 @@ public class SemanticAnalyzer extends VisitorAdaptor {
 
         if (currentSwitchTypeStack.isEmpty()) {
             // If this happens the error will be reported elsewhere
-            expr.struct = Tab.noType;
+            expr.struct = MyTab.noType;
             return;
         }
 
@@ -672,11 +669,11 @@ public class SemanticAnalyzer extends VisitorAdaptor {
     }
 
     private Obj findInCurrentScope(String ident) {
-        SymbolDataStructure locals = Tab.currentScope.getLocals();
-        if (locals == null) return Tab.noObj;
+        SymbolDataStructure locals = MyTab.currentScope.getLocals();
+        if (locals == null) return MyTab.noObj;
 
         Obj result = locals.searchKey(ident);
-        return result != null? result: Tab.noObj;
+        return result != null? result: MyTab.noObj;
     }
 
     private static boolean areNotCompatible(Struct s1, Struct s2) {
@@ -691,7 +688,7 @@ public class SemanticAnalyzer extends VisitorAdaptor {
         // Arrays are example if one of the elements has no type
         return s1.getKind() == s2.getKind()
                && s1.getKind() == Struct.Array
-               && (s1.getElemType() == Tab.noType || s2.getElemType() == Tab.noType);
+               && (s1.getElemType() == MyTab.noType || s2.getElemType() == MyTab.noType);
     }
 
     private void reportElement(String messageHead, Obj obj, SyntaxNode node) {

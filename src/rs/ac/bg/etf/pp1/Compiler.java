@@ -20,15 +20,11 @@ import rs.ac.bg.etf.pp1.ast.Program;
 import rs.ac.bg.etf.pp1.test.CompilerError;
 import rs.ac.bg.etf.pp1.util.Log4JUtils;
 import rs.etf.pp1.mj.runtime.Code;
-import rs.etf.pp1.symboltable.Tab;
-import rs.etf.pp1.symboltable.concepts.*;
-import rs.etf.pp1.symboltable.visitors.SymbolTableVisitor;
 
 public class Compiler implements rs.ac.bg.etf.pp1.test.Compiler {
     private static Logger log;
     private List<CompilerError> errors;
 
-    private Struct boolType;
     private boolean syntaxErrorDetected;
     private boolean semanticErrorDetected;
 
@@ -71,11 +67,10 @@ public class Compiler implements rs.ac.bg.etf.pp1.test.Compiler {
 
             Program program = (Program) symbol.value;
 
-            initSymbolTable();
+            MyTab.init();
             SemanticAnalyzer semAnalyzer = doSemanticAnalysis(program);
 
-            log.info("==============SADRZAJ TABELE SIMBOLA===================");
-            tsdump();
+            MyTab.dump(log);
 
             if (syntaxErrorDetected || semanticErrorDetected) {
                 log.error("Parsiranje NIJE uspesno zavrseno!");
@@ -93,14 +88,6 @@ public class Compiler implements rs.ac.bg.etf.pp1.test.Compiler {
             log.error(e.getMessage(), e);
             return errors;
         }
-    }
-
-    public void tsdump() {
-        SymbolTableVisitor stv = new DumpSymbolTableVisitorWithBool();
-        for (Scope s = Tab.currentScope; s != null; s = s.getOuter()) {
-            s.accept(stv);
-        }
-        log.info("\n" + stv.getOutput());
     }
 
     private Symbol parse(String sourceFilePath) throws Exception {
@@ -133,14 +120,8 @@ public class Compiler implements rs.ac.bg.etf.pp1.test.Compiler {
         }
     }
 
-    private void initSymbolTable() {
-        boolType = new Struct(Struct.Bool);
-        Tab.init();
-        Tab.currentScope.addToLocals(new Obj(Obj.Type, "bool", boolType));
-    }
-
     private SemanticAnalyzer doSemanticAnalysis(Program program) {
-        SemanticAnalyzer semAnalyzer = new SemanticAnalyzer(boolType);
+        SemanticAnalyzer semAnalyzer = new SemanticAnalyzer();
         program.traverseBottomUp(semAnalyzer);
 
         errors.addAll(semAnalyzer.errors);
@@ -153,7 +134,7 @@ public class Compiler implements rs.ac.bg.etf.pp1.test.Compiler {
         File objFile = new File(outputFilePath);
         if (objFile.exists()) objFile.delete();
 
-        CodeGenerator codeGenerator = new CodeGenerator(boolType, predeclared);
+        CodeGenerator codeGenerator = new CodeGenerator(predeclared);
         program.traverseBottomUp(codeGenerator);
         Code.dataSize = nVars;
         Code.mainPc = codeGenerator.mainPc;
