@@ -1,0 +1,30 @@
+ERROR 22:42:25,318 - Linija 2: Konstanti greska_int je dodeljen izraz pogresnog tipa
+ERROR 22:42:25,319 - Linija 3: Konstanti greska_char je dodeljen izraz pogresnog tipa
+ERROR 22:42:25,319 - Linija 9: Nepostojeci tip: imt
+ERROR 22:42:25,320 - Linija 12: Identifikator nepostojeci ne postoji
+ERROR 22:42:25,320 - Linija 12: Dodela vrednosti nije moguca, tipovi nisu kompatibilni
+ERROR 22:42:25,321 - Linija 13: Dodela vrednosti nije moguca, tipovi nisu kompatibilni
+ERROR 22:42:25,321 - Linija 15: Identifikator nepostojeci ne postoji
+ERROR 22:42:25,321 - Linija 15: Samo celobrojne vrednosti se mogu inkrementirati ili dekrementirati
+ERROR 22:42:25,321 - Linija 18: Identifikator i nije funkcija
+ERROR 22:42:25,321 - Linija 20: Break se moze koristiti samo u do-while blokovima
+ERROR 22:42:25,321 - Linija 21: Continue se moze koristiti samo u do-while blokovima
+ERROR 22:42:25,321 - Linija 23: Ne moze se raditi ispisivanje niza
+ERROR 22:42:25,322 - Linija 11: Funkciji method1 fali return naredba koja je van grana
+ERROR 22:42:25,322 - Linija 29: Operacije AND i OR i uslovi se koriste samo sa bool vrednostima
+ERROR 22:42:25,323 - Linija 31: Pogresan broj parametara funkcije method1
+ERROR 22:42:25,323 - Linija 31: Parametar #1 poziva funkcije method1 je pogresnog tipa
+ERROR 22:42:25,323 - Linija 33: Relacione operacije se ne mogu koristiti sa nekompatibilnim tipovima
+ERROR 22:42:25,324 - Linija 34: Mogu se negirati samo celobrojne vrednosti
+ERROR 22:42:25,324 - Linija 34: Relacione operacije se ne mogu koristiti sa nekompatibilnim tipovima
+ERROR 22:42:25,324 - Linija 35: Povratna vrednost je pogrešnog tipa
+ERROR 22:42:25,325 - Linija 37: Operacija % se moze koristiti samo sa celobrojnim vrednostima
+ERROR 22:42:25,325 - Linija 38: Velicina niza u strukturi mora biti celobrojna vrednost
+ERROR 22:42:25,325 - Linija 42: Return se ne moze koristiti u switch blokovima
+ERROR 22:42:25,326 - Linija 42: Return izraz ove funkcije mora imati povratnu vrednost
+ERROR 22:42:25,326 - Linija 40: Default bloku fali yield naredba
+ERROR 22:42:25,326 - Linija 40: Dodela vrednosti nije moguca, tipovi nisu kompatibilni
+ERROR 22:42:25,326 - Linija 47: Svi blokovi switch-a moraju da vracaju isti tip rezultata
+ERROR 22:42:25,326 - Linija 26: Funkciji method2 fali return naredba koja je van grana
+ERROR 22:42:25,326 - Linija 1: Mora postojati ulazna metoda 'main'
+ERROR 22:42:25,327 - Parsiranje NIJE uspesno zavrseno!

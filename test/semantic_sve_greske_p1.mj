@@ -1,0 +1,50 @@
+program semantic_sve_grekse_p1
+    const int greska_int = false;
+    const char greska_char = 3;
+
+    int i;
+    char c;
+    int ar[];
+
+    imt x;
+{
+    int method1(int c) {
+        nepostojeci = 3;
+        i = true;
+
+        nepostojeci++;
+        c--;
+
+        i();
+        
+        break;
+        continue;
+        
+        print(ar);
+    }
+
+    int method2() {
+        do {
+
+        } while (1);
+    
+        method1(c, i);
+        
+        if (i > c)
+            if (i != -c)
+                return true;
+
+        i = i % c;
+        ar = new int [c];
+        
+        c = switch(i) {
+            case 0: yield 0;
+            default: return;
+        };
+
+        c = switch(i) {
+            case 0: yield 'a';
+            default: yield 1;
+        };
+    }
+}

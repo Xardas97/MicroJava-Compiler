@@ -1,0 +1,41 @@
+INFO  22:42:25,319 - Linija 5: Nadjeno Var i: Int, 0, 0
+INFO  22:42:25,319 - Linija 6: Nadjeno Var c: Char, 1, 0
+INFO  22:42:25,319 - Linija 7: Nadjeno Var ar: Array of Int, 2, 0
+INFO  22:42:25,319 - Linija 9: Nadjeno Var x: None, 3, 0
+INFO  22:42:25,320 - Linija 11: Nadjeno Meth method1: Int, 0, 0
+INFO  22:42:25,320 - Linija 11: Nadjeno Var c: Int, 0, 1
+INFO  22:42:25,320 - Linija 12: Koriscenje argumenta Var noObj: None, -1, -1
+INFO  22:42:25,320 - Linija 13: Koriscenje argumenta Var i: Int, 0, 0
+INFO  22:42:25,321 - Linija 15: Koriscenje argumenta Var noObj: None, -1, -1
+INFO  22:42:25,321 - Linija 16: Koriscenje argumenta Var c: Int, 0, 1
+INFO  22:42:25,321 - Linija 18: Koriscenje argumenta Var i: Int, 0, 0
+INFO  22:42:25,322 - Linija 26: Nadjeno Meth method2: Int, 0, 0
+INFO  22:42:25,323 - Linija 31: Poziv Meth method1: Int, 0, 1
+INFO  22:42:25,326 - ==============SADRZAJ TABELE SIMBOLA===================
+INFO  22:42:25,327 - 
+Type int: int, -1, -1 
+Type char: char, -1, -1 
+Con eol: char, 10, 0 
+Con null: Class [], 0, 0 
+Meth chr: char, 0, 1 
+   Var i: int, 0, 1 
+
+Meth ord: int, 0, 1 
+   Var ch: char, 0, 1 
+
+Meth len: int, 0, 1 
+   Var arr: Arr of notype, 0, 1 
+
+Type bool: bool, -1, -1 
+Prog semantic_sve_grekse_p1: notype, 0, 1 
+   Var i: int, 0, 0 
+   Var c: char, 1, 0 
+   Var ar: Arr of int, 2, 0 
+   Var x: notype, 3, 0 
+   Meth method1: int, 0, 1 
+      Var c: int, 0, 1 
+
+   Meth method2: int, 0, 0 
+
+
+

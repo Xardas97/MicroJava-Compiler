@@ -1,0 +1,6 @@
+program semantic_sve_grekse_p2
+{
+    int main(int c) {
+        return 1;
+    }
+}

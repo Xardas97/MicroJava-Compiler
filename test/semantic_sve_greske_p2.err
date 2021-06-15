@@ -1,0 +1,3 @@
+ERROR 22:46:55,989 - Linija 3: Ulazna metoda 'main' ne sme imati povratnu vrednost
+ERROR 22:46:55,989 - Linija 3: Ulazna metoda 'main' ne sme imati argumente
+ERROR 22:46:55,990 - Parsiranje NIJE uspesno zavrseno!
