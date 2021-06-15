@@ -1,0 +1,18 @@
+program parser_oporavak_od_gresaka
+    int a = 3, b;
+    const bool c, d = false;
+    const + = 3;
+{
+    void method1(int a a, int b) {}
+    void method2(int c++) {}
+
+    void main()
+    {
+        b = +;
+        c = true;
+        
+        if (a > b || c && && true || d) {
+            return;
+        }
+    }
+}

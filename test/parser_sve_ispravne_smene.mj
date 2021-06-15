@@ -1,4 +1,4 @@
-program Parser_sve_ispravne_smene
+program parser_sve_ispravne_smene
     const int intConst1 = 3, intConst12 = 4;
     const bool boolConst = false;
     const char charConst = 'C';
@@ -18,7 +18,7 @@ program Parser_sve_ispravne_smene
         method1(charConst);
         int_var--;
 
-        methodInt1 = switch (int_var)
+        methodInt1 = switch (int_var + 1)
 					 {
 						case 0: methodChar = 'a'; yield 0;
 						case 1: yield form_par_array[0];

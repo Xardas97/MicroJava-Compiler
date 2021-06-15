@@ -1,0 +1,35 @@
+INFO  22:02:22,727 - Linija 2: Nadjeno Var b: Int, 0, 0
+INFO  22:02:22,727 - Linija 3: Nadjeno Con d: Bool, 0, 0
+INFO  22:02:22,727 - Linija 6: Nadjeno Meth method1: None, 0, 0
+INFO  22:02:22,727 - Linija 6: Nadjeno Var b: Int, 0, 1
+INFO  22:02:22,727 - Linija 7: Nadjeno Meth method2: None, 0, 0
+INFO  22:02:22,729 - Linija 9: Nadjeno Meth main: None, 0, 0
+INFO  22:02:22,729 - Linija 12: Koriscenje argumenta Var noObj: None, -1, -1
+INFO  22:02:22,729 - ==============SADRZAJ TABELE SIMBOLA===================
+INFO  22:02:22,730 - 
+Type int: int, -1, -1 
+Type char: char, -1, -1 
+Con eol: char, 10, 0 
+Con null: Class [], 0, 0 
+Meth chr: char, 0, 1 
+   Var i: int, 0, 1 
+
+Meth ord: int, 0, 1 
+   Var ch: char, 0, 1 
+
+Meth len: int, 0, 1 
+   Var arr: Arr of notype, 0, 1 
+
+Type bool: bool, -1, -1 
+Prog parser_oporavak_od_gresaka: notype, 0, 1 
+   Var b: int, 0, 0 
+   Con d: bool, 0, 0 
+   Meth method1: notype, 0, 2 
+      Var b: int, 0, 1 
+
+   Meth method2: notype, 0, 1 
+
+   Meth main: notype, 0, 0 
+
+
+

@@ -1,38 +1,38 @@
-INFO  13:47:25,567 - Linija 2: Nadjeno Con intConst1: Int, 3, 0
-INFO  13:47:25,568 - Linija 2: Nadjeno Con intConst12: Int, 4, 0
-INFO  13:47:25,568 - Linija 3: Nadjeno Con boolConst: Bool, 0, 0
-INFO  13:47:25,568 - Linija 4: Nadjeno Con charConst: Char, 67, 0
-INFO  13:47:25,568 - Linija 6: Nadjeno Var int_array1: Array of Int, 0, 0
-INFO  13:47:25,568 - Linija 6: Nadjeno Var int_var: Int, 1, 0
-INFO  13:47:25,568 - Linija 6: Nadjeno Var int_array2: Array of Int, 2, 0
-INFO  13:47:25,568 - Linija 7: Nadjeno Var bool_var: Bool, 3, 0
-INFO  13:47:25,569 - Linija 9: Nadjeno Meth method1: None, 0, 0
-INFO  13:47:25,569 - Linija 9: Nadjeno Var form_par: Char, 0, 1
-INFO  13:47:25,569 - Linija 11: Nadjeno Meth method2: Int, 0, 0
-INFO  13:47:25,570 - Linija 11: Nadjeno Var form_par_array: Array of Int, 0, 1
-INFO  13:47:25,570 - Linija 11: Nadjeno Var form_par_bool: Bool, 1, 1
-INFO  13:47:25,570 - Linija 12: Nadjeno Var methodInt1: Int, 2, 1
-INFO  13:47:25,570 - Linija 12: Nadjeno Var methodInt2: Int, 3, 1
-INFO  13:47:25,570 - Linija 13: Nadjeno Var methodChar: Char, 4, 1
-INFO  13:47:25,570 - Linija 15: Koriscenje argumenta Var form_par_bool: Bool, 1, 1
-INFO  13:47:25,570 - Linija 17: Koriscenje argumenta Var int_var: Int, 1, 0
-INFO  13:47:25,570 - Linija 17: Koriscenje argumenta Meth method2: Int, 0, 2
-INFO  13:47:25,571 - Linija 17: Koriscenje argumenta Var form_par_array: Array of Int, 0, 1
-INFO  13:47:25,571 - Linija 17: Koriscenje argumenta Con boolConst: Bool, 0, 0
-INFO  13:47:25,571 - Linija 17: Poziv Meth method2: Int, 0, 2
-INFO  13:47:25,572 - Linija 18: Koriscenje argumenta Meth method1: None, 0, 1
-INFO  13:47:25,572 - Linija 18: Poziv Meth method1: None, 0, 1
-INFO  13:47:25,572 - Linija 19: Koriscenje argumenta Var int_var: Int, 1, 0
-INFO  13:47:25,573 - Linija 21: Koriscenje argumenta Var int_var: Int, 1, 0
-INFO  13:47:25,573 - Linija 24: Pristup Var form_par_array: Array of Int, 0, 1
-INFO  13:47:25,573 - Linija 24: Koriscenje argumenta Var form_par_array: Array of Int, 0, 1
-INFO  13:47:25,573 - Linija 28: Koriscenje argumenta Var int_var: Int, 1, 0
-INFO  13:47:25,573 - Linija 33: Nadjeno Meth main: None, 0, 0
-INFO  13:47:25,573 - Linija 36: Poziv Meth method2: Int, 0, 2
-INFO  13:47:25,573 - Linija 38: Pristup Var int_array1: Array of Int, 0, 0
-INFO  13:47:25,574 - Linija 45: Pristup Var int_array1: Array of Int, 0, 0
-INFO  13:47:25,574 - ==============SADRZAJ TABELE SIMBOLA===================
-INFO  13:47:25,574 - 
+INFO  21:55:19,405 - Linija 2: Nadjeno Con intConst1: Int, 3, 0
+INFO  21:55:19,405 - Linija 2: Nadjeno Con intConst12: Int, 4, 0
+INFO  21:55:19,406 - Linija 3: Nadjeno Con boolConst: Bool, 0, 0
+INFO  21:55:19,406 - Linija 4: Nadjeno Con charConst: Char, 67, 0
+INFO  21:55:19,406 - Linija 6: Nadjeno Var int_array1: Array of Int, 0, 0
+INFO  21:55:19,406 - Linija 6: Nadjeno Var int_var: Int, 1, 0
+INFO  21:55:19,406 - Linija 6: Nadjeno Var int_array2: Array of Int, 2, 0
+INFO  21:55:19,406 - Linija 7: Nadjeno Var bool_var: Bool, 3, 0
+INFO  21:55:19,406 - Linija 9: Nadjeno Meth method1: None, 0, 0
+INFO  21:55:19,407 - Linija 9: Nadjeno Var form_par: Char, 0, 1
+INFO  21:55:19,407 - Linija 11: Nadjeno Meth method2: Int, 0, 0
+INFO  21:55:19,407 - Linija 11: Nadjeno Var form_par_array: Array of Int, 0, 1
+INFO  21:55:19,407 - Linija 11: Nadjeno Var form_par_bool: Bool, 1, 1
+INFO  21:55:19,407 - Linija 12: Nadjeno Var methodInt1: Int, 2, 1
+INFO  21:55:19,407 - Linija 12: Nadjeno Var methodInt2: Int, 3, 1
+INFO  21:55:19,407 - Linija 13: Nadjeno Var methodChar: Char, 4, 1
+INFO  21:55:19,408 - Linija 15: Koriscenje argumenta Var form_par_bool: Bool, 1, 1
+INFO  21:55:19,408 - Linija 17: Koriscenje argumenta Var int_var: Int, 1, 0
+INFO  21:55:19,408 - Linija 17: Koriscenje argumenta Meth method2: Int, 0, 2
+INFO  21:55:19,408 - Linija 17: Koriscenje argumenta Var form_par_array: Array of Int, 0, 1
+INFO  21:55:19,408 - Linija 17: Koriscenje argumenta Con boolConst: Bool, 0, 0
+INFO  21:55:19,408 - Linija 17: Poziv Meth method2: Int, 0, 2
+INFO  21:55:19,409 - Linija 18: Koriscenje argumenta Meth method1: None, 0, 1
+INFO  21:55:19,409 - Linija 18: Poziv Meth method1: None, 0, 1
+INFO  21:55:19,409 - Linija 19: Koriscenje argumenta Var int_var: Int, 1, 0
+INFO  21:55:19,410 - Linija 21: Koriscenje argumenta Var int_var: Int, 1, 0
+INFO  21:55:19,410 - Linija 24: Pristup Var form_par_array: Array of Int, 0, 1
+INFO  21:55:19,411 - Linija 24: Koriscenje argumenta Var form_par_array: Array of Int, 0, 1
+INFO  21:55:19,411 - Linija 28: Koriscenje argumenta Var int_var: Int, 1, 0
+INFO  21:55:19,411 - Linija 33: Nadjeno Meth main: None, 0, 0
+INFO  21:55:19,411 - Linija 36: Poziv Meth method2: Int, 0, 2
+INFO  21:55:19,411 - Linija 38: Pristup Var int_array1: Array of Int, 0, 0
+INFO  21:55:19,411 - Linija 45: Pristup Var int_array1: Array of Int, 0, 0
+INFO  21:55:19,412 - ==============SADRZAJ TABELE SIMBOLA===================
+INFO  21:55:19,412 - 
 Type int: int, -1, -1 
 Type char: char, -1, -1 
 Con eol: char, 10, 0 
@@ -47,7 +47,7 @@ Meth len: int, 0, 1
    Var arr: Arr of notype, 0, 1 
 
 Type bool: bool, -1, -1 
-Prog Parser_sve_ispravne_smene: notype, 0, 1 
+Prog parser_sve_ispravne_smene: notype, 0, 1 
    Con intConst1: int, 3, 0 
    Con intConst12: int, 4, 0 
    Con boolConst: bool, 0, 0 
@@ -70,11 +70,11 @@ Prog Parser_sve_ispravne_smene: notype, 0, 1
 
 
 
-INFO  13:47:25,575 - ==============SINTAKSNO STABLO===================
-INFO  13:47:25,580 - 
+INFO  21:55:19,412 - ==============SINTAKSNO STABLO===================
+INFO  21:55:19,415 - 
 Program(
   ProgName(
-   Parser_sve_ispravne_smene
+   parser_sve_ispravne_smene
   ) [ProgName]
   VarConstDeclList(
     VarConstDeclList(
@@ -445,7 +445,7 @@ Program(
                         SwitchExpr(
                           SwitchStart(
                           ) [SwitchStart]
-                          SingleExpression(
+                          MultiExpression(
                             FactorTerm(
                               DesignatorFctr(
                                 SingularDesignator(
@@ -453,7 +453,16 @@ Program(
                                 ) [SingularDesignator]
                               ) [DesignatorFctr]
                             ) [FactorTerm]
-                          ) [SingleExpression]
+                            Plus(
+                            ) [Plus]
+                            TermListElement(
+                              FactorTerm(
+                                NumConstFctr(
+                                 1
+                                ) [NumConstFctr]
+                              ) [FactorTerm]
+                            ) [TermListElement]
+                          ) [MultiExpression]
                           CaseList(
                             CaseList(
                               EmptyCaseListElement(

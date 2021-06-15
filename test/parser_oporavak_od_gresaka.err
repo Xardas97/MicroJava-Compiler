@@ -1,0 +1,10 @@
+ERROR 22:02:22,703 - Lose ime promenljive ili parametra na liniji: 2
+ERROR 22:02:22,705 - Losa deklaracija konstante na liniji: 3
+ERROR 22:02:22,706 - Losa deklaracija konstanti na liniji: 4
+ERROR 22:02:22,709 - Lose ime promenljive ili parametra na liniji: 6
+ERROR 22:02:22,712 - Lose ime promenljive ili parametra na liniji: 7
+ERROR 22:02:22,712 - Iskaz ne moze biti prepoznat na liniji: 11
+ERROR 22:02:22,716 - Los logicki izraz na liniji: 14
+ERROR 22:02:22,729 - Linija 12: Identifikator c ne postoji
+ERROR 22:02:22,729 - Linija 12: Dodela vrednosti nije moguca, tipovi nisu kompatibilni
+ERROR 22:02:22,730 - Parsiranje NIJE uspesno zavrseno!
