@@ -1,0 +1,1056 @@
+INFO  13:47:25,567 - Linija 2: Nadjeno Con intConst1: Int, 3, 0
+INFO  13:47:25,568 - Linija 2: Nadjeno Con intConst12: Int, 4, 0
+INFO  13:47:25,568 - Linija 3: Nadjeno Con boolConst: Bool, 0, 0
+INFO  13:47:25,568 - Linija 4: Nadjeno Con charConst: Char, 67, 0
+INFO  13:47:25,568 - Linija 6: Nadjeno Var int_array1: Array of Int, 0, 0
+INFO  13:47:25,568 - Linija 6: Nadjeno Var int_var: Int, 1, 0
+INFO  13:47:25,568 - Linija 6: Nadjeno Var int_array2: Array of Int, 2, 0
+INFO  13:47:25,568 - Linija 7: Nadjeno Var bool_var: Bool, 3, 0
+INFO  13:47:25,569 - Linija 9: Nadjeno Meth method1: None, 0, 0
+INFO  13:47:25,569 - Linija 9: Nadjeno Var form_par: Char, 0, 1
+INFO  13:47:25,569 - Linija 11: Nadjeno Meth method2: Int, 0, 0
+INFO  13:47:25,570 - Linija 11: Nadjeno Var form_par_array: Array of Int, 0, 1
+INFO  13:47:25,570 - Linija 11: Nadjeno Var form_par_bool: Bool, 1, 1
+INFO  13:47:25,570 - Linija 12: Nadjeno Var methodInt1: Int, 2, 1
+INFO  13:47:25,570 - Linija 12: Nadjeno Var methodInt2: Int, 3, 1
+INFO  13:47:25,570 - Linija 13: Nadjeno Var methodChar: Char, 4, 1
+INFO  13:47:25,570 - Linija 15: Koriscenje argumenta Var form_par_bool: Bool, 1, 1
+INFO  13:47:25,570 - Linija 17: Koriscenje argumenta Var int_var: Int, 1, 0
+INFO  13:47:25,570 - Linija 17: Koriscenje argumenta Meth method2: Int, 0, 2
+INFO  13:47:25,571 - Linija 17: Koriscenje argumenta Var form_par_array: Array of Int, 0, 1
+INFO  13:47:25,571 - Linija 17: Koriscenje argumenta Con boolConst: Bool, 0, 0
+INFO  13:47:25,571 - Linija 17: Poziv Meth method2: Int, 0, 2
+INFO  13:47:25,572 - Linija 18: Koriscenje argumenta Meth method1: None, 0, 1
+INFO  13:47:25,572 - Linija 18: Poziv Meth method1: None, 0, 1
+INFO  13:47:25,572 - Linija 19: Koriscenje argumenta Var int_var: Int, 1, 0
+INFO  13:47:25,573 - Linija 21: Koriscenje argumenta Var int_var: Int, 1, 0
+INFO  13:47:25,573 - Linija 24: Pristup Var form_par_array: Array of Int, 0, 1
+INFO  13:47:25,573 - Linija 24: Koriscenje argumenta Var form_par_array: Array of Int, 0, 1
+INFO  13:47:25,573 - Linija 28: Koriscenje argumenta Var int_var: Int, 1, 0
+INFO  13:47:25,573 - Linija 33: Nadjeno Meth main: None, 0, 0
+INFO  13:47:25,573 - Linija 36: Poziv Meth method2: Int, 0, 2
+INFO  13:47:25,573 - Linija 38: Pristup Var int_array1: Array of Int, 0, 0
+INFO  13:47:25,574 - Linija 45: Pristup Var int_array1: Array of Int, 0, 0
+INFO  13:47:25,574 - ==============SADRZAJ TABELE SIMBOLA===================
+INFO  13:47:25,574 - 
+Type int: int, -1, -1 
+Type char: char, -1, -1 
+Con eol: char, 10, 0 
+Con null: Class [], 0, 0 
+Meth chr: char, 0, 1 
+   Var i: int, 0, 1 
+
+Meth ord: int, 0, 1 
+   Var ch: char, 0, 1 
+
+Meth len: int, 0, 1 
+   Var arr: Arr of notype, 0, 1 
+
+Type bool: bool, -1, -1 
+Prog Parser_sve_ispravne_smene: notype, 0, 1 
+   Con intConst1: int, 3, 0 
+   Con intConst12: int, 4, 0 
+   Con boolConst: bool, 0, 0 
+   Con charConst: char, 67, 0 
+   Var int_array1: Arr of int, 0, 0 
+   Var int_var: int, 1, 0 
+   Var int_array2: Arr of int, 2, 0 
+   Var bool_var: bool, 3, 0 
+   Meth method1: notype, 0, 1 
+      Var form_par: char, 0, 1 
+
+   Meth method2: int, 0, 2 
+      Var form_par_array: Arr of int, 0, 1 
+      Var form_par_bool: bool, 1, 1 
+      Var methodInt1: int, 2, 1 
+      Var methodInt2: int, 3, 1 
+      Var methodChar: char, 4, 1 
+
+   Meth main: notype, 0, 0 
+
+
+
+INFO  13:47:25,575 - ==============SINTAKSNO STABLO===================
+INFO  13:47:25,580 - 
+Program(
+  ProgName(
+   Parser_sve_ispravne_smene
+  ) [ProgName]
+  VarConstDeclList(
+    VarConstDeclList(
+      VarConstDeclList(
+        VarConstDeclList(
+          VarConstDeclList(
+            EmptyVarConstDeclList(
+            ) [EmptyVarConstDeclList]
+            VarConstDeclConst(
+              ConstDeclList(
+                Type(
+                 int
+                ) [Type]
+                ConstAssignList(
+                  ConstAssignElement(
+                    ConstAssignmentNum(
+                     intConst1
+                     3
+                    ) [ConstAssignmentNum]
+                  ) [ConstAssignElement]
+                  ConstAssignmentNum(
+                   intConst12
+                   4
+                  ) [ConstAssignmentNum]
+                ) [ConstAssignList]
+              ) [ConstDeclList]
+            ) [VarConstDeclConst]
+          ) [VarConstDeclList]
+          VarConstDeclConst(
+            ConstDeclList(
+              Type(
+               bool
+              ) [Type]
+              ConstAssignElement(
+                ConstAssignmentBool(
+                 boolConst
+                 0
+                ) [ConstAssignmentBool]
+              ) [ConstAssignElement]
+            ) [ConstDeclList]
+          ) [VarConstDeclConst]
+        ) [VarConstDeclList]
+        VarConstDeclConst(
+          ConstDeclList(
+            Type(
+             char
+            ) [Type]
+            ConstAssignElement(
+              ConstAssignmentChar(
+               charConst
+               C
+              ) [ConstAssignmentChar]
+            ) [ConstAssignElement]
+          ) [ConstDeclList]
+        ) [VarConstDeclConst]
+      ) [VarConstDeclList]
+      VarConstDeclVar(
+        VarDeclList(
+          Type(
+           int
+          ) [Type]
+          VarNameList(
+            VarNameList(
+              VarNameElement(
+                ArrayVarName(
+                 int_array1
+                ) [ArrayVarName]
+              ) [VarNameElement]
+              SingularVarName(
+               int_var
+              ) [SingularVarName]
+            ) [VarNameList]
+            ArrayVarName(
+             int_array2
+            ) [ArrayVarName]
+          ) [VarNameList]
+        ) [VarDeclList]
+      ) [VarConstDeclVar]
+    ) [VarConstDeclList]
+    VarConstDeclVar(
+      VarDeclList(
+        Type(
+         bool
+        ) [Type]
+        VarNameElement(
+          SingularVarName(
+           bool_var
+          ) [SingularVarName]
+        ) [VarNameElement]
+      ) [VarDeclList]
+    ) [VarConstDeclVar]
+  ) [VarConstDeclList]
+  MethodDeclList(
+    MethodDeclList(
+      MethodDeclList(
+        EmptyMethodDeclList(
+        ) [EmptyMethodDeclList]
+        MethodDecl(
+          MethodTypeName(
+            VoidReturnType(
+            ) [VoidReturnType]
+           method1
+          ) [MethodTypeName]
+          FormParList(
+            FormPar(
+              Type(
+               char
+              ) [Type]
+              SingularVarName(
+               form_par
+              ) [SingularVarName]
+            ) [FormPar]
+            EmptyFormParMore(
+            ) [EmptyFormParMore]
+          ) [FormParList]
+          EmptyMethodVarDeclList(
+          ) [EmptyMethodVarDeclList]
+          EmptyStatementList(
+          ) [EmptyStatementList]
+        ) [MethodDecl]
+      ) [MethodDeclList]
+      MethodDecl(
+        MethodTypeName(
+          NonVoidReturnType(
+            Type(
+             int
+            ) [Type]
+          ) [NonVoidReturnType]
+         method2
+        ) [MethodTypeName]
+        FormParList(
+          FormPar(
+            Type(
+             int
+            ) [Type]
+            ArrayVarName(
+             form_par_array
+            ) [ArrayVarName]
+          ) [FormPar]
+          FormParMoreElement(
+            FormPar(
+              Type(
+               bool
+              ) [Type]
+              SingularVarName(
+               form_par_bool
+              ) [SingularVarName]
+            ) [FormPar]
+            EmptyFormParMore(
+            ) [EmptyFormParMore]
+          ) [FormParMoreElement]
+        ) [FormParList]
+        MethodVarDeclList(
+          MethodVarDeclList(
+            EmptyMethodVarDeclList(
+            ) [EmptyMethodVarDeclList]
+            VarDeclList(
+              Type(
+               int
+              ) [Type]
+              VarNameList(
+                VarNameElement(
+                  SingularVarName(
+                   methodInt1
+                  ) [SingularVarName]
+                ) [VarNameElement]
+                SingularVarName(
+                 methodInt2
+                ) [SingularVarName]
+              ) [VarNameList]
+            ) [VarDeclList]
+          ) [MethodVarDeclList]
+          VarDeclList(
+            Type(
+             char
+            ) [Type]
+            VarNameElement(
+              SingularVarName(
+               methodChar
+              ) [SingularVarName]
+            ) [VarNameElement]
+          ) [VarDeclList]
+        ) [MethodVarDeclList]
+        StatementList(
+          StatementList(
+            StatementList(
+              StatementList(
+                StatementList(
+                  StatementList(
+                    StatementList(
+                      StatementList(
+                        EmptyStatementList(
+                        ) [EmptyStatementList]
+                        UnmatchedStmt(
+                          UnmatchedIfStmt(
+                            IfStart(
+                            ) [IfStart]
+                            ConditionListElement(
+                              CondTermElement(
+                                CondFactRelop(
+                                  SingleExpression(
+                                    FactorTerm(
+                                      DesignatorFctr(
+                                        SingularDesignator(
+                                         form_par_bool
+                                        ) [SingularDesignator]
+                                      ) [DesignatorFctr]
+                                    ) [FactorTerm]
+                                  ) [SingleExpression]
+                                  Equal(
+                                  ) [Equal]
+                                  SingleExpression(
+                                    FactorTerm(
+                                      BoolConstFctr(
+                                       0
+                                      ) [BoolConstFctr]
+                                    ) [FactorTerm]
+                                  ) [SingleExpression]
+                                ) [CondFactRelop]
+                              ) [CondTermElement]
+                            ) [ConditionListElement]
+                            MatchedStmt(
+                              ReturnStmt(
+                                SingleExpressionWithNegation(
+                                  Negation(
+                                  ) [Negation]
+                                  FactorTerm(
+                                    NumConstFctr(
+                                     1
+                                    ) [NumConstFctr]
+                                  ) [FactorTerm]
+                                ) [SingleExpressionWithNegation]
+                              ) [ReturnStmt]
+                            ) [MatchedStmt]
+                          ) [UnmatchedIfStmt]
+                        ) [UnmatchedStmt]
+                      ) [StatementList]
+                      MatchedStmt(
+                        DesignatorStmt(
+                          AssignmentStmt(
+                            SingleAssignmentStmt(
+                              SingularDesignator(
+                               int_var
+                              ) [SingularDesignator]
+                              MultiExpressionWithNegation(
+                                Negation(
+                                ) [Negation]
+                                FactorTerm(
+                                  DesignatorFctr(
+                                    SingularDesignator(
+                                     intConst1
+                                    ) [SingularDesignator]
+                                  ) [DesignatorFctr]
+                                ) [FactorTerm]
+                                Plus(
+                                ) [Plus]
+                                TermListElement(
+                                  FactorListTerm(
+                                    FactorTerm(
+                                      NumConstFctr(
+                                       1
+                                      ) [NumConstFctr]
+                                    ) [FactorTerm]
+                                    Multiple(
+                                    ) [Multiple]
+                                    ExprFctr(
+                                      MultiExpression(
+                                        FactorTerm(
+                                          NumConstFctr(
+                                           2
+                                          ) [NumConstFctr]
+                                        ) [FactorTerm]
+                                        Plus(
+                                        ) [Plus]
+                                        TermListElement(
+                                          FactorTerm(
+                                            MethodCallFctr(
+                                              MethodCall(
+                                                SingularDesignator(
+                                                 method2
+                                                ) [SingularDesignator]
+                                                ActParList(
+                                                  ActPar(
+                                                    SingleExpression(
+                                                      FactorTerm(
+                                                        DesignatorFctr(
+                                                          SingularDesignator(
+                                                           form_par_array
+                                                          ) [SingularDesignator]
+                                                        ) [DesignatorFctr]
+                                                      ) [FactorTerm]
+                                                    ) [SingleExpression]
+                                                  ) [ActPar]
+                                                  ActParsMoreElement(
+                                                    ActPar(
+                                                      SingleExpression(
+                                                        FactorTerm(
+                                                          DesignatorFctr(
+                                                            SingularDesignator(
+                                                             boolConst
+                                                            ) [SingularDesignator]
+                                                          ) [DesignatorFctr]
+                                                        ) [FactorTerm]
+                                                      ) [SingleExpression]
+                                                    ) [ActPar]
+                                                    EmptyActParsMore(
+                                                    ) [EmptyActParsMore]
+                                                  ) [ActParsMoreElement]
+                                                ) [ActParList]
+                                              ) [MethodCall]
+                                            ) [MethodCallFctr]
+                                          ) [FactorTerm]
+                                        ) [TermListElement]
+                                      ) [MultiExpression]
+                                    ) [ExprFctr]
+                                  ) [FactorListTerm]
+                                ) [TermListElement]
+                              ) [MultiExpressionWithNegation]
+                            ) [SingleAssignmentStmt]
+                          ) [AssignmentStmt]
+                        ) [DesignatorStmt]
+                      ) [MatchedStmt]
+                    ) [StatementList]
+                    MatchedStmt(
+                      DesignatorStmt(
+                        MethodCallStmt(
+                          MethodCall(
+                            SingularDesignator(
+                             method1
+                            ) [SingularDesignator]
+                            ActParList(
+                              ActPar(
+                                SingleExpression(
+                                  FactorTerm(
+                                    DesignatorFctr(
+                                      SingularDesignator(
+                                       charConst
+                                      ) [SingularDesignator]
+                                    ) [DesignatorFctr]
+                                  ) [FactorTerm]
+                                ) [SingleExpression]
+                              ) [ActPar]
+                              EmptyActParsMore(
+                              ) [EmptyActParsMore]
+                            ) [ActParList]
+                          ) [MethodCall]
+                        ) [MethodCallStmt]
+                      ) [DesignatorStmt]
+                    ) [MatchedStmt]
+                  ) [StatementList]
+                  MatchedStmt(
+                    DesignatorStmt(
+                      DecrementStmt(
+                        SingularDesignator(
+                         int_var
+                        ) [SingularDesignator]
+                      ) [DecrementStmt]
+                    ) [DesignatorStmt]
+                  ) [MatchedStmt]
+                ) [StatementList]
+                MatchedStmt(
+                  DesignatorStmt(
+                    AssignmentStmt(
+                      SingleAssignmentStmt(
+                        SingularDesignator(
+                         methodInt1
+                        ) [SingularDesignator]
+                        SwitchExpr(
+                          SwitchStart(
+                          ) [SwitchStart]
+                          SingleExpression(
+                            FactorTerm(
+                              DesignatorFctr(
+                                SingularDesignator(
+                                 int_var
+                                ) [SingularDesignator]
+                              ) [DesignatorFctr]
+                            ) [FactorTerm]
+                          ) [SingleExpression]
+                          CaseList(
+                            CaseList(
+                              EmptyCaseListElement(
+                              ) [EmptyCaseListElement]
+                              Case(
+                                CaseStart(
+                                ) [CaseStart]
+                               0
+                                StatementList(
+                                  StatementList(
+                                    EmptyStatementList(
+                                    ) [EmptyStatementList]
+                                    MatchedStmt(
+                                      DesignatorStmt(
+                                        AssignmentStmt(
+                                          SingleAssignmentStmt(
+                                            SingularDesignator(
+                                             methodChar
+                                            ) [SingularDesignator]
+                                            SingleExpression(
+                                              FactorTerm(
+                                                CharConstFctr(
+                                                 a
+                                                ) [CharConstFctr]
+                                              ) [FactorTerm]
+                                            ) [SingleExpression]
+                                          ) [SingleAssignmentStmt]
+                                        ) [AssignmentStmt]
+                                      ) [DesignatorStmt]
+                                    ) [MatchedStmt]
+                                  ) [StatementList]
+                                  MatchedStmt(
+                                    YieldStmt(
+                                      SingleExpression(
+                                        FactorTerm(
+                                          NumConstFctr(
+                                           0
+                                          ) [NumConstFctr]
+                                        ) [FactorTerm]
+                                      ) [SingleExpression]
+                                    ) [YieldStmt]
+                                  ) [MatchedStmt]
+                                ) [StatementList]
+                              ) [Case]
+                            ) [CaseList]
+                            Case(
+                              CaseStart(
+                              ) [CaseStart]
+                             1
+                              StatementList(
+                                EmptyStatementList(
+                                ) [EmptyStatementList]
+                                MatchedStmt(
+                                  YieldStmt(
+                                    SingleExpression(
+                                      FactorTerm(
+                                        DesignatorFctr(
+                                          ArrayDesignator(
+                                            ArrayName(
+                                             form_par_array
+                                            ) [ArrayName]
+                                            SingleExpression(
+                                              FactorTerm(
+                                                NumConstFctr(
+                                                 0
+                                                ) [NumConstFctr]
+                                              ) [FactorTerm]
+                                            ) [SingleExpression]
+                                          ) [ArrayDesignator]
+                                        ) [DesignatorFctr]
+                                      ) [FactorTerm]
+                                    ) [SingleExpression]
+                                  ) [YieldStmt]
+                                ) [MatchedStmt]
+                              ) [StatementList]
+                            ) [Case]
+                          ) [CaseList]
+                          DefaultStart(
+                          ) [DefaultStart]
+                          StatementList(
+                            EmptyStatementList(
+                            ) [EmptyStatementList]
+                            MatchedStmt(
+                              YieldStmt(
+                                SingleExpressionWithNegation(
+                                  Negation(
+                                  ) [Negation]
+                                  FactorTerm(
+                                    NumConstFctr(
+                                     1
+                                    ) [NumConstFctr]
+                                  ) [FactorTerm]
+                                ) [SingleExpressionWithNegation]
+                              ) [YieldStmt]
+                            ) [MatchedStmt]
+                          ) [StatementList]
+                        ) [SwitchExpr]
+                      ) [SingleAssignmentStmt]
+                    ) [AssignmentStmt]
+                  ) [DesignatorStmt]
+                ) [MatchedStmt]
+              ) [StatementList]
+              MatchedStmt(
+                PrintStmt(
+                  SingleExpression(
+                    FactorTerm(
+                      DesignatorFctr(
+                        SingularDesignator(
+                         int_var
+                        ) [SingularDesignator]
+                      ) [DesignatorFctr]
+                    ) [FactorTerm]
+                  ) [SingleExpression]
+                  PrintWidth(
+                   1
+                  ) [PrintWidth]
+                ) [PrintStmt]
+              ) [MatchedStmt]
+            ) [StatementList]
+            MatchedStmt(
+              PrintStmt(
+                SingleExpression(
+                  FactorTerm(
+                    DesignatorFctr(
+                      SingularDesignator(
+                       methodInt1
+                      ) [SingularDesignator]
+                    ) [DesignatorFctr]
+                  ) [FactorTerm]
+                ) [SingleExpression]
+                NoPrintArg(
+                ) [NoPrintArg]
+              ) [PrintStmt]
+            ) [MatchedStmt]
+          ) [StatementList]
+          MatchedStmt(
+            ReturnStmt(
+              SingleExpression(
+                FactorTerm(
+                  DesignatorFctr(
+                    SingularDesignator(
+                     methodInt1
+                    ) [SingularDesignator]
+                  ) [DesignatorFctr]
+                ) [FactorTerm]
+              ) [SingleExpression]
+            ) [ReturnStmt]
+          ) [MatchedStmt]
+        ) [StatementList]
+      ) [MethodDecl]
+    ) [MethodDeclList]
+    MethodDecl(
+      MethodTypeName(
+        VoidReturnType(
+        ) [VoidReturnType]
+       main
+      ) [MethodTypeName]
+      NoFormPars(
+      ) [NoFormPars]
+      EmptyMethodVarDeclList(
+      ) [EmptyMethodVarDeclList]
+      StatementList(
+        StatementList(
+          StatementList(
+            EmptyStatementList(
+            ) [EmptyStatementList]
+            MatchedStmt(
+              DesignatorStmt(
+                AssignmentStmt(
+                  SingleAssignmentStmt(
+                    SingularDesignator(
+                     int_array1
+                    ) [SingularDesignator]
+                    SingleExpression(
+                      FactorTerm(
+                        ArrayInitFctr(
+                          Type(
+                           int
+                          ) [Type]
+                          SingleExpression(
+                            FactorTerm(
+                              NumConstFctr(
+                               3
+                              ) [NumConstFctr]
+                            ) [FactorTerm]
+                          ) [SingleExpression]
+                        ) [ArrayInitFctr]
+                      ) [FactorTerm]
+                    ) [SingleExpression]
+                  ) [SingleAssignmentStmt]
+                ) [AssignmentStmt]
+              ) [DesignatorStmt]
+            ) [MatchedStmt]
+          ) [StatementList]
+          MatchedStmt(
+            DesignatorStmt(
+              AssignmentStmt(
+                SingleAssignmentStmt(
+                  SingularDesignator(
+                   int_var
+                  ) [SingularDesignator]
+                  SingleExpression(
+                    FactorTerm(
+                      MethodCallFctr(
+                        MethodCall(
+                          SingularDesignator(
+                           method2
+                          ) [SingularDesignator]
+                          ActParList(
+                            ActPar(
+                              SingleExpression(
+                                FactorTerm(
+                                  DesignatorFctr(
+                                    SingularDesignator(
+                                     int_array1
+                                    ) [SingularDesignator]
+                                  ) [DesignatorFctr]
+                                ) [FactorTerm]
+                              ) [SingleExpression]
+                            ) [ActPar]
+                            ActParsMoreElement(
+                              ActPar(
+                                SingleExpression(
+                                  FactorTerm(
+                                    BoolConstFctr(
+                                     1
+                                    ) [BoolConstFctr]
+                                  ) [FactorTerm]
+                                ) [SingleExpression]
+                              ) [ActPar]
+                              EmptyActParsMore(
+                              ) [EmptyActParsMore]
+                            ) [ActParsMoreElement]
+                          ) [ActParList]
+                        ) [MethodCall]
+                      ) [MethodCallFctr]
+                    ) [FactorTerm]
+                  ) [SingleExpression]
+                ) [SingleAssignmentStmt]
+              ) [AssignmentStmt]
+            ) [DesignatorStmt]
+          ) [MatchedStmt]
+        ) [StatementList]
+        UnmatchedStmt(
+          UnmatchedIfStmt(
+            IfStart(
+            ) [IfStart]
+            ConditionList(
+              ConditionListElement(
+                CondTermElement(
+                  CondFactSingle(
+                    SingleExpression(
+                      FactorTerm(
+                        DesignatorFctr(
+                          SingularDesignator(
+                           boolConst
+                          ) [SingularDesignator]
+                        ) [DesignatorFctr]
+                      ) [FactorTerm]
+                    ) [SingleExpression]
+                  ) [CondFactSingle]
+                ) [CondTermElement]
+              ) [ConditionListElement]
+              Or(
+              ) [Or]
+              CondTermList(
+                CondTermElement(
+                  CondFactRelop(
+                    SingleExpression(
+                      FactorTerm(
+                        DesignatorFctr(
+                          SingularDesignator(
+                           int_var
+                          ) [SingularDesignator]
+                        ) [DesignatorFctr]
+                      ) [FactorTerm]
+                    ) [SingleExpression]
+                    GreaterEqual(
+                    ) [GreaterEqual]
+                    SingleExpression(
+                      FactorTerm(
+                        ExprFctr(
+                          MultiExpression(
+                            FactorTerm(
+                              NumConstFctr(
+                               2
+                              ) [NumConstFctr]
+                            ) [FactorTerm]
+                            Plus(
+                            ) [Plus]
+                            TermListElement(
+                              FactorTerm(
+                                NumConstFctr(
+                                 1
+                                ) [NumConstFctr]
+                              ) [FactorTerm]
+                            ) [TermListElement]
+                          ) [MultiExpression]
+                        ) [ExprFctr]
+                      ) [FactorTerm]
+                    ) [SingleExpression]
+                  ) [CondFactRelop]
+                ) [CondTermElement]
+                And(
+                ) [And]
+                CondFactRelop(
+                  SingleExpression(
+                    FactorTerm(
+                      DesignatorFctr(
+                        ArrayDesignator(
+                          ArrayName(
+                           int_array1
+                          ) [ArrayName]
+                          SingleExpression(
+                            FactorTerm(
+                              NumConstFctr(
+                               0
+                              ) [NumConstFctr]
+                            ) [FactorTerm]
+                          ) [SingleExpression]
+                        ) [ArrayDesignator]
+                      ) [DesignatorFctr]
+                    ) [FactorTerm]
+                  ) [SingleExpression]
+                  NotEqual(
+                  ) [NotEqual]
+                  SingleExpression(
+                    FactorTerm(
+                      NumConstFctr(
+                       3
+                      ) [NumConstFctr]
+                    ) [FactorTerm]
+                  ) [SingleExpression]
+                ) [CondFactRelop]
+              ) [CondTermList]
+            ) [ConditionList]
+            MatchedStmt(
+              MatchedIfElseStmt(
+                IfStart(
+                ) [IfStart]
+                ConditionListElement(
+                  CondTermElement(
+                    CondFactSingle(
+                      SingleExpression(
+                        FactorTerm(
+                          BoolConstFctr(
+                           1
+                          ) [BoolConstFctr]
+                        ) [FactorTerm]
+                      ) [SingleExpression]
+                    ) [CondFactSingle]
+                  ) [CondTermElement]
+                ) [ConditionListElement]
+                PrintStmt(
+                  SingleExpression(
+                    FactorTerm(
+                      NumConstFctr(
+                       1
+                      ) [NumConstFctr]
+                    ) [FactorTerm]
+                  ) [SingleExpression]
+                  NoPrintArg(
+                  ) [NoPrintArg]
+                ) [PrintStmt]
+                Else(
+                ) [Else]
+                StatementBlock(
+                  StatementList(
+                    StatementList(
+                      EmptyStatementList(
+                      ) [EmptyStatementList]
+                      MatchedStmt(
+                        DesignatorStmt(
+                          IncrementStmt(
+                            SingularDesignator(
+                             int_var
+                            ) [SingularDesignator]
+                          ) [IncrementStmt]
+                        ) [DesignatorStmt]
+                      ) [MatchedStmt]
+                    ) [StatementList]
+                    MatchedStmt(
+                      WhileStmt(
+                        WhileStart(
+                        ) [WhileStart]
+                        MatchedStmt(
+                          StatementBlock(
+                            StatementList(
+                              StatementList(
+                                StatementList(
+                                  StatementList(
+                                    EmptyStatementList(
+                                    ) [EmptyStatementList]
+                                    MatchedStmt(
+                                      DesignatorStmt(
+                                        AssignmentStmt(
+                                          SingleAssignmentStmt(
+                                            ArrayDesignator(
+                                              ArrayName(
+                                               int_array1
+                                              ) [ArrayName]
+                                              SingleExpression(
+                                                FactorTerm(
+                                                  NumConstFctr(
+                                                   0
+                                                  ) [NumConstFctr]
+                                                ) [FactorTerm]
+                                              ) [SingleExpression]
+                                            ) [ArrayDesignator]
+                                            SingleExpression(
+                                              FactorTerm(
+                                                NumConstFctr(
+                                                 1
+                                                ) [NumConstFctr]
+                                              ) [FactorTerm]
+                                            ) [SingleExpression]
+                                          ) [SingleAssignmentStmt]
+                                        ) [AssignmentStmt]
+                                      ) [DesignatorStmt]
+                                    ) [MatchedStmt]
+                                  ) [StatementList]
+                                  MatchedStmt(
+                                    DesignatorStmt(
+                                      AssignmentStmt(
+                                        SingleAssignmentStmt(
+                                          SingularDesignator(
+                                           bool_var
+                                          ) [SingularDesignator]
+                                          SingleExpression(
+                                            FactorTerm(
+                                              BoolConstFctr(
+                                               0
+                                              ) [BoolConstFctr]
+                                            ) [FactorTerm]
+                                          ) [SingleExpression]
+                                        ) [SingleAssignmentStmt]
+                                      ) [AssignmentStmt]
+                                    ) [DesignatorStmt]
+                                  ) [MatchedStmt]
+                                ) [StatementList]
+                                MatchedStmt(
+                                  MatchedIfElseStmt(
+                                    IfStart(
+                                    ) [IfStart]
+                                    ConditionListElement(
+                                      CondTermElement(
+                                        CondFactSingle(
+                                          SingleExpression(
+                                            FactorTerm(
+                                              DesignatorFctr(
+                                                SingularDesignator(
+                                                 bool_var
+                                                ) [SingularDesignator]
+                                              ) [DesignatorFctr]
+                                            ) [FactorTerm]
+                                          ) [SingleExpression]
+                                        ) [CondFactSingle]
+                                      ) [CondTermElement]
+                                    ) [ConditionListElement]
+                                    BreakStmt(
+                                      Semi(
+                                      ) [Semi]
+                                    ) [BreakStmt]
+                                    Else(
+                                    ) [Else]
+                                    ContinueStmt(
+                                      Semi(
+                                      ) [Semi]
+                                    ) [ContinueStmt]
+                                  ) [MatchedIfElseStmt]
+                                ) [MatchedStmt]
+                              ) [StatementList]
+                              UnmatchedStmt(
+                                UnmatchedIfStmt(
+                                  IfStart(
+                                  ) [IfStart]
+                                  ConditionListElement(
+                                    CondTermList(
+                                      CondTermElement(
+                                        CondFactRelop(
+                                          SingleExpression(
+                                            FactorTerm(
+                                              NumConstFctr(
+                                               3
+                                              ) [NumConstFctr]
+                                            ) [FactorTerm]
+                                          ) [SingleExpression]
+                                          GreaterThan(
+                                          ) [GreaterThan]
+                                          SingleExpression(
+                                            FactorTerm(
+                                              NumConstFctr(
+                                               2
+                                              ) [NumConstFctr]
+                                            ) [FactorTerm]
+                                          ) [SingleExpression]
+                                        ) [CondFactRelop]
+                                      ) [CondTermElement]
+                                      And(
+                                      ) [And]
+                                      CondFactSingle(
+                                        SingleExpression(
+                                          FactorTerm(
+                                            DesignatorFctr(
+                                              SingularDesignator(
+                                               bool_var
+                                              ) [SingularDesignator]
+                                            ) [DesignatorFctr]
+                                          ) [FactorTerm]
+                                        ) [SingleExpression]
+                                      ) [CondFactSingle]
+                                    ) [CondTermList]
+                                  ) [ConditionListElement]
+                                  MatchedStmt(
+                                    EmptyReturnStmt(
+                                      Semi(
+                                      ) [Semi]
+                                    ) [EmptyReturnStmt]
+                                  ) [MatchedStmt]
+                                ) [UnmatchedIfStmt]
+                              ) [UnmatchedStmt]
+                            ) [StatementList]
+                          ) [StatementBlock]
+                        ) [MatchedStmt]
+                        ConditionList(
+                          ConditionListElement(
+                            CondTermElement(
+                              CondFactRelop(
+                                SingleExpression(
+                                  FactorListTerm(
+                                    FactorTerm(
+                                      DesignatorFctr(
+                                        SingularDesignator(
+                                         int_var
+                                        ) [SingularDesignator]
+                                      ) [DesignatorFctr]
+                                    ) [FactorTerm]
+                                    Modulo(
+                                    ) [Modulo]
+                                    NumConstFctr(
+                                     2
+                                    ) [NumConstFctr]
+                                  ) [FactorListTerm]
+                                ) [SingleExpression]
+                                LesserEqual(
+                                ) [LesserEqual]
+                                SingleExpression(
+                                  FactorTerm(
+                                    NumConstFctr(
+                                     1
+                                    ) [NumConstFctr]
+                                  ) [FactorTerm]
+                                ) [SingleExpression]
+                              ) [CondFactRelop]
+                            ) [CondTermElement]
+                          ) [ConditionListElement]
+                          Or(
+                          ) [Or]
+                          CondTermElement(
+                            CondFactRelop(
+                              SingleExpression(
+                                FactorListTerm(
+                                  FactorTerm(
+                                    DesignatorFctr(
+                                      SingularDesignator(
+                                       int_var
+                                      ) [SingularDesignator]
+                                    ) [DesignatorFctr]
+                                  ) [FactorTerm]
+                                  Divide(
+                                  ) [Divide]
+                                  NumConstFctr(
+                                   2
+                                  ) [NumConstFctr]
+                                ) [FactorListTerm]
+                              ) [SingleExpression]
+                              GreaterEqual(
+                              ) [GreaterEqual]
+                              SingleExpression(
+                                FactorTerm(
+                                  NumConstFctr(
+                                   4
+                                  ) [NumConstFctr]
+                                ) [FactorTerm]
+                              ) [SingleExpression]
+                            ) [CondFactRelop]
+                          ) [CondTermElement]
+                        ) [ConditionList]
+                      ) [WhileStmt]
+                    ) [MatchedStmt]
+                  ) [StatementList]
+                ) [StatementBlock]
+              ) [MatchedIfElseStmt]
+            ) [MatchedStmt]
+          ) [UnmatchedIfStmt]
+        ) [UnmatchedStmt]
+      ) [StatementList]
+    ) [MethodDecl]
+  ) [MethodDeclList]
+) [Program]

@@ -43,14 +43,14 @@ public class Compiler implements rs.ac.bg.etf.pp1.test.Compiler {
         Compiler compiler = new Compiler();
         List<CompilerError> errors = compiler.compile(args[0], args[1]);
 
-        System.out.print("==============ERROR LIST===================\n");
+        /*System.out.print("==============ERROR LIST===================\n");
         errors.sort(new Comparator<CompilerError>() {
             @Override
             public int compare(CompilerError e1, CompilerError e2) {
                 return e1.getLine() - e2.getLine();
             }
         });
-        errors.forEach(System.out::println);
+        errors.forEach(System.out::println);*/
     }
 
     @Override
