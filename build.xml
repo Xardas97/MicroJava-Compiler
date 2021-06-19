@@ -7,6 +7,7 @@
                 <exclude name="SemanticAnalyzer.java"/>
                 <exclude name="MyDumpSymbolTableVisitor.java"/>
                 <exclude name="MyTab.java"/>
+                <exclude name="MyCode.java"/>
                 <exclude name="CodeGenerator.java"/>
                 <exclude name="CounterVisitor.java"/>
                 <exclude name="Compiler.java"/>

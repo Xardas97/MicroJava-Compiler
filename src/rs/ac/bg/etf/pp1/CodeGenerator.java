@@ -33,245 +33,249 @@ public class CodeGenerator extends VisitorAdaptor {
 
     public CodeGenerator(PredeclaredFunctionsUsed predeclared) {
         if (predeclared.chr || predeclared.ord) {
-            MyTab.find("chr").setAdr(Code.pc);
-            MyTab.find("ord").setAdr(Code.pc);
-            Code.put(Code.enter);
-            Code.put(1);
-            Code.put(1);
-            Code.put(Code.load_n);
-            Code.put(Code.exit);
-            Code.put(Code.return_);
+            MyTab.find("chr").setAdr(MyCode.pc);
+            MyTab.find("ord").setAdr(MyCode.pc);
+            MyCode.put(MyCode.enter);
+            MyCode.put(1);
+            MyCode.put(1);
+            MyCode.put(MyCode.load_n);
+            MyCode.put(MyCode.exit);
+            MyCode.put(MyCode.return_);
         }
 
         if (predeclared.len) {
-            MyTab.find("len").setAdr(Code.pc);
-            Code.put(Code.enter);
-            Code.put(1);
-            Code.put(1);
-            Code.put(Code.load_n);
-            Code.put(Code.arraylength);
-            Code.put(Code.exit);
-            Code.put(Code.return_);
+            MyTab.find("len").setAdr(MyCode.pc);
+            MyCode.put(MyCode.enter);
+            MyCode.put(1);
+            MyCode.put(1);
+            MyCode.put(MyCode.load_n);
+            MyCode.put(MyCode.arraylength);
+            MyCode.put(MyCode.exit);
+            MyCode.put(MyCode.return_);
         }
     }
 
     public void visit(MethodTypeName methodTypeName) {
         if ("main".equals(methodTypeName.getMethodName())) {
-            mainPc = Code.pc;
+            mainPc = MyCode.pc;
         }
 
-        methodTypeName.obj.setAdr(Code.pc);
+        methodTypeName.obj.setAdr(MyCode.pc);
 
-        Code.put(Code.enter);
-        Code.put(methodTypeName.obj.getLevel());
-        Code.put(methodTypeName.obj.getLocalSymbols().size());
+        MyCode.put(MyCode.enter);
+        MyCode.put(methodTypeName.obj.getLevel());
+        MyCode.put(methodTypeName.obj.getLocalSymbols().size());
     }
 
     public void visit(MethodDecl methodDecl) {
         Struct type = methodDecl.getMethodTypeName().obj.getType();
         if (type == MyTab.noType) {
-            Code.put(Code.exit);
-            Code.put(Code.return_);
+            MyCode.put(MyCode.exit);
+            MyCode.put(MyCode.return_);
         }
     }
 
     public void visit(ReturnStmt returnStmt) {
-        Code.put(Code.exit);
-        Code.put(Code.return_);
+        MyCode.put(MyCode.exit);
+        MyCode.put(MyCode.return_);
     }
 
     public void visit(EmptyReturnStmt returnStmt) {
-        Code.put(Code.exit);
-        Code.put(Code.return_);
+        MyCode.put(MyCode.exit);
+        MyCode.put(MyCode.return_);
     }
 
     public void visit(NumConstFctr numConst) {
-        Code.loadConst(numConst.getN1());
+        MyCode.loadConst(numConst.getN1());
     }
 
     public void visit(CharConstFctr charConst) {
-        Code.loadConst(charConst.getC1());
+        MyCode.loadConst(charConst.getC1());
     }
 
     public void visit(BoolConstFctr boolConst) {
-        Code.loadConst(boolConst.getB1());
+        MyCode.loadConst(boolConst.getB1());
     }
 
     public void visit(PrintStmt printStmt) {
         if (printStmt.getPrintArg() instanceof NoPrintArg) {
-            Code.loadConst(5);
+            MyCode.loadConst(5);
         }
         else {
             int width = ((PrintWidth)printStmt.getPrintArg()).getWidth();
-            Code.loadConst(width);
+            MyCode.loadConst(width);
         }
 
         if(printStmt.getExpr().struct.compatibleWith(MyTab.charType)) {
-            Code.put(Code.bprint);
+            MyCode.put(MyCode.bprint);
         }
         else {
-            Code.put(Code.print);
+            MyCode.put(MyCode.print);
         }
     }
 
     public void visit(ReadStmt readStmt) {
-        if(readStmt.getDesignator().obj.getType().compatibleWith(MyTab.charType)) {
-            Code.put(Code.bread);
+        Obj obj = readStmt.getDesignator().obj;
+
+        if(obj.getType().compatibleWith(MyTab.charType)) {
+            MyCode.put(MyCode.bread);
         }
         else {
-            Code.put(Code.read);
+            MyCode.put(MyCode.read);
         }
 
-        Code.store(readStmt.getDesignator().obj);
+        MyCode.store(obj);
     }
 
     public void visit(SingleAssignmentStmt assignment) {
         if (assignment.getParent() instanceof DoubleAssignmentStmt) {
-            Code.put(Code.dup);
+            MyCode.put(MyCode.dup);
         }
 
-        Code.store(assignment.getDesignator().obj);
+        MyCode.store(assignment.getDesignator().obj);
     }
 
     public void visit(DoubleAssignmentStmt assignment) {
         if (assignment.getParent() instanceof DoubleAssignmentStmt) {
-            Code.put(Code.dup);
+            MyCode.put(MyCode.dup);
         }
 
-        Code.store(assignment.getDesignator().obj);
+        MyCode.store(assignment.getDesignator().obj);
     }
 
     public void visit(DesignatorFctr designatorFctr) {
-        Code.load(designatorFctr.getDesignator().obj);
+        MyCode.load(designatorFctr.getDesignator().obj);
     }
 
     public void visit(IncrementStmt incrementStmt) {
         Designator designator = incrementStmt.getDesignator();
-        doIncOrDec(designator, Code.add);
+        doIncOrDec(designator, MyCode.add);
     }
 
     public void visit(DecrementStmt decrementStmt) {
         Designator designator = decrementStmt.getDesignator();
-        doIncOrDec(designator, Code.sub);
+        doIncOrDec(designator, MyCode.sub);
     }
 
     private void doIncOrDec(Designator designator, int cmd) {
         if (designator instanceof ArrayDesignator) {
-            Code.put(Code.dup2);
+            MyCode.put(MyCode.dup2);
         }
 
-        Code.load(designator.obj);
-        Code.loadConst(1);
-        Code.put(cmd);
-        Code.store(designator.obj);
+        MyCode.load(designator.obj);
+        MyCode.loadConst(1);
+        MyCode.put(cmd);
+        MyCode.store(designator.obj);
     }
 
     public void visit(MethodCall methodCall) {
         Obj methodObj = methodCall.getDesignator().obj;
-        int offset = methodObj.getAdr() - Code.pc;
-        Code.put(Code.call);
-        Code.put2(offset);
+        int offset = methodObj.getAdr() - MyCode.pc;
+        MyCode.put(MyCode.call);
+        MyCode.put2(offset);
 
         if (methodCall.getParent() instanceof MethodCallStmt && methodCall.struct != MyTab.noType) {
-            Code.put(Code.pop);
+            MyCode.put(MyCode.pop);
         }
     }
 
     public void visit(ArrayName arrayName) {
-        Code.load(arrayName.obj);
+        MyCode.load(arrayName.obj);
     }
 
     public void visit(ArrayInitFctr arrayInit) {
-        Code.put(Code.newarray);
-        if (arrayInit.struct == MyTab.charType || arrayInit.struct == MyTab.boolType) {
-            Code.put(0);
+        MyCode.put(MyCode.newarray);
+
+        Struct elemType = arrayInit.struct.getElemType();
+        if (elemType == MyTab.charType || elemType == MyTab.boolType) {
+            MyCode.put(0);
         }
         else {
-            Code.put(1);
+            MyCode.put(1);
         }
     }
 
     public void visit(SingleExpressionWithNegation expr) {
-        Code.put(Code.neg);
+        MyCode.put(MyCode.neg);
     }
 
     public void visit(MultiExpression expr) {
         int op = getAddopOp(expr.getAddop());
-        Code.put(op);
+        MyCode.put(op);
     }
 
     public void visit(MultiExpressionWithNegation expr) {
         int op = getAddopOp(expr.getAddop());
-        Code.put(op);
+        MyCode.put(op);
     }
 
     public void visit(TermList term) {
         int op = getAddopOp(term.getAddop());
-        Code.put(op);
+        MyCode.put(op);
     }
 
     public void visit(FactorListTerm term) {
         int op = getMulopOp(term.getMulop());
-        Code.put(op);
+        MyCode.put(op);
 
         if (term.getParent() instanceof MultiExpressionWithNegation) {
-            Code.put(Code.neg);
+            MyCode.put(MyCode.neg);
         }
     }
 
     public void visit(FactorTerm term) {
         if (term.getParent() instanceof MultiExpressionWithNegation) {
-            Code.put(Code.neg);
+            MyCode.put(MyCode.neg);
         }
     }
 
     private int getAddopOp(Addop addop) {
-        if (addop instanceof Plus) return Code.add;
-        return Code.sub;
+        if (addop instanceof Plus) return MyCode.add;
+        return MyCode.sub;
     }
 
     private int getMulopOp(Mulop mulop) {
-        if (mulop instanceof Multiple) return Code.mul;
-        if (mulop instanceof Divide) return Code.mul;
-        return Code.rem;
+        if (mulop instanceof Multiple) return MyCode.mul;
+        if (mulop instanceof Divide) return MyCode.mul;
+        return MyCode.rem;
     }
 
     public void visit(WhileStart whileStart) {
         WhileInfo info = new WhileInfo();
-        info.start = Code.pc;
+        info.start = MyCode.pc;
         currentWhileInfoStack.push(info);
     }
 
     private void generateWhileStmtJumps() {
         WhileInfo info = currentWhileInfoStack.pop();
 
-        conditionFalsePatchAddrs.add(Code.pc + 1);
-        Code.putFalseJump(lastRelopOp, 0);
+        conditionFalsePatchAddrs.add(MyCode.pc + 1);
+        MyCode.putFalseJump(lastRelopOp, 0);
 
         for(int addr : conditionTruePatchAddrs) {
-            Code.fixup(addr);
+            MyCode.fixup(addr);
         }
         conditionTruePatchAddrs = new LinkedList<>();
 
-        Code.putJump(info.start);
+        MyCode.putJump(info.start);
 
         for(int addr : conditionFalsePatchAddrs) {
-            Code.fixup(addr);
+            MyCode.fixup(addr);
         }
         conditionFalsePatchAddrs = new LinkedList<>();
 
         for(int addr : info.patchUp) {
-            Code.fixup(addr);
+            MyCode.fixup(addr);
         }
     }
 
     public void visit(ContinueStmt whileStmt) {
-        Code.putJump(currentWhileInfoStack.peek().start);
+        MyCode.putJump(currentWhileInfoStack.peek().start);
     }
 
     public void visit(BreakStmt breakStmt) {
-        currentWhileInfoStack.peek().patchUp.add(Code.pc + 1);
-        Code.putJump(0);
+        currentWhileInfoStack.peek().patchUp.add(MyCode.pc + 1);
+        MyCode.putJump(0);
     }
 
     public void visit(CondFactRelop condFact) {
@@ -279,31 +283,31 @@ public class CodeGenerator extends VisitorAdaptor {
     }
 
     private int getRelopOp(Relop relop) {
-        if (relop instanceof Equal) return Code.eq;
-        if (relop instanceof NotEqual) return Code.ne;
-        if (relop instanceof GreaterThan) return Code.gt;
-        if (relop instanceof LesserThan) return Code.lt;
-        if (relop instanceof GreaterEqual) return Code.ge;
-        return Code.le;
+        if (relop instanceof Equal) return MyCode.eq;
+        if (relop instanceof NotEqual) return MyCode.ne;
+        if (relop instanceof GreaterThan) return MyCode.gt;
+        if (relop instanceof LesserThan) return MyCode.lt;
+        if (relop instanceof GreaterEqual) return MyCode.ge;
+        return MyCode.le;
     }
 
     public void visit(CondFactSingle condFact) {
-        Code.loadConst(0);
-        lastRelopOp = Code.ne;
+        MyCode.loadConst(0);
+        lastRelopOp = MyCode.ne;
     }
 
     public void visit(And and) {
-        conditionFalsePatchAddrs.add(Code.pc + 1);
-        Code.putFalseJump(lastRelopOp, 0);
+        conditionFalsePatchAddrs.add(MyCode.pc + 1);
+        MyCode.putFalseJump(lastRelopOp, 0);
     }
 
     public void visit(Or or) {
-        conditionTruePatchAddrs.add(Code.pc + 1);
-        Code.put(Code.jcc + lastRelopOp);
-        Code.put2(0);
+        conditionTruePatchAddrs.add(MyCode.pc + 1);
+        MyCode.put(MyCode.jcc + lastRelopOp);
+        MyCode.put2(0);
 
         for(int addr : conditionFalsePatchAddrs) {
-            Code.fixup(addr);
+            MyCode.fixup(addr);
         }
         conditionFalsePatchAddrs = new LinkedList<>();
     }
@@ -330,13 +334,13 @@ public class CodeGenerator extends VisitorAdaptor {
     }
 
     private void generateIfStmtJumps() {
-        conditionFalsePatchAddrs.add(Code.pc + 1);
-        Code.putFalseJump(lastRelopOp, 0);
+        conditionFalsePatchAddrs.add(MyCode.pc + 1);
+        MyCode.putFalseJump(lastRelopOp, 0);
 
         ifStmtNextJumpPatchAddrStack.push(conditionFalsePatchAddrs);
 
         for(int addr : conditionTruePatchAddrs) {
-           Code.fixup(addr);
+           MyCode.fixup(addr);
         }
 
         conditionFalsePatchAddrs = new LinkedList<>();
@@ -347,12 +351,12 @@ public class CodeGenerator extends VisitorAdaptor {
         List<Integer> lastNextJumpPatchAddrs = ifStmtNextJumpPatchAddrStack.pop();
 
         List<Integer> nextJumpPatchAddrs = new LinkedList<>();
-        nextJumpPatchAddrs.add(Code.pc + 1);
+        nextJumpPatchAddrs.add(MyCode.pc + 1);
         ifStmtNextJumpPatchAddrStack.push(nextJumpPatchAddrs);
-        Code.putJump(0);
+        MyCode.putJump(0);
 
         for(int addr : lastNextJumpPatchAddrs) {
-            Code.fixup(addr);
+            MyCode.fixup(addr);
         }
     }
 
@@ -372,7 +376,7 @@ public class CodeGenerator extends VisitorAdaptor {
         List<Integer> nextJumpPatchAddrs = ifStmtNextJumpPatchAddrStack.pop();
 
         for(int addr : nextJumpPatchAddrs) {
-            Code.fixup(addr);
+            MyCode.fixup(addr);
         }
     }
 
@@ -382,38 +386,38 @@ public class CodeGenerator extends VisitorAdaptor {
 
     public void visit(CaseStart caseStart) {
         // Save the switch parameter by duplicating
-        Code.put(Code.dup);
+        MyCode.put(MyCode.dup);
 
         int number = ((Case)caseStart.getParent()).getN2();
-        Code.loadConst(number);
+        MyCode.loadConst(number);
 
         SwitchInfo info = switchInfoStack.peek();
-        info.lastCasePatchAddr = Code.pc + 1;
-        Code.putFalseJump(Code.eq, 0);
+        info.lastCasePatchAddr = MyCode.pc + 1;
+        MyCode.putFalseJump(MyCode.eq, 0);
     }
 
     public void visit(Case case_) {
         SwitchInfo info = switchInfoStack.peek();
-        Code.fixup(info.lastCasePatchAddr);
+        MyCode.fixup(info.lastCasePatchAddr);
     }
 
     public void visit(YieldStmt yieldStmt) {
         SwitchInfo info = switchInfoStack.peek();
-        info.endOfSwitchPatchAddrs.add(Code.pc + 1);
-        Code.putJump(0);
+        info.endOfSwitchPatchAddrs.add(MyCode.pc + 1);
+        MyCode.putJump(0);
     }
 
     public void visit(SwitchExpr switchExpr) {
         SwitchInfo info = switchInfoStack.pop();
         for (int addr : info.endOfSwitchPatchAddrs) {
-            Code.fixup(addr);
+            MyCode.fixup(addr);
         }
 
         // The top of the stack is the result on the switch expr
         // we need to save it behind the leftover duplicate of the parameter
         // and than delete the leftover parameter duplicate and the result duplicate
-        Code.put(Code.dup_x1);
-        Code.put(Code.pop);
-        Code.put(Code.pop);
+        MyCode.put(MyCode.dup_x1);
+        MyCode.put(MyCode.pop);
+        MyCode.put(MyCode.pop);
     }
 }
