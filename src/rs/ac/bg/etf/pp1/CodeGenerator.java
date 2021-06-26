@@ -236,7 +236,7 @@ public class CodeGenerator extends VisitorAdaptor {
 
     private int getMulopOp(Mulop mulop) {
         if (mulop instanceof Multiple) return MyCode.mul;
-        if (mulop instanceof Divide) return MyCode.mul;
+        if (mulop instanceof Divide) return MyCode.div;
         return MyCode.rem;
     }
 
