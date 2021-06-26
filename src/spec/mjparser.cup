@@ -87,7 +87,7 @@ nonterminal Condition, CondTerm, And, Or, Relop;
 nonterminal SwitchStart, Cases, Case, CaseStart, DefaultStart;
 
 nonterminal rs.etf.pp1.symboltable.concepts.Obj ProgName, MethodTypeName, Designator, ArrayName;
-nonterminal rs.etf.pp1.symboltable.concepts.Struct AssignmentStatement, Type, Expr, Terms, Term, Factor, MethodCall;
+nonterminal rs.etf.pp1.symboltable.concepts.Struct AssignmentStatement, Type, Expr, MoreAddops, AddopMore, Terms, Term, Factor, MethodCall;
 nonterminal rs.etf.pp1.symboltable.concepts.Struct CondFact;
 
 Program ::= (Program) PROG ProgName:progName VarConstDecls LBRACE MethodDecls RBRACE
@@ -247,12 +247,17 @@ ActPar ::= (ActPar) Expr
 Type ::= (Type) IDENT:typeName
        ;
 
-Expr ::= (SingleExpression) Term
-       | (MultiExpression) Term Addop Terms
-       | (SingleExpressionWithNegation) Negation Term
-       | (MultiExpressionWithNegation) Negation Term Addop Terms
+Expr ::= (AddopExpr) Term MoreAddops
+       | (AddopExprWithNegation) Negation Term MoreAddops
        | (SwitchExpr) SwitchStart LPAREN Expr RPAREN LBRACE Cases DefaultStart COLON Statements RBRACE
        ;
+
+MoreAddops ::= (MoreAddopElements) AddopMore MoreAddops
+             | (NoMoreAddops)
+             ;
+
+AddopMore ::= (AddopMore) Addop Term
+            ;
 
 DefaultStart ::= (DefaultStart) DEFAULT
                ;

@@ -394,34 +394,47 @@ public class SemanticAnalyzer extends VisitorAdaptor {
         terms.struct = terms.getTerm().struct;
     }
 
-    public void visit(SingleExpression expr) {
-        expr.struct = expr.getTerm().struct;
+    public void visit(AddopMore addopMore) {
+        Struct struct = addopMore.getTerm().struct;
+
+        if (struct != MyTab.intType) {
+            Addop addop = addopMore.getAddop();
+            reportError("Operacija " + addopToChar(addop) + " se moze koristiti samo sa celobrojnim vrednostima", addopMore);
+            addopMore.struct = MyTab.intType;
+            return;
+        }
+
+        addopMore.struct = struct;
     }
 
-    public void visit(SingleExpressionWithNegation expr) {
+    public void visit(MoreAddopElements moreAddops) {
+		moreAddops.struct = moreAddops.getAddopMore().struct;
+    }
+
+    public void visit(AddopExprWithNegation expr) {
         Struct struct = expr.getTerm().struct;
 
         if (struct != MyTab.intType) {
             reportError("Mogu se negirati samo celobrojne vrednosti", expr);
+
+            if (expr.getMoreAddops() instanceof MoreAddopElements) {
+                Addop addop = ((MoreAddopElements)expr.getMoreAddops()).getAddopMore().getAddop();
+                reportError("Operacija " + addopToChar(addop) + " se moze koristiti samo sa celobrojnim vrednostima", expr);
+            }
         }
 
         expr.struct = struct;
     }
 
-    public void visit(MultiExpression expr) {
-        calculateMultiExpressionType(expr.getTerm().struct, expr.getTerms().struct, expr.getAddop(), expr);
-    }
+    public void visit(AddopExpr expr) {
+        Struct struct = expr.getTerm().struct;
 
-    public void visit(MultiExpressionWithNegation expr) {
-        calculateMultiExpressionType(expr.getTerm().struct, expr.getTerms().struct, expr.getAddop(), expr);
-    }
-
-    private void calculateMultiExpressionType(Struct operand1, Struct operand2, Addop addop, Expr expr) {
-        if (operand1 != MyTab.intType || operand2 != MyTab.intType) {
+        if (expr.getMoreAddops() instanceof MoreAddopElements && struct != MyTab.intType) {
+            Addop addop = ((MoreAddopElements)expr.getMoreAddops()).getAddopMore().getAddop();
             reportError("Operacija " + addopToChar(addop) + " se moze koristiti samo sa celobrojnim vrednostima", expr);
         }
 
-        expr.struct = operand1;
+        expr.struct = expr.getTerm().struct;
     }
 
     private char addopToChar(Addop addop) {

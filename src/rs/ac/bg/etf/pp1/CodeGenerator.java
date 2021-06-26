@@ -195,17 +195,8 @@ public class CodeGenerator extends VisitorAdaptor {
         }
     }
 
-    public void visit(SingleExpressionWithNegation expr) {
-        MyCode.put(MyCode.neg);
-    }
-
-    public void visit(MultiExpression expr) {
-        int op = getAddopOp(expr.getAddop());
-        MyCode.put(op);
-    }
-
-    public void visit(MultiExpressionWithNegation expr) {
-        int op = getAddopOp(expr.getAddop());
+    public void visit(AddopMore addopsMore) {
+        int op = getAddopOp(addopsMore.getAddop());
         MyCode.put(op);
     }
 
@@ -218,13 +209,13 @@ public class CodeGenerator extends VisitorAdaptor {
         int op = getMulopOp(term.getMulop());
         MyCode.put(op);
 
-        if (term.getParent() instanceof MultiExpressionWithNegation) {
+        if (term.getParent() instanceof AddopExprWithNegation) {
             MyCode.put(MyCode.neg);
         }
     }
 
     public void visit(FactorTerm term) {
-        if (term.getParent() instanceof MultiExpressionWithNegation) {
+        if (term.getParent() instanceof AddopExprWithNegation) {
             MyCode.put(MyCode.neg);
         }
     }
